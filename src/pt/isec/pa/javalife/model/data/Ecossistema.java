@@ -40,7 +40,7 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         return elementos;
     }
 
-    public boolean addElemento(IElemento elemento) { // ir melhorando obviamente com coords e assim
+    /*public boolean addElemento(IElemento elemento) { // ir melhorando obviamente com coords e assim
         if (elemento instanceof Fauna) {
             elementos.add(new Animal());
             return true;
@@ -55,7 +55,7 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         }
 
         return false;
-    }
+    }*/
 
     public void editElemento(int id, ArrayList<String> parametros) {
         for (IElemento elemento : elementos) {

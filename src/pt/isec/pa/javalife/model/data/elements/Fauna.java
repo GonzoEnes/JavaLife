@@ -3,17 +3,16 @@ package pt.isec.pa.javalife.model.data.elements;
 import pt.isec.pa.javalife.model.data.Area;
 
 public sealed class Fauna extends ElementoBase implements IElementoComForca permits Animal {
-    private int id;
-    private Elemento tipo;
-    private Area area;
     private double forca;
 
-    public Fauna() {
+    public Fauna(int id, Area area, Elemento tipo) {
+        super(id, area, tipo);
         this.forca = 50;
     }
+
     @Override
     public double getForca() {
-        return 0;
+        return forca;
     }
 
     @Override
@@ -22,17 +21,8 @@ public sealed class Fauna extends ElementoBase implements IElementoComForca perm
     }
 
     @Override
-    public int getId() {
-        return id;
-    }
-
-    @Override
     public Elemento getType() {
-        return tipo;
+        return Elemento.FAUNA;
     }
 
-    @Override
-    public Area getArea() {
-        return area;
-    }
 }
