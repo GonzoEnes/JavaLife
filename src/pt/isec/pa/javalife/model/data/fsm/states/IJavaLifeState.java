@@ -15,6 +15,7 @@ public interface IJavaLifeState {
             case MORRER -> new MorrerState(context, ecossistema);
             case REPRODUZIR -> new ReproduzirState(context, ecossistema);
             case MOVIMENTAR -> new MovimentarState(context, ecossistema);
+            case ATACAR -> new AtaqueState(context, ecossistema);
         };
     }
 }
