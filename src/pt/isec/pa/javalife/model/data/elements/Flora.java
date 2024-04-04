@@ -26,7 +26,7 @@ public sealed class Flora extends ElementoBase implements IElementoComForca, IEl
     }
 
     @Override
-    public void setForca(double forca) {
+    public void setForca(double forca) { // ISTO ESTÁ MAL
         this.forca += forca;
         if (forca > 100 || forca < 0) {
             return;

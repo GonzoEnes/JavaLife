@@ -5,5 +5,6 @@ public abstract sealed class ElementoBase
         permits Inanimado, Flora, Fauna {
     // TODO
 
-    
+
+
 }
