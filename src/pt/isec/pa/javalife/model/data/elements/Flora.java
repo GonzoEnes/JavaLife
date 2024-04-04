@@ -1,7 +1,12 @@
 package pt.isec.pa.javalife.model.data.elements;
 
+import pt.isec.pa.javalife.model.data.Area;
+
 public sealed class Flora extends ElementoBase implements IElementoComForca, IElementoComImagem permits Erva {
 
+    private int id;
+    private Area area;
+    private Elemento tipo;
     private int forca;
     private String imagem;
 
@@ -36,5 +41,20 @@ public sealed class Flora extends ElementoBase implements IElementoComForca, IEl
     @Override
     public void setImagem(String imagem) {
         this.imagem = imagem;
+    }
+
+    @Override
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public Elemento getType() {
+        return tipo;
+    }
+
+    @Override
+    public Area getArea() {
+        return area;
     }
 }

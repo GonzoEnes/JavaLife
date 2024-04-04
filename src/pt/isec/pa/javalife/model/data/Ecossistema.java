@@ -10,9 +10,7 @@ import java.util.Set;
 
 public class Ecossistema implements Serializable, IGameEngineEvolve {
     private Set<IElemento> elementos;
-
     private int altura;
-
     private int largura;
 
     public Ecossistema(int altura, int largura) {
