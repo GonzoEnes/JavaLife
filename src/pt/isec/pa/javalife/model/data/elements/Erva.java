@@ -1,11 +1,9 @@
 package pt.isec.pa.javalife.model.data.elements;
 
-public final class Erva extends Flora{
-    public Erva(String imagem) {
-        super(imagem);
-    }
+import pt.isec.pa.javalife.model.data.Area;
 
-    public Erva(int forca, String imagem) {
-        super(forca, imagem);
+public final class Erva extends Flora{
+    public Erva(int id, Area area, Elemento tipo, String imagem) {
+        super(id, area, tipo, imagem);
     }
 }
