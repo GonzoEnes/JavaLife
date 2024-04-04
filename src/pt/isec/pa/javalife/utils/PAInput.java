@@ -1,4 +1,4 @@
-package pt.isec.pa.utils;
+package pt.isec.pa.javalife.utils;
 
 import java.util.Scanner;
 

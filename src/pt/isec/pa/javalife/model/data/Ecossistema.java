@@ -46,7 +46,7 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
             return true;
         }
         else if (elemento instanceof Flora) {
-            elementos.add(new Erva(50, ""));
+            elementos.add(new Erva());
             return true;
         }
         else if (elemento instanceof Inanimado) {
@@ -57,7 +57,7 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         return false;
     }*/
 
-    public void editElemento(int id, ArrayList<String> parametros) {
+    public void editElemento(int id, ArrayList<String> parametros) { // ir reforçando, claro
         for (IElemento elemento : elementos) {
             if (elemento.getId() == id) {
                 if (elemento instanceof Erva) {
