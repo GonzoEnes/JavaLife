@@ -7,6 +7,8 @@ import pt.isec.pa.javalife.model.data.fsm.JavaLifeState;
 public interface IJavaLifeState {
    JavaLifeState getState();
 
+   boolean evolve();
+
    // meter funções de transição de estados
 
     static IJavaLifeState createState(JavaLifeState type, JavaLifeContext context, Ecossistema ecossistema) {
@@ -15,7 +17,6 @@ public interface IJavaLifeState {
             case MORRER -> new MorrerState(context, ecossistema);
             case REPRODUZIR -> new ReproduzirState(context, ecossistema);
             case MOVIMENTAR -> new MovimentarState(context, ecossistema);
-            case ATACAR -> new AtaqueState(context, ecossistema);
         };
     }
 }
