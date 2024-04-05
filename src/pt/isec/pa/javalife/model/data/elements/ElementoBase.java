@@ -30,11 +30,11 @@ public abstract sealed class ElementoBase
         return tipo;
     }
 
-    /*public void setArea(Area area) {
+    public void setArea(Area area) {
         this.area = area;
-    }*/
+    }
 
-    /*public void setTipo(Elemento tipo) {
+    public void setTipo(Elemento tipo) {
         this.tipo = tipo;
-    }*/
+    }
 }

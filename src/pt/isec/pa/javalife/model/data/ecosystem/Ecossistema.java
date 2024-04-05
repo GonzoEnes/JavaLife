@@ -1,16 +1,21 @@
-package pt.isec.pa.javalife.model.data;
+package pt.isec.pa.javalife.model.data.ecosystem;
 
+import pt.isec.pa.javalife.model.command.ICommand;
+import pt.isec.pa.javalife.model.data.Area;
 import pt.isec.pa.javalife.model.data.elements.*;
 import pt.isec.pa.javalife.model.data.fsm.JavaLifeContext;
 import pt.isec.pa.javalife.model.gameengine.interfaces.IGameEngine;
 import pt.isec.pa.javalife.model.gameengine.interfaces.IGameEngineEvolve;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 public class Ecossistema implements Serializable, IGameEngineEvolve {
+    @Serial
+    private static final long serialUID = 1L;
     private Set<IElemento> elementos;
     private int altura;
     private int largura;
@@ -43,7 +48,7 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
 
     // LÓGICA
 
-    public static IElemento addElemento(IElemento elemento, Area area, Elemento tipo, String imagem) { // tem de ser feito com factory
+    public static IElemento addElemento(Area area, Elemento tipo, String imagem) { // tem de ser feito com factory
         return switch (tipo) {
             case INANIMADO -> new Pedra(area, tipo);
             case FAUNA -> new Animal(area, tipo);
@@ -51,39 +56,44 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         };
     }
 
-    /*static IJavaLifeState createState(JavaLifeState type, JavaLifeContext context, Ecossistema ecossistema) {
-        return switch (type) {
-            case PROCURAR_COMIDA -> new ProcurarComidaState(context,ecossistema);
-            case MORRER -> new MorrerState(context, ecossistema);
-            case REPRODUZIR -> new ReproduzirState(context, ecossistema);
-            case MOVIMENTAR -> new MovimentarState(context, ecossistema);
-        };
-    }*/
-
-    public boolean removeElemento(IElemento elemento, int id) {
-        if (elemento.getType() == Elemento.INANIMADO) { // não se podem remover inanimados
+    public boolean removeElemento(Elemento tipo, int id) {
+        if (tipo == Elemento.INANIMADO) { // não se podem remover inanimados
             return false;
         }
 
-        if (elementos.contains(elemento) && elemento.getId() == id) {
-            elementos.remove(elemento);
-            return true;
+        for (IElemento elemento : elementos) {
+            if (elemento.getType() == tipo && elemento.getId() == id) {
+                elementos.remove(elemento);
+                return true;
+            }
         }
 
         return false;
     }
 
-    public void editElemento(int id, ArrayList<String> parametros) { // ir reforçando, claro
+    public boolean editElemento(Elemento tipo, int id, ArrayList<String> parametros) { // ir reforçando, claro
+        //ArrayList<String> parametrosOld = new ArrayList<>();
         for (IElemento elemento : elementos) {
-            if (elemento.getId() == id) {
-                if (elemento instanceof Erva) {
-                    ((Erva) elemento).setForca(Double.parseDouble(parametros.get(0)));
-                }
-                else if (elemento instanceof Animal) {
-                    ((Animal) elemento).setForca(Double.parseDouble(parametros.get(0)));
+            if (elemento.getId() == id && elemento.getType() == tipo) {
+                switch (tipo) {
+                    case FAUNA -> {
+                        //parametrosOld.add(Double.toString(((Animal)elemento).getForca()));
+                        ((Animal)elemento).setForca(Double.parseDouble(parametros.get(0)));
+                        return true;
+                    }
+                    case FLORA -> { // a flora pode editar a força ou a imagem dela acho eu
+                        //parametrosOld.add(Double.toString(((Erva)elemento).getForca()));
+                        ((Erva)elemento).setForca(Double.parseDouble(parametros.get(0)));
+                        if (!parametros.get(1).isBlank()) { // se o campo da edição de imagem estiver vazio não vale a pena meter nada
+                            //parametrosOld.add(((Erva)elemento).getImagem());
+                            ((Erva)elemento).setImagem("files/" + parametros.get(1));
+                        }
+                        return true; // devolver os parâmetros antigos para se dar undo() no editar
+                    }
                 }
             }
         }
+        return false;
     }
 
     @Override

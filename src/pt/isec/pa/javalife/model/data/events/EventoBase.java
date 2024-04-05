@@ -1,6 +1,6 @@
 package pt.isec.pa.javalife.model.data.events;
 
-import pt.isec.pa.javalife.model.data.Ecossistema;
+import pt.isec.pa.javalife.model.data.ecosystem.Ecossistema;
 
 public sealed abstract class EventoBase implements IEvento permits Sol, Herbicida, Forca {
     private final Evento tipo;

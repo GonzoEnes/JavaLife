@@ -1,6 +1,6 @@
 package pt.isec.pa.javalife.model.data.events;
 
-import pt.isec.pa.javalife.model.data.Ecossistema;
+import pt.isec.pa.javalife.model.data.ecosystem.Ecossistema;
 
 public final class Sol extends EventoBase implements IEvento{
 

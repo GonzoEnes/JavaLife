@@ -1,7 +1,6 @@
 package pt.isec.pa.javalife.model.data.fsm;
 
-import pt.isec.pa.javalife.model.data.Ecossistema;
-import pt.isec.pa.javalife.model.data.elements.Elemento;
+import pt.isec.pa.javalife.model.data.ecosystem.Ecossistema;
 import pt.isec.pa.javalife.model.data.elements.IElemento;
 import pt.isec.pa.javalife.model.data.fsm.states.IJavaLifeState;
 
@@ -11,8 +10,8 @@ public class JavaLifeContext {
     private Ecossistema ecossistema;
     private IJavaLifeState state;
 
-    public JavaLifeContext() { // ver isto
-        this.ecossistema = new Ecossistema(100, 100);
+    public JavaLifeContext(Ecossistema ecossistema) { // ver isto
+        this.ecossistema = ecossistema;
         this.state = IJavaLifeState.createState(JavaLifeState.MOVIMENTAR, this, ecossistema);
     }
 
