@@ -43,21 +43,22 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
 
     // LÓGICA
 
-    public boolean addElemento(IElemento elemento, Area area, Elemento tipo, String imagem) { // ir melhorando obviamente com coords e assim
-        if (elemento instanceof Fauna) {
-            elementos.add(new Animal(area, tipo));
-            return true;
-        }
-        else if (elemento instanceof Flora) {
-            elementos.add(new Erva(area, tipo, imagem));
-            return true;
-        }
-        else if (elemento instanceof Inanimado) {
-            elementos.add(new Pedra(area, tipo));
-            return true;
-        }
-        return false;
+    public static IElemento addElemento(IElemento elemento, Area area, Elemento tipo, String imagem) { // tem de ser feito com factory
+        return switch (tipo) {
+            case INANIMADO -> new Pedra(area, tipo);
+            case FAUNA -> new Animal(area, tipo);
+            case FLORA -> new Erva(area, tipo, imagem);
+        };
     }
+
+    /*static IJavaLifeState createState(JavaLifeState type, JavaLifeContext context, Ecossistema ecossistema) {
+        return switch (type) {
+            case PROCURAR_COMIDA -> new ProcurarComidaState(context,ecossistema);
+            case MORRER -> new MorrerState(context, ecossistema);
+            case REPRODUZIR -> new ReproduzirState(context, ecossistema);
+            case MOVIMENTAR -> new MovimentarState(context, ecossistema);
+        };
+    }*/
 
     public boolean removeElemento(IElemento elemento, int id) {
         if (elemento.getType() == Elemento.INANIMADO) { // não se podem remover inanimados
