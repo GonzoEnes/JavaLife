@@ -14,4 +14,9 @@ public class ProcurarComidaState extends JavaLifeAdapter {
     public JavaLifeState getState() {
         return JavaLifeState.PROCURAR_COMIDA;
     }
+
+    @Override
+    public boolean evolve() {
+        return false;
+    }
 }

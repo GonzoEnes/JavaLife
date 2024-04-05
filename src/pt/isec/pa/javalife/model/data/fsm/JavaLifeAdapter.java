@@ -14,4 +14,7 @@ public abstract class JavaLifeAdapter implements IJavaLifeState {
     public void changeState(JavaLifeState state) {
         context.changeState(IJavaLifeState.createState(state, context, ecossistema));
     }
+
+    @Override
+    public abstract boolean evolve();
 }

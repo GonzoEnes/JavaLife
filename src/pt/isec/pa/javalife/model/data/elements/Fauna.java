@@ -4,9 +4,10 @@ import pt.isec.pa.javalife.model.data.Area;
 
 public sealed class Fauna extends ElementoBase implements IElementoComForca permits Animal {
     private double forca;
+    private static int idS = 0;
 
-    public Fauna(int id, Area area, Elemento tipo) {
-        super(id, area, tipo);
+    public Fauna(Area area, Elemento tipo) {
+        super(idS++, area, tipo);
         this.forca = 50;
     }
 

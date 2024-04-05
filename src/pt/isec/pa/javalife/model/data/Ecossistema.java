@@ -1,6 +1,7 @@
 package pt.isec.pa.javalife.model.data;
 
 import pt.isec.pa.javalife.model.data.elements.*;
+import pt.isec.pa.javalife.model.data.fsm.JavaLifeContext;
 import pt.isec.pa.javalife.model.gameengine.interfaces.IGameEngine;
 import pt.isec.pa.javalife.model.gameengine.interfaces.IGameEngineEvolve;
 
@@ -18,44 +19,58 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         this.altura = altura;
         this.largura = largura;
         this.elementos = new HashSet<>();
+        //this.context = new JavaLifeContext();
     }
 
-    public int getAltura() {
-        return altura;
-    }
-
+    // GETTERS & SETTERS
     public int getLargura() {
         return largura;
-    }
-
-    public void setAltura(int altura) {
-        this.altura = altura;
     }
 
     public void setLargura(int largura) {
         this.largura = largura;
     }
 
+    public int getAltura() { return altura; }
+
+    public void setAltura(int altura) {
+        this.altura = altura;
+    }
+
     public Set<IElemento> getElementos() {
         return elementos;
     }
 
-    /*public boolean addElemento(IElemento elemento) { // ir melhorando obviamente com coords e assim
+    // LÓGICA
+
+    public boolean addElemento(IElemento elemento, Area area, Elemento tipo, String imagem) { // ir melhorando obviamente com coords e assim
         if (elemento instanceof Fauna) {
-            elementos.add(new Animal());
+            elementos.add(new Animal(area, tipo));
             return true;
         }
         else if (elemento instanceof Flora) {
-            elementos.add(new Erva());
+            elementos.add(new Erva(area, tipo, imagem));
             return true;
         }
         else if (elemento instanceof Inanimado) {
-            elementos.add(new Pedra());
+            elementos.add(new Pedra(area, tipo));
+            return true;
+        }
+        return false;
+    }
+
+    public boolean removeElemento(IElemento elemento, int id) {
+        if (elemento.getType() == Elemento.INANIMADO) { // não se podem remover inanimados
+            return false;
+        }
+
+        if (elementos.contains(elemento) && elemento.getId() == id) {
+            elementos.remove(elemento);
             return true;
         }
 
         return false;
-    }*/
+    }
 
     public void editElemento(int id, ArrayList<String> parametros) { // ir reforçando, claro
         for (IElemento elemento : elementos) {
@@ -72,6 +87,6 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
 
     @Override
     public void evolve(IGameEngine gameEngine, long currentTime) {
-
+        // aqui não sei o que há de ser posto mas deve ser a chamada da evolve() da fsm digo eu idk
     }
 }

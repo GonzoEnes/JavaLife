@@ -14,4 +14,9 @@ public class MovimentarState extends JavaLifeAdapter {
     public JavaLifeState getState() {
         return JavaLifeState.MOVIMENTAR;
     }
+
+    @Override
+    public boolean evolve() {
+        return false;
+    }
 }

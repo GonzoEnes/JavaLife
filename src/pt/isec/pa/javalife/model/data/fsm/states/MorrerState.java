@@ -14,4 +14,9 @@ public class MorrerState extends JavaLifeAdapter {
     public JavaLifeState getState() {
         return JavaLifeState.MORRER;
     }
+
+    @Override
+    public boolean evolve() {
+        return false;
+    }
 }

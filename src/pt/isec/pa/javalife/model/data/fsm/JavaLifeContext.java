@@ -11,8 +11,8 @@ public class JavaLifeContext {
     private Ecossistema ecossistema;
     private IJavaLifeState state;
 
-    public JavaLifeContext(Ecossistema ecossistema) { // ver isto
-        this.ecossistema = ecossistema;
+    public JavaLifeContext() { // ver isto
+        this.ecossistema = new Ecossistema(100, 100);
         this.state = IJavaLifeState.createState(JavaLifeState.MOVIMENTAR, this, ecossistema);
     }
 

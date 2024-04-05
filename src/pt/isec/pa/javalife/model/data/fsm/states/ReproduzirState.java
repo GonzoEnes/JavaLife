@@ -14,4 +14,9 @@ public class ReproduzirState extends JavaLifeAdapter {
     public JavaLifeState getState() {
         return JavaLifeState.REPRODUZIR;
     }
+
+    @Override
+    public boolean evolve() {
+        return false;
+    }
 }
