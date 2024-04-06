@@ -1,5 +1,6 @@
-package pt.isec.pa.javalife.model.data;
+package pt.isec.pa.javalife.model.data.ecosystem;
 
+import pt.isec.pa.javalife.model.data.area.Area;
 import pt.isec.pa.javalife.model.data.ecosystem.Ecossistema;
 import pt.isec.pa.javalife.model.data.elements.Elemento;
 import pt.isec.pa.javalife.model.data.elements.IElemento;
@@ -16,8 +17,8 @@ public class EcossistemaManager {
         this.ecossistema = new Ecossistema(50, 50);
     }
 
-    public IElemento addElemento(Area area, Elemento tipo, String imagem) {
-        return Ecossistema.addElemento(area, tipo, imagem);
+    public IElemento addElemento(Area area, Elemento tipo, String imagem, int x, int y) {
+        return Ecossistema.addElemento(area, tipo, imagem, x, y);
     }
 
     public boolean removeElemento(Elemento tipo, int id) {

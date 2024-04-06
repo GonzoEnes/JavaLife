@@ -1,9 +1,7 @@
 package pt.isec.pa.javalife.model.data.ecosystem;
 
-import pt.isec.pa.javalife.model.command.ICommand;
-import pt.isec.pa.javalife.model.data.Area;
+import pt.isec.pa.javalife.model.data.area.Area;
 import pt.isec.pa.javalife.model.data.elements.*;
-import pt.isec.pa.javalife.model.data.fsm.JavaLifeContext;
 import pt.isec.pa.javalife.model.gameengine.interfaces.IGameEngine;
 import pt.isec.pa.javalife.model.gameengine.interfaces.IGameEngineEvolve;
 
@@ -48,11 +46,11 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
 
     // LÓGICA
 
-    public static IElemento addElemento(Area area, Elemento tipo, String imagem) { // tem de ser feito com factory
+    public static IElemento addElemento(Area area, Elemento tipo, String imagem, int x, int y) { // tem de ser feito com factory
         return switch (tipo) {
-            case INANIMADO -> new Pedra(area, tipo);
-            case FAUNA -> new Animal(area, tipo);
-            case FLORA -> new Erva(area, tipo, imagem);
+            case INANIMADO -> new Pedra(area, tipo, x, y);
+            case FAUNA -> new Animal(area, tipo, x, y);
+            case FLORA -> new Erva(area, tipo, imagem, x, y);
         };
     }
 

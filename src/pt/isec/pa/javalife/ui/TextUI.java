@@ -1,9 +1,6 @@
 package pt.isec.pa.javalife.ui;
 
-import pt.isec.pa.javalife.model.data.EcossistemaManager;
-import pt.isec.pa.javalife.model.data.ecosystem.Ecossistema;
-import pt.isec.pa.javalife.model.data.fsm.JavaLifeContext;
-import pt.isec.pa.javalife.utils.PAInput;
+import pt.isec.pa.javalife.model.data.ecosystem.EcossistemaManager;
 
 public class TextUI {
     private EcossistemaManager manager;

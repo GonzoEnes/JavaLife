@@ -1,7 +1,7 @@
 package pt.isec.pa.javalife.model.command.commands;
 
 import pt.isec.pa.javalife.model.command.CommandAdapter;
-import pt.isec.pa.javalife.model.data.EcossistemaManager;
+import pt.isec.pa.javalife.model.data.ecosystem.EcossistemaManager;
 import pt.isec.pa.javalife.model.data.elements.Elemento;
 
 import java.util.ArrayList;

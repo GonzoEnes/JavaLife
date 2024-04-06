@@ -1,6 +1,6 @@
 package pt.isec.pa.javalife.model.data.elements;
 
-import pt.isec.pa.javalife.model.data.Area;
+import pt.isec.pa.javalife.model.data.area.Area;
 
 import java.io.Serializable;
 

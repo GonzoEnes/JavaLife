@@ -1,8 +1,8 @@
 package pt.isec.pa.javalife.model.command.commands;
 
 import pt.isec.pa.javalife.model.command.CommandAdapter;
-import pt.isec.pa.javalife.model.data.Area;
-import pt.isec.pa.javalife.model.data.EcossistemaManager;
+import pt.isec.pa.javalife.model.data.area.Area;
+import pt.isec.pa.javalife.model.data.ecosystem.EcossistemaManager;
 import pt.isec.pa.javalife.model.data.elements.Elemento;
 
 public class RemoveElementoCmd extends CommandAdapter {
@@ -10,6 +10,8 @@ public class RemoveElementoCmd extends CommandAdapter {
     private int id;
     private Area area;
     private String imagem;
+    private int x;
+    private int y;
     public RemoveElementoCmd(EcossistemaManager manager, Elemento tipo, int id, Area area, String imagem) {
         super(manager);
         this.id = id;
@@ -20,7 +22,7 @@ public class RemoveElementoCmd extends CommandAdapter {
 
     @Override
     public boolean undo() {
-        manager.addElemento(area, tipo, imagem);
+        manager.addElemento(area, tipo, imagem, x, y);
         return true;
     }
 
