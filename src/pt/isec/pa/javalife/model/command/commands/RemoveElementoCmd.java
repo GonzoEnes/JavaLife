@@ -12,12 +12,14 @@ public class RemoveElementoCmd extends CommandAdapter {
     private String imagem;
     private int x;
     private int y;
-    public RemoveElementoCmd(EcossistemaManager manager, Elemento tipo, int id, Area area, String imagem) {
+    public RemoveElementoCmd(EcossistemaManager manager, Elemento tipo, int id, Area area, String imagem, int x, int y) {
         super(manager);
         this.id = id;
         this.tipo = tipo;
         this.area = area;
         this.imagem = imagem;
+        this.x = x;
+        this.y = y;
     }
 
     @Override

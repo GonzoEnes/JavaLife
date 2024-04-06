@@ -13,12 +13,14 @@ public class AddElementoCmd extends CommandAdapter {
     private String imagem;
     private int x;
     private int y;
-    public AddElementoCmd(EcossistemaManager manager, Elemento tipo, int id, Area area, String imagem) {
+    public AddElementoCmd(EcossistemaManager manager, Elemento tipo, int id, Area area, String imagem, int x, int y) {
         super(manager);
         this.id = id;
         this.area = area;
         this.tipo = tipo;
         this.imagem = imagem;
+        this.x = x;
+        this.y = y;
     }
 
     @Override
