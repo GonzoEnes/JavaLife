@@ -28,7 +28,6 @@ public class RemoveElementoCmd extends CommandAdapter {
 
     @Override
     public boolean execute() {
-        manager.removeElemento(tipo, id);
-        return true;
+        return manager.removeElemento(tipo, id);
     }
 }
