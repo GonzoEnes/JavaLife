@@ -5,6 +5,7 @@ import pt.isec.pa.javalife.model.data.ecosystem.Ecossistema;
 import pt.isec.pa.javalife.model.data.elements.Elemento;
 import pt.isec.pa.javalife.model.data.elements.IElemento;
 
+import java.io.File;
 import java.util.ArrayList;
 
 // esta classe vai servir como Facade do Ecossistema para que as outras classes não consigam manipular o Ecossistema diretamente
@@ -27,5 +28,9 @@ public class EcossistemaManager {
 
     public boolean editElemento(Elemento tipo, int id, ArrayList<String> parametros) {
         return ecossistema.editElemento(tipo, id, parametros);
+    }
+
+    public void carregarSimulacao(File file) {
+
     }
 }
