@@ -6,8 +6,8 @@ public sealed class Fauna extends ElementoBase implements IElementoComForca perm
     private double forca;
     private static int idS = 0;
 
-    public Fauna(Area area, Elemento tipo, int x, int y) {
-        super(x, y, idS++, area, tipo);
+    public Fauna(Area area, Elemento tipo) {
+        super(++idS, area, tipo);
         this.forca = 50;
     }
 

@@ -7,8 +7,8 @@ public sealed class Flora extends ElementoBase implements IElementoComForca, IEl
     private String imagem;
     private static int idS = 0;
 
-    public Flora(Area area, Elemento tipo, String imagem, int x, int y) {
-        super(x, y, idS++, area, tipo);
+    public Flora(Area area, Elemento tipo, String imagem) {
+        super(++idS, area, tipo);
         this.forca = 50;
         this.imagem = imagem;
     }

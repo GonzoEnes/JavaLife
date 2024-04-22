@@ -11,16 +11,12 @@ public class AddElementoCmd extends CommandAdapter {
     private int id;
     private Area area;
     private String imagem;
-    private int x;
-    private int y;
-    public AddElementoCmd(EcossistemaManager manager, Elemento tipo, int id, Area area, String imagem, int x, int y) {
+    public AddElementoCmd(EcossistemaManager manager, Elemento tipo, int id, Area area, String imagem) {
         super(manager);
         this.id = id;
         this.area = area;
         this.tipo = tipo;
         this.imagem = imagem;
-        this.x = x;
-        this.y = y;
     }
 
     @Override
@@ -30,7 +26,7 @@ public class AddElementoCmd extends CommandAdapter {
 
     @Override
     public boolean execute() {
-        manager.addElemento(area, tipo, imagem, x, y);
+        manager.addElemento(area, tipo, imagem);
         return true;
     }
 }

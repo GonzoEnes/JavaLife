@@ -46,11 +46,11 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
 
     // LÓGICA
 
-    public static IElemento addElemento(Area area, Elemento tipo, String imagem, int x, int y) { // tem de ser feito com factory
+    public boolean addElemento(Area area, Elemento tipo, String imagem) { // tem de ser feito com factory
         return switch (tipo) {
-            case INANIMADO -> new Pedra(area, tipo, x, y);
-            case FAUNA -> new Animal(area, tipo, x, y);
-            case FLORA -> new Erva(area, tipo, imagem, x, y);
+            case INANIMADO -> elementos.add(new Pedra(area, tipo));
+            case FAUNA -> elementos.add(new Animal(area, tipo));
+            case FLORA -> elementos.add(new Erva(area, tipo, imagem));
         };
     }
 
