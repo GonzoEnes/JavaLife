@@ -29,23 +29,33 @@ public class EcossistemaUI extends BorderPane {
 
     public void createViews() {
         Set<IElemento> elementos = manager.getElementos();
-
         this.board = new GridPane();
-        this.board.setMaxHeight(manager.getAltura());
-        this.board.setMaxWidth(manager.getLargura());
         this.setCenter(board);
 
-        int cellWidth = (int)getWidth() / manager.getLargura(); // ir buscar o tamanho de cada cell
-        int cellHeight = (int)getHeight() / manager.getAltura(); // e a altura
+        /*// Get the dimensions of the ecosystem
+        int ecosystemWidth = manager.getLargura();
+        int ecosystemHeight = manager.getAltura();
 
-        System.out.println("cellWidth: " + cellWidth + "\n\n" + "cellHeight: " + cellHeight);
+        // Get the dimensions of the screen
+        double screenWidth = this.getWidth();
+        System.out.println(screenWidth);
+        double screenHeight = this.getHeight();
 
+        // Calculate the scaling factors
+        double widthScaleFactor = screenWidth / ecosystemWidth;
+        double heightScaleFactor = screenHeight / ecosystemHeight;
+
+        // Iterate through elements to create and add rectangles to the GridPane
         for (IElemento elemento : elementos) {
+            // Calculate the scaled dimensions of the element
+            double scaledWidth = (elemento.getArea().direita() - elemento.getArea().esquerda()) * widthScaleFactor;
+            double scaledHeight = (elemento.getArea().baixo() - elemento.getArea().cima()) * heightScaleFactor;
+
             Rectangle rect = new Rectangle(
-                    elemento.getArea().esquerda() * cellWidth,
-                    elemento.getArea().cima() * cellHeight,
-                    (elemento.getArea().direita() - elemento.getArea().esquerda()) * cellWidth,
-                    (elemento.getArea().baixo() - elemento.getArea().cima()) * cellHeight
+                    elemento.getArea().esquerda() * widthScaleFactor,
+                    elemento.getArea().cima() * heightScaleFactor,
+                    scaledWidth,
+                    scaledHeight
             );
 
             switch (elemento.getType()) {
@@ -60,7 +70,7 @@ public class EcossistemaUI extends BorderPane {
                     break;
             }
 
-            board.add(rect, (int)elemento.getArea().esquerda(), (int)elemento.getArea().cima());
-        }
+            board.add(rect, (int) (elemento.getArea().esquerda() * widthScaleFactor), (int) (elemento.getArea().cima() * heightScaleFactor));
+        }*/
     }
 }

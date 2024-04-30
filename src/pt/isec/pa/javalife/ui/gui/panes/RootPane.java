@@ -4,10 +4,14 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import pt.isec.pa.javalife.model.data.ecosystem.EcossistemaManager;
 
+import java.util.Stack;
+
 public class RootPane extends BorderPane {
     private EcossistemaManager manager;
     private EcossistemaUI board;
     private StackPane stackPane;
+
+    private MainMenuUI mainMenuUI;
 
     public RootPane(EcossistemaManager manager) {
         this.manager = manager;
@@ -15,8 +19,12 @@ public class RootPane extends BorderPane {
     }
 
     public void createViews() {
-        board = new EcossistemaUI(manager);
+        mainMenuUI = new MainMenuUI(manager);
+        /*board = new EcossistemaUI(manager);
         this.stackPane = new StackPane(board);
+        this.setCenter(stackPane);*/
+
+        this.stackPane = new StackPane(mainMenuUI);
         this.setCenter(stackPane);
     }
 

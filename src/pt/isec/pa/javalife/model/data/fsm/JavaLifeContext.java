@@ -12,7 +12,7 @@ public class JavaLifeContext {
 
     public JavaLifeContext(Ecossistema ecossistema) { // ver isto
         this.ecossistema = ecossistema;
-        this.state = IJavaLifeState.createState(JavaLifeState.MOVIMENTAR, this, ecossistema);
+        this.state = JavaLifeState.createState(JavaLifeState.MOVIMENTAR, this, ecossistema);
     }
 
     public JavaLifeState getState() {
