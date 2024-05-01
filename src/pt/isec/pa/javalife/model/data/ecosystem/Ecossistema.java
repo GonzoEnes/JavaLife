@@ -47,6 +47,10 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
     // LÓGICA
 
     public boolean addElemento(Area area, Elemento tipo, String imagem) { // tem de ser feito com factory
+        if (!isAreaValida(area)) {
+            return false;
+        }
+
         return switch (tipo) {
             case INANIMADO -> elementos.add(new Pedra(area, tipo));
             case FAUNA -> elementos.add(new Animal(area, tipo));
@@ -97,5 +101,10 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
     @Override
     public void evolve(IGameEngine gameEngine, long currentTime) {
         // aqui não sei o que há de ser posto mas deve ser a chamada da evolve() da fsm digo eu idk
+    }
+
+    private boolean isAreaValida(Area area) {
+        return area.cima() >= 0 && area.esquerda() >= 0 &&
+                area.baixo() <= altura && area.direita() <= largura;
     }
 }

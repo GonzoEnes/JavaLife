@@ -2,18 +2,19 @@ package pt.isec.pa.javalife.ui.gui.panes;
 
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 import pt.isec.pa.javalife.model.data.ecosystem.EcossistemaManager;
 
 import java.util.Stack;
 
 public class RootPane extends BorderPane {
     private EcossistemaManager manager;
-    private EcossistemaUI board;
     private StackPane stackPane;
-
+    private Stage stage;
     private MainMenuUI mainMenuUI;
 
-    public RootPane(EcossistemaManager manager) {
+    public RootPane(Stage stage, EcossistemaManager manager) {
+        this.stage = stage;
         this.manager = manager;
         createViews();
         registerHandlers();
@@ -37,7 +38,7 @@ public class RootPane extends BorderPane {
         StackPane stackPane = (StackPane)this.getCenter();
         stackPane.getChildren().clear();
 
-        EcossistemaUI ecossistemaUI = new EcossistemaUI(manager);
+        EcossistemaUI ecossistemaUI = new EcossistemaUI(stage, manager);
         stackPane.getChildren().add(ecossistemaUI);
         ecossistemaUI.requestFocus();
     }

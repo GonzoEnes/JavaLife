@@ -12,7 +12,6 @@ import pt.isec.pa.javalife.model.gameengine.GameEngine;
 import pt.isec.pa.javalife.ui.gui.panes.RootPane;
 
 public class JavaLifeFX extends Application {
-
     private EcossistemaManager manager;
     public static void main(String[] args) {
         launch(args);
@@ -39,8 +38,8 @@ public class JavaLifeFX extends Application {
     }
 
     private void firstStage(Stage stage) {
-        RootPane rootPane = new RootPane(manager);
-        Scene scene = new Scene(rootPane, 1280, 720);
+        RootPane rootPane = new RootPane(stage, manager);
+        Scene scene = new Scene(rootPane, 1440, 1000);
         stage.setScene(scene);
         stage.show();
     } // para propositos de teste, mudar para o menu depois
