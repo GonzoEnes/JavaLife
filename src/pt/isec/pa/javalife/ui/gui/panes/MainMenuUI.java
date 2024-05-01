@@ -49,7 +49,14 @@ public class MainMenuUI extends BorderPane {
     }
 
     public void registerHandlers() {
+        btnStartSimul.setOnAction(actionEvent -> {
+            RootPane rootPane = (RootPane) getScene().getRoot();
+            rootPane.showEcossistemaUI();
+        });
 
+        btnExit.setOnAction(actionEvent -> {
+            System.exit(1);
+        });
     }
 
     public void update() {

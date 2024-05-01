@@ -20,6 +20,7 @@ public class EcossistemaUI extends BorderPane {
         this.manager = manager;
         createViews();
         registerHandlers();
+        update();
         this.requestFocus();
     }
 
@@ -72,5 +73,9 @@ public class EcossistemaUI extends BorderPane {
 
             board.add(rect, (int) (elemento.getArea().esquerda() * widthScaleFactor), (int) (elemento.getArea().cima() * heightScaleFactor));
         }*/
+    }
+
+    public void update() {
+
     }
 }

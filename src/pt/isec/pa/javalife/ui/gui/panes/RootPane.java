@@ -16,6 +16,11 @@ public class RootPane extends BorderPane {
     public RootPane(EcossistemaManager manager) {
         this.manager = manager;
         createViews();
+        registerHandlers();
+    }
+
+    public void registerHandlers() {
+
     }
 
     public void createViews() {
@@ -28,7 +33,7 @@ public class RootPane extends BorderPane {
         this.setCenter(stackPane);
     }
 
-    public void showBoard() {
+    public void showEcossistemaUI() {
         StackPane stackPane = (StackPane)this.getCenter();
         stackPane.getChildren().clear();
 
