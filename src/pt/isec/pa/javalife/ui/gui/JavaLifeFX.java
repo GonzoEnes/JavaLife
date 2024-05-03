@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import pt.isec.pa.javalife.Main;
 import pt.isec.pa.javalife.model.data.area.Area;
 import pt.isec.pa.javalife.model.data.ecosystem.EcossistemaManager;
@@ -20,7 +21,6 @@ public class JavaLifeFX extends Application {
     @Override
     public void init() throws Exception {
         super.init();
-
         manager = Main.manager;
     }
 
@@ -38,8 +38,9 @@ public class JavaLifeFX extends Application {
     }
 
     private void firstStage(Stage stage) {
+        stage.initStyle(StageStyle.UNDECORATED);
         RootPane rootPane = new RootPane(stage, manager);
-        Scene scene = new Scene(rootPane, 1440, 1000);
+        Scene scene = new Scene(rootPane, 1280,720);
         stage.setScene(scene);
         stage.show();
     } // para propositos de teste, mudar para o menu depois

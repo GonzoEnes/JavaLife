@@ -22,7 +22,18 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         this.altura = altura;
         this.largura = largura;
         this.elementos = new HashSet<>();
+        createCerca();
         //this.context = new JavaLifeContext();
+    }
+
+    public void createCerca() {
+        for (int i = 0; i < altura; i++) {
+            for (int j = 0; j < largura; j++) {
+                if (i == 0 || i == altura - 1 || j == 0 || j == largura - 1) {
+                    elementos.add(new Pedra(new Area(i, j, i + 1, j + 1), Elemento.INANIMADO));
+                }
+            }
+        }
     }
 
     // GETTERS & SETTERS
@@ -101,6 +112,7 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
     @Override
     public void evolve(IGameEngine gameEngine, long currentTime) {
         // aqui não sei o que há de ser posto mas deve ser a chamada da evolve() da fsm digo eu idk
+
     }
 
     private boolean isAreaValida(Area area) {

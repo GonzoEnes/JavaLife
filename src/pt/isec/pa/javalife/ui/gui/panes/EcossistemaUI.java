@@ -1,12 +1,11 @@
 package pt.isec.pa.javalife.ui.gui.panes;
 
 import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
@@ -26,8 +25,6 @@ public class EcossistemaUI extends BorderPane {
     public EcossistemaUI(Stage stage, EcossistemaManager manager) {
         this.stage = stage;
         this.manager = manager;
-        this.setHeight(stage.getHeight());
-        this.setWidth(manager.getLargura());
         createViews();
         registerHandlers();
         update();
@@ -40,49 +37,32 @@ public class EcossistemaUI extends BorderPane {
     }
 
     public void createViews() {
-        Set<IElemento> elementos = manager.getElementos();
         this.board = new GridPane();
+        this.board.setStyle("-fx-background-color: black");
         this.setCenter(board);
-
-            /*switch (elemento.getType()) {
-                case FAUNA:
-                    rect.setFill(Color.BLACK);
-                    break;
-                case INANIMADO:
-                    rect.setFill(Color.BLUE);
-                    break;
-                case FLORA:
-                    rect.setFill(Color.VIOLET);
-                    break;
-            }
-
-            board.add(rect, (int) (elemento.getArea().esquerda() * widthScaleFactor), (int) (elemento.getArea().cima() * heightScaleFactor));
-        }*/
+        //setAlignment(board, Pos.CENTER);
     }
 
     public void update() {
         board.getChildren().clear();
         Set<IElemento> elementos = manager.getElementos();
 
-        double cellWidth = stage.getWidth() / manager.getLargura();
-        for (IElemento elemento : elementos) {
-            Area area = elemento.getArea();
-            int columnIndex = (int)area.esquerda() * (int)cellWidth;//(int) (area.esquerda() * (stage.getWidth() / manager.getLargura())); // Usar stage.getWidth() em vez de stage.getHeight()
-            int rowIndex = (int)area.cima();//(int) (area.cima() * (stage.getHeight())); // Manter o uso de stage.getHeight() aqui
-            System.out.println("\n" + columnIndex + "\n" + rowIndex);
-            ImageView imageView = createImageView(elemento);
-            System.out.println("OLA " + imageView.getFitHeight());
-            System.out.println("OLA 2" + imageView.getFitWidth());
+        double widthScaleFactor = stage.getWidth() / manager.getLargura();
+        double heightScaleFactor = stage.getHeight() / manager.getAltura();
 
-            board.add(imageView, columnIndex, rowIndex);
+        for (IElemento elemento : elementos) {
+            ImageView imageView = createImageView(elemento, widthScaleFactor, heightScaleFactor);
+            board.add(imageView, (int) elemento.getArea().esquerda(), (int) elemento.getArea().cima());
         }
     }
-
-    private ImageView createImageView(IElemento elemento) {
+    private ImageView createImageView(IElemento elemento, double widthScaleFactor, double heightScaleFactor) {
+        Area area = elemento.getArea();
+        double larg = (area.direita() - area.esquerda()) * widthScaleFactor;
+        double alt = (area.baixo() - area.cima()) * heightScaleFactor;
         Image image = getElementImage(elemento);
         ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(board.getWidth() / manager.getLargura());
-        imageView.setFitHeight(board.getWidth() / manager.getLargura());
+        imageView.setFitWidth(larg);
+        imageView.setFitHeight(alt);
         return imageView;
     }
 
