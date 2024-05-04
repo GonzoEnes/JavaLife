@@ -40,7 +40,7 @@ public class JavaLifeFX extends Application {
     private void firstStage(Stage stage) {
         stage.initStyle(StageStyle.UNDECORATED);
         RootPane rootPane = new RootPane(stage, manager);
-        Scene scene = new Scene(rootPane, 1280,720);
+        Scene scene = new Scene(rootPane, 600,500);
         stage.setScene(scene);
         stage.show();
     } // para propositos de teste, mudar para o menu depois

@@ -17,8 +17,8 @@ public class EcossistemaManager {
     // falta aqui depois o CmdManager e o PropertyChangeSupport (para a sinalização dos clientes) quando fizermos a GUI
 
     public EcossistemaManager(long timeInMillis) {
-        this.ecossistema = new Ecossistema(20, 20);
-        this.ecossistema.addElemento(new Area(10, 10, 15, 13), Elemento.FAUNA, null);
+        this.ecossistema = new Ecossistema(70, 40);
+        //this.ecossistema.addElemento(new Area(10, 10, 15, 13), Elemento.FAUNA, null);
         //this.ecossistema.addElemento(new Area(300, 300, 70, 400), Elemento.FLORA, null);
         //this.ecossistema.addElemento(new Area(100, 30, 20, 50), Elemento.INANIMADO, null);
         //this.ecossistema.addElemento(new Area(400, 300, 100, 400), Elemento.FAUNA, null);

@@ -47,24 +47,66 @@ public class EcossistemaUI extends BorderPane {
         board.getChildren().clear();
         Set<IElemento> elementos = manager.getElementos();
 
-        double widthScaleFactor = stage.getWidth() / manager.getLargura();
-        double heightScaleFactor = stage.getHeight() / manager.getAltura();
+        // Definir as dimensões do ecossistema e da tela
+        double ecoWidth = manager.getLargura(); // largura do ecossistema
+        double ecoHeight = manager.getAltura(); // altura do ecossistema
+        double screenWidth = stage.getWidth(); // largura do ecrã
+        double screenHeight = stage.getHeight(); // altura do ecrã
+
+        if (ecoWidth == 0 || ecoHeight == 0 || screenWidth == 0 || screenHeight == 0) {
+            System.out.println("One of the dimensions is zero");
+            return;
+        }
 
         for (IElemento elemento : elementos) {
-            ImageView imageView = createImageView(elemento, widthScaleFactor, heightScaleFactor);
-            board.add(imageView, (int) elemento.getArea().esquerda(), (int) elemento.getArea().cima());
+            double eleX = elemento.getArea().esquerda();
+            double eleY = elemento.getArea().cima();
+
+            double widthScale = screenWidth / ecoWidth;
+            double heightScale = screenHeight / ecoHeight;
+
+            double posX = eleX * widthScale;
+            double posY = eleY * heightScale;
+
+            if (posX < 0 || posX >= screenWidth || posY < 0 || posY >= screenHeight) {
+                System.out.println("Image is being added outside the GridPane");
+                continue;
+            }
+
+            double larg = (elemento.getArea().direita() - elemento.getArea().esquerda()) * widthScale;
+            double alt = (elemento.getArea().cima() - elemento.getArea().baixo()) * heightScale;
+
+            ImageView imageView = createImageView(elemento, larg, alt);
+            if (imageView.getImage() == null) {
+                System.out.println("Image is not being loaded correctly");
+                continue;
+            }
+
+            board.add(imageView, (int)Math.ceil(posX), (int)Math.ceil(posY));
         }
     }
-    private ImageView createImageView(IElemento elemento, double widthScaleFactor, double heightScaleFactor) {
-        Area area = elemento.getArea();
-        double larg = (area.direita() - area.esquerda()) * widthScaleFactor;
-        double alt = (area.baixo() - area.cima()) * heightScaleFactor;
+    /*private double[] calculateElementDimensions(IElemento elemento, double scaleFactor) {
+        // Coordenadas do canto superior esquerdo do elemento no ecossistema
+        double eleX = (elemento.getArea().direita() - elemento.getArea().esquerda()) / 2.0;
+        double eleY = (elemento.getArea().cima() - elemento.getArea().baixo()) / 2.0;
+
+        // Aplica o fator de escala às coordenadas e dimensões
+        double posX = eleX * scaleFactor;
+        double posY = eleY * scaleFactor;
+        double larg = (elemento.getArea().direita() - elemento.getArea().esquerda()) * scaleFactor;
+        double alt = (elemento.getArea().cima() - elemento.getArea().baixo()) * scaleFactor;
+
+        return new double[]{larg, alt, posX, posY};
+    }*/
+
+    private ImageView createImageView(IElemento elemento, double larg, double alt) {
         Image image = getElementImage(elemento);
         ImageView imageView = new ImageView(image);
         imageView.setFitWidth(larg);
         imageView.setFitHeight(alt);
         return imageView;
     }
+
 
     private Image getElementImage(IElemento element) {
         switch (element.getType()) {

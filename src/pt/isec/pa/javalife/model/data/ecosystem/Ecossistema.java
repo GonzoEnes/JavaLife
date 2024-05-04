@@ -30,7 +30,7 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         for (int i = 0; i < altura; i++) {
             for (int j = 0; j < largura; j++) {
                 if (i == 0 || i == altura - 1 || j == 0 || j == largura - 1) {
-                    elementos.add(new Pedra(new Area(i, j, i + 1, j + 1), Elemento.INANIMADO));
+                    elementos.add(new Pedra(new Area(i+1, j, i, j + 1), Elemento.INANIMADO));
                 }
             }
         }
