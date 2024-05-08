@@ -40,70 +40,43 @@ public class EcossistemaUI extends BorderPane {
         this.board = new GridPane();
         this.board.setStyle("-fx-background-color: black");
         this.setCenter(board);
-        //setAlignment(board, Pos.CENTER);
     }
 
     public void update() {
         board.getChildren().clear();
         Set<IElemento> elementos = manager.getElementos();
-
-        // Definir as dimensões do ecossistema e da tela
-        double ecoWidth = manager.getLargura(); // largura do ecossistema
-        double ecoHeight = manager.getAltura(); // altura do ecossistema
-        double screenWidth = stage.getWidth(); // largura do ecrã
-        double screenHeight = stage.getHeight(); // altura do ecrã
-
-        if (ecoWidth == 0 || ecoHeight == 0 || screenWidth == 0 || screenHeight == 0) {
-            System.out.println("One of the dimensions is zero");
-            return;
-        }
+        double ecoHeight = manager.getAltura();
+        double ecoWidth = manager.getLargura();
+        double screenHeight = stage.getHeight();
+        double screenWidth = stage.getWidth();
 
         for (IElemento elemento : elementos) {
-            double eleX = elemento.getArea().esquerda();
-            double eleY = elemento.getArea().cima();
+            Area area = elemento.getArea();
 
-            double widthScale = screenWidth / ecoWidth;
-            double heightScale = screenHeight / ecoHeight;
+            double eleX = (area.esquerda() + area.direita()) / 2.0;
+            double eleY = (area.cima() + area.baixo()) / 2.0;
+
+            double heightScale = (screenHeight > ecoHeight) ? screenHeight / ecoHeight : ecoHeight / screenHeight;
+            double widthScale = (screenWidth > ecoWidth) ? screenWidth / ecoWidth : ecoWidth / screenWidth;
 
             double posX = eleX * widthScale;
             double posY = eleY * heightScale;
 
-            if (posX < 0 || posX >= screenWidth || posY < 0 || posY >= screenHeight) {
-                System.out.println("Image is being added outside the GridPane");
-                continue;
+            if (posX > screenWidth || posY > screenHeight) {
+                System.out.println("FORA DO PANE\n");
             }
 
-            double larg = (elemento.getArea().direita() - elemento.getArea().esquerda()) * widthScale;
-            double alt = (elemento.getArea().cima() - elemento.getArea().baixo()) * heightScale;
-
-            ImageView imageView = createImageView(elemento, larg, alt);
-            if (imageView.getImage() == null) {
-                System.out.println("Image is not being loaded correctly");
-                continue;
-            }
-
-            board.add(imageView, (int)Math.ceil(posX), (int)Math.ceil(posY));
+            System.out.println("posX: " + posX + " posY: " + posY + " screenWidth: " + screenWidth + " screenHeight: " + screenHeight + " ecoWidth: " + ecoWidth + " ecoHeight: " + ecoHeight + " widthScale: " + widthScale + " heightScale: " + heightScale);
+            ImageView imageView = createImageView(elemento, heightScale, widthScale);
+            board.add(imageView, (int)posX, (int)posY);
         }
     }
-    /*private double[] calculateElementDimensions(IElemento elemento, double scaleFactor) {
-        // Coordenadas do canto superior esquerdo do elemento no ecossistema
-        double eleX = (elemento.getArea().direita() - elemento.getArea().esquerda()) / 2.0;
-        double eleY = (elemento.getArea().cima() - elemento.getArea().baixo()) / 2.0;
 
-        // Aplica o fator de escala às coordenadas e dimensões
-        double posX = eleX * scaleFactor;
-        double posY = eleY * scaleFactor;
-        double larg = (elemento.getArea().direita() - elemento.getArea().esquerda()) * scaleFactor;
-        double alt = (elemento.getArea().cima() - elemento.getArea().baixo()) * scaleFactor;
-
-        return new double[]{larg, alt, posX, posY};
-    }*/
-
-    private ImageView createImageView(IElemento elemento, double larg, double alt) {
+    private ImageView createImageView(IElemento elemento, double heightScale, double widthScale) {
         Image image = getElementImage(elemento);
         ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(larg);
-        imageView.setFitHeight(alt);
+        imageView.setFitWidth(widthScale);
+        imageView.setFitHeight(heightScale);
         return imageView;
     }
 
