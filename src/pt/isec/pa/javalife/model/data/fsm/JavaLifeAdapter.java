@@ -6,16 +6,16 @@ import pt.isec.pa.javalife.model.data.fsm.states.IJavaLifeState;
 
 public abstract class JavaLifeAdapter implements IJavaLifeState {
     private Ecossistema ecossistema;
-    private Fauna fauna;
-    public JavaLifeAdapter(Fauna fauna, Ecossistema ecossistema) {
-        this.fauna = fauna;
+    private JavaLifeContext context;
+    public JavaLifeAdapter(JavaLifeContext context, Ecossistema ecossistema) {
+        this.context = context;
         this.ecossistema= ecossistema;
     }
 
     public void changeState(JavaLifeState state) {
-        fauna.setFaunaState(JavaLifeState.createState(state, fauna, ecossistema));
+        context.changeState(JavaLifeState.createState(state, context, ecossistema));
     }
 
     @Override
-    public abstract boolean evolve();
+    public abstract boolean evolve() throws InterruptedException;
 }

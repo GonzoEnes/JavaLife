@@ -7,8 +7,8 @@ import pt.isec.pa.javalife.model.data.fsm.JavaLifeContext;
 import pt.isec.pa.javalife.model.data.fsm.JavaLifeState;
 
 public class ProcurarComidaState extends JavaLifeAdapter {
-    public ProcurarComidaState(Fauna fauna, Ecossistema ecossistema) {
-        super(fauna, ecossistema);
+    public ProcurarComidaState(JavaLifeContext context, Ecossistema ecossistema) {
+        super(context, ecossistema);
     }
 
     @Override

@@ -3,7 +3,9 @@ package pt.isec.pa.javalife.model.data.ecosystem;
 import pt.isec.pa.javalife.model.data.area.Area;
 import pt.isec.pa.javalife.model.data.ecosystem.Ecossistema;
 import pt.isec.pa.javalife.model.data.elements.Elemento;
+import pt.isec.pa.javalife.model.data.elements.Fauna;
 import pt.isec.pa.javalife.model.data.elements.IElemento;
+import pt.isec.pa.javalife.model.data.fsm.JavaLifeContext;
 import pt.isec.pa.javalife.model.gameengine.interfaces.IGameEngine;
 
 import java.util.ArrayList;
@@ -12,24 +14,27 @@ import java.util.Set;
 // esta classe vai servir como Facade do Ecossistema para que as outras classes não consigam manipular o Ecossistema diretamente
 public class EcossistemaManager {
     private Ecossistema ecossistema;
+    private JavaLifeContext context;
     private long timeInMillis;
 
     // falta aqui depois o CmdManager e o PropertyChangeSupport (para a sinalização dos clientes) quando fizermos a GUI
 
-    public EcossistemaManager(long timeInMillis) {
+    public EcossistemaManager(long timeInMillis) throws InterruptedException {
+
         this.ecossistema = new Ecossistema(50, 50);
         //this.ecossistema.addElemento(new Area(0, 1, 1, 1), Elemento.FAUNA, null);
         //this.ecossistema.addElemento(new Area(300, 300, 70, 400), Elemento.FLORA, null);
         //this.ecossistema.addElemento(new Area(30, 10, 20, 20), Elemento.INANIMADO, null);
-        //this.ecossistema.addElemento(new Area(400, 300, 100, 400), Elemento.FAUNA, null);
+        this.ecossistema.addElemento(new Area(400, 300, 100, 400), Elemento.FAUNA, null);
         //this.ecossistema.addElemento(new Area(100, 300, 70, 400), Elemento.FAUNA, null);
         this.timeInMillis = timeInMillis;
+
     }
 
-    public boolean addElemento(Area area, Elemento tipo, String imagem) {
+    public boolean addElemento(Area area, Elemento tipo, String imagem) throws InterruptedException {
         return ecossistema.addElemento(area, tipo, imagem);
     }
-
+    public JavaLifeContext getFsm(){return context;}
     public boolean removeElemento(Elemento tipo, int id) {
         return ecossistema.removeElemento(tipo, id);
     }

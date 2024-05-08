@@ -14,7 +14,7 @@ public class CommandManager {
         this.undo = new ArrayDeque<>();
     }
 
-    public boolean undo() {
+    public boolean undo() throws InterruptedException {
         if (undo.isEmpty())
             return false;
         ICommand command = undo.pop();
@@ -23,7 +23,7 @@ public class CommandManager {
         return true;
     }
 
-    public boolean redo() {
+    public boolean redo() throws InterruptedException {
         if (redo.isEmpty())
             return false;
         ICommand command = redo.pop();

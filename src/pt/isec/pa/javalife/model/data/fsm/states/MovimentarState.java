@@ -6,9 +6,11 @@ import pt.isec.pa.javalife.model.data.fsm.JavaLifeAdapter;
 import pt.isec.pa.javalife.model.data.fsm.JavaLifeContext;
 import pt.isec.pa.javalife.model.data.fsm.JavaLifeState;
 
+import static java.lang.Thread.sleep;
+
 public class MovimentarState extends JavaLifeAdapter {
-    public MovimentarState(Fauna fauna, Ecossistema ecossistema) {
-        super(fauna,ecossistema);
+    public MovimentarState(JavaLifeContext context, Ecossistema ecossistema) {
+        super(context,ecossistema);
     }
 
     @Override
@@ -17,7 +19,10 @@ public class MovimentarState extends JavaLifeAdapter {
     }
 
     @Override
-    public boolean evolve() {
-        return false;
+    public boolean evolve() throws InterruptedException {
+        sleep(5000);
+        changeState(JavaLifeState.MORRER);
+        System.out.println(getState());
+        return true;
     }
 }

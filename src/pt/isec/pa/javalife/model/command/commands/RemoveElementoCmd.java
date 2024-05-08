@@ -19,7 +19,7 @@ public class RemoveElementoCmd extends CommandAdapter {
     }
 
     @Override
-    public boolean undo() {
+    public boolean undo() throws InterruptedException {
         manager.addElemento(area, tipo, imagem);
         return true;
     }

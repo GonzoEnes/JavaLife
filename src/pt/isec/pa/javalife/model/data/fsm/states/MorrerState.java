@@ -7,8 +7,8 @@ import pt.isec.pa.javalife.model.data.fsm.JavaLifeContext;
 import pt.isec.pa.javalife.model.data.fsm.JavaLifeState;
 
 public class MorrerState extends JavaLifeAdapter {
-    public MorrerState(Fauna fauna, Ecossistema ecossistema) {
-        super(fauna, ecossistema);
+    public MorrerState(JavaLifeContext context, Ecossistema ecossistema) {
+        super(context, ecossistema);
     }
 
     @Override

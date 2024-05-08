@@ -56,7 +56,7 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
     }
 
     // LÓGICA
-    public boolean addElemento(Area area, Elemento tipo, String imagem) { // tem de ser feito com factory
+    public boolean addElemento(Area area, Elemento tipo, String imagem) throws InterruptedException { // tem de ser feito com factory
         if (!isAreaValida(area)) {
             return false;
         }

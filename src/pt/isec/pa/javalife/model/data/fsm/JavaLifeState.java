@@ -10,12 +10,12 @@ public enum JavaLifeState {
 
     PROCURAR_COMIDA, MOVIMENTAR, REPRODUZIR, MORRER;
 
-    static IJavaLifeState createState(JavaLifeState type, Fauna fauna, Ecossistema ecossistema) { // factory de objetos
+    static IJavaLifeState createState(JavaLifeState type, JavaLifeContext context, Ecossistema ecossistema) { // factory de objetos
         return switch (type) {
-            case PROCURAR_COMIDA -> new ProcurarComidaState(fauna,ecossistema);
-            case MORRER -> new MorrerState(fauna, ecossistema);
-            case REPRODUZIR -> new ReproduzirState(fauna, ecossistema);
-            case MOVIMENTAR -> new MovimentarState(fauna, ecossistema);
+            case PROCURAR_COMIDA -> new ProcurarComidaState(context,ecossistema);
+            case MORRER -> new MorrerState(context, ecossistema);
+            case REPRODUZIR -> new ReproduzirState(context, ecossistema);
+            case MOVIMENTAR -> new MovimentarState(context, ecossistema);
         };
     }
 }

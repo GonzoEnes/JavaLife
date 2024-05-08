@@ -10,12 +10,12 @@ public class CommandAdapter implements ICommand {
         this.manager = manager;
     }
     @Override
-    public boolean undo() {
+    public boolean undo() throws InterruptedException {
         return false;
     }
 
     @Override
-    public boolean execute() {
+    public boolean execute() throws InterruptedException {
         return false;
     }
 }

@@ -7,8 +7,8 @@ import pt.isec.pa.javalife.model.data.fsm.JavaLifeContext;
 import pt.isec.pa.javalife.model.data.fsm.JavaLifeState;
 
 public class ReproduzirState extends JavaLifeAdapter {
-    public ReproduzirState(Fauna fauna, Ecossistema ecossistema) {
-        super(fauna, ecossistema);
+    public ReproduzirState(JavaLifeContext context, Ecossistema ecossistema) {
+        super(context, ecossistema);
     }
 
     @Override

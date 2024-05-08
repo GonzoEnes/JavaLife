@@ -1,7 +1,7 @@
 package pt.isec.pa.javalife.model.command;
 
 public interface ICommand {
-    boolean undo();
+    boolean undo() throws InterruptedException;
 
-    boolean execute();
+    boolean execute() throws InterruptedException;
 }

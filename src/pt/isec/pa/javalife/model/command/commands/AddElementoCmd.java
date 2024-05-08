@@ -25,7 +25,7 @@ public class AddElementoCmd extends CommandAdapter {
     }
 
     @Override
-    public boolean execute() {
+    public boolean execute() throws InterruptedException {
         manager.addElemento(area, tipo, imagem);
         return true;
     }

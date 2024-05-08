@@ -7,7 +7,7 @@ import pt.isec.pa.javalife.model.data.fsm.JavaLifeState;
 public interface IJavaLifeState {
    JavaLifeState getState();
 
-   boolean evolve();
+   boolean evolve() throws InterruptedException;
 
    // meter funções de transição de estados
 
