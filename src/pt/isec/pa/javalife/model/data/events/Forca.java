@@ -1,7 +1,6 @@
 package pt.isec.pa.javalife.model.data.events;
 
 import pt.isec.pa.javalife.model.data.ecosystem.Ecossistema;
-import pt.isec.pa.javalife.model.data.elements.Animal;
 import pt.isec.pa.javalife.model.data.elements.IElemento;
 
 public final class Forca extends EventoBase implements IEvento{

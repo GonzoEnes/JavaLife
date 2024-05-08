@@ -8,20 +8,21 @@ import java.util.Set;
 
 public class JavaLifeContext {
     private Ecossistema ecossistema;
-    private IJavaLifeState state;
+  //  private IJavaLifeState state;
 
     public JavaLifeContext(Ecossistema ecossistema) { // ver isto
         this.ecossistema = ecossistema;
-        this.state = JavaLifeState.createState(JavaLifeState.MOVIMENTAR, this, ecossistema);
+       // this.state = JavaLifeState.createState(JavaLifeState.MOVIMENTAR, this, ecossistema);
     }
 
-    public JavaLifeState getState() {
-        return state.getState();
-    }
+    //TUDO COISO CORRIGIR
+  //  public JavaLifeState getState() {
+      //  return state.getState();
+   // }
 
-    void changeState(IJavaLifeState state) {
-        this.state = state;
-    }
+   // void changeState(IJavaLifeState state) {
+       // this.state = state;
+   // }
 
     public Set<IElemento> getElements() {
         return ecossistema.getElementos();

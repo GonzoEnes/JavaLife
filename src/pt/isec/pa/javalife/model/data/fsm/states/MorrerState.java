@@ -1,13 +1,14 @@
 package pt.isec.pa.javalife.model.data.fsm.states;
 
 import pt.isec.pa.javalife.model.data.ecosystem.Ecossistema;
+import pt.isec.pa.javalife.model.data.elements.Fauna;
 import pt.isec.pa.javalife.model.data.fsm.JavaLifeAdapter;
 import pt.isec.pa.javalife.model.data.fsm.JavaLifeContext;
 import pt.isec.pa.javalife.model.data.fsm.JavaLifeState;
 
 public class MorrerState extends JavaLifeAdapter {
-    public MorrerState(JavaLifeContext context, Ecossistema ecossistema) {
-        super(context, ecossistema);
+    public MorrerState(Fauna fauna, Ecossistema ecossistema) {
+        super(fauna, ecossistema);
     }
 
     @Override

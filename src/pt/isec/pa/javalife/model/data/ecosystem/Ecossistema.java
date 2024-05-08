@@ -30,7 +30,7 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         for (int i = 0; i < altura; i++) {
             for (int j = 0; j < largura; j++) {
                 if (i == 0 || i == altura - 1 || j == 0 || j == largura - 1) {
-                    elementos.add(new Pedra(new Area(i+1, j, i, j + 1), Elemento.INANIMADO));
+                    elementos.add(new Inanimado(new Area(i+1, j, i, j + 1), Elemento.INANIMADO));
                 }
             }
         }
@@ -62,9 +62,9 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         }
 
         return switch (tipo) {
-            case INANIMADO -> elementos.add(new Pedra(area, tipo));
-            case FAUNA -> elementos.add(new Animal(area, tipo));
-            case FLORA -> elementos.add(new Erva(area, tipo, imagem));
+            case INANIMADO -> elementos.add(new Inanimado(area, tipo));
+            case FAUNA -> elementos.add(new Fauna(area, tipo,this));
+            case FLORA -> elementos.add(new Flora(area, tipo, imagem));
         };
     }
 
@@ -90,15 +90,15 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
                 switch (tipo) {
                     case FAUNA -> {
                         //parametrosOld.add(Double.toString(((Animal)elemento).getForca()));
-                        ((Animal)elemento).setForca(Double.parseDouble(parametros.get(0)));
+                        ((Fauna)elemento).setForca(Double.parseDouble(parametros.get(0)));
                         return true;
                     }
                     case FLORA -> { // a flora pode editar a força ou a imagem dela acho eu
                         //parametrosOld.add(Double.toString(((Erva)elemento).getForca()));
-                        ((Erva)elemento).setForca(Double.parseDouble(parametros.get(0)));
+                        ((Flora)elemento).setForca(Double.parseDouble(parametros.get(0)));
                         if (!parametros.get(1).isBlank()) { // se o campo da edição de imagem estiver vazio não vale a pena meter nada
                             //parametrosOld.add(((Erva)elemento).getImagem());
-                            ((Erva)elemento).setImagem("files/" + parametros.get(1));
+                            ((Flora)elemento).setImagem("files/" + parametros.get(1));
                         }
                         return true; // devolver os parâmetros antigos para se dar undo() no editar
                     }

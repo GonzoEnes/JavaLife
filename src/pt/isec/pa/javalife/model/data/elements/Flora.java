@@ -2,7 +2,7 @@ package pt.isec.pa.javalife.model.data.elements;
 
 import pt.isec.pa.javalife.model.data.area.Area;
 
-public sealed class Flora extends ElementoBase implements IElementoComForca, IElementoComImagem permits Erva {
+public final class Flora extends ElementoBase implements IElementoComForca, IElementoComImagem {
     private double forca;
     private String imagem;
     private static int idS = 0;

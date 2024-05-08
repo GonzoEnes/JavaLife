@@ -1,14 +1,30 @@
 package pt.isec.pa.javalife.model.data.elements;
 
 import pt.isec.pa.javalife.model.data.area.Area;
+import pt.isec.pa.javalife.model.data.ecosystem.Ecossistema;
+import pt.isec.pa.javalife.model.data.fsm.states.IJavaLifeState;
+import pt.isec.pa.javalife.model.data.fsm.states.MovimentarState;
 
-public sealed class Fauna extends ElementoBase implements IElementoComForca permits Animal {
+public final class Fauna extends ElementoBase implements IElementoComForca {
     private double forca;
     private static int idS = 0;
 
-    public Fauna(Area area, Elemento tipo) {
+    private Ecossistema ecossistema;
+    private IJavaLifeState faunaState;
+
+    public Fauna(Area area, Elemento tipo, Ecossistema ecossistema) {
         super(++idS, area, tipo);
         this.forca = 50;
+        this.ecossistema = ecossistema;
+        this.faunaState = new MovimentarState(this,ecossistema);
+    }
+    
+    public IJavaLifeState getFaunaState() {
+        return faunaState;
+    }
+
+    public void setFaunaState(IJavaLifeState faunaState) {
+        this.faunaState = faunaState;
     }
 
     @Override
