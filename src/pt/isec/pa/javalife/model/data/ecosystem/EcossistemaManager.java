@@ -26,15 +26,15 @@ public class EcossistemaManager {
         //this.ecossistema.addElemento(new Area(30, 10, 20, 20), Elemento.INANIMADO, null);
         IElemento elemento = new Fauna(new Area(10,10,10,10), Elemento.FAUNA);
         this.ecossistema.addElemento(elemento);
+        //IElemento elemento = new Fauna(new Area(10,10,10,10), Elemento.FAUNA, ecossistema);
+        //this.ecossistema.addElemento(elemento);
         //this.ecossistema.addElemento(new Area(100, 300, 70, 400), Elemento.FAUNA, null);
         this.timeInMillis = timeInMillis;
     }
 
     public boolean addElemento(IElemento elemento) throws InterruptedException {
-        if (elemento.getType() == Elemento.FAUNA) {
-            this.context = new JavaLifeContext((Fauna)elemento);
-        }
-        return ecossistema.addElemento(elemento);
+        //elemento = new Fauna(new Area(10,10,10,10), Elemento.FAUNA, ecossistema);
+        return this.ecossistema.addElemento(elemento);
     }
     public JavaLifeContext getFsm() {return context;}
     public boolean removeElemento(IElemento elemento) {

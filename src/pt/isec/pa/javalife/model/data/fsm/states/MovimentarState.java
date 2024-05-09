@@ -21,17 +21,15 @@ public class MovimentarState extends JavaLifeAdapter {
         /*sleep(1000);
         changeState(JavaLifeState.MORRER);*/
         fauna.setForca(fauna.getForca()-1);
-        if (fauna.getForca()==0){
+        if (fauna.getForca() == 0){
             changeState(JavaLifeState.MORRER);
         }
 
         if(fauna.getForca()<35){
             changeState(JavaLifeState.PROCURAR_COMIDA);
         }
-        if(fauna.getForca()<70 && fauna.getForca()>55){
-
+        if(fauna.getForca() < 70 && fauna.getForca() > 55){
             changeState(JavaLifeState.REPRODUZIR);
-
         }
         //System.out.println("OLA ESTADO " + getState());
         return true;

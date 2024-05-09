@@ -16,14 +16,12 @@ import static pt.isec.pa.javalife.model.data.fsm.JavaLifeState.*;
 
 public class TextUI {
     private EcossistemaManager manager;
-
-
     public TextUI(EcossistemaManager manager) { // está a correr sem dar erro, falta testar as funções :))))
         this.manager = manager;
     }
 
-
     public boolean start() throws InterruptedException {
+        //manager.addElemento(new Fauna(new Area(10,10,10,10), Elemento.FAUNA, null));
         movimentar();
         return false;
     }
@@ -48,7 +46,7 @@ public class TextUI {
     public boolean movimentar() throws InterruptedException {
         //System.out.printf("\nWSexo %s\n",manager.getFsm().getState());
         //int choice = PAInput.chooseOption("Sexo", "Estado Procurar Comida", "Estado Reproduzir", "Estado Morrer", "Stop machine");
-        ArrayList<Fauna> a= new ArrayList<>();
+        ArrayList<Fauna> a = new ArrayList<>();
         Fauna elemento = new Fauna(new Area(10,10,10,10), Elemento.FAUNA);
         Fauna elemento1 = new Fauna(new Area(10,10,10,10), Elemento.FAUNA);
         Fauna elemento2 = new Fauna(new Area(10,10,10,10), Elemento.FAUNA);
@@ -56,7 +54,7 @@ public class TextUI {
         a.add(elemento1);
         a.add(elemento2);
 
-        for(int i =0; i<100 ;i++){
+        for(int i = 0; i < 100 ;i++){
             for (Fauna o : a) {
                 System.out.println(o.toString());
                 System.out.println(o.getState());
@@ -108,5 +106,4 @@ public class TextUI {
         }
         return false;
     }
-
 }

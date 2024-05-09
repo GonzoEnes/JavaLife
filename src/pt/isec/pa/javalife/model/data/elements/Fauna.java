@@ -17,15 +17,10 @@ public final class Fauna extends ElementoBase implements IElementoComForca {
     public Fauna(Area area, Elemento tipo) throws InterruptedException {
         super(++idS, area, tipo);
         this.forca = 50;
-        this.ecossistema = ecossistema;
-        this.initStateMachine();
-    }
-
-    private void initStateMachine() throws InterruptedException {
-        // Criar o contexto da máquina de estados
         this.context = new JavaLifeContext(this);
         // Evoluir o estado inicial
         //context.evolve();
+        this.context.evolve();
     }
 
     @Override

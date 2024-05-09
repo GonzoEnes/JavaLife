@@ -27,6 +27,9 @@ public class JavaLifeContext {
     public boolean evolve(/*GameEngine gameEngine, long currentTime*/) throws InterruptedException {
 
        /* if(getState() == JavaLifeState.MOVIMENTAR){
+=======
+        if(getState() == JavaLifeState.MOVIMENTAR){
+>>>>>>> Stashed changes
             state.evolve();
             return true;
         }*/
