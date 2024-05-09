@@ -104,7 +104,7 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
     @Override
     public void evolve(IGameEngine gameEngine, long currentTime) {
         // aqui não sei o que há de ser posto mas deve ser a chamada da evolve() da fsm digo eu idk
-
+        //provavelmente evolve com fauna
     }
 
     private boolean isAreaValida(Area area) {

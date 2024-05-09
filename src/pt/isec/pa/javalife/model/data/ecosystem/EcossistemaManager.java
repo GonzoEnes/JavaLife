@@ -1,7 +1,6 @@
 package pt.isec.pa.javalife.model.data.ecosystem;
 
 import pt.isec.pa.javalife.model.data.area.Area;
-import pt.isec.pa.javalife.model.data.ecosystem.Ecossistema;
 import pt.isec.pa.javalife.model.data.elements.Elemento;
 import pt.isec.pa.javalife.model.data.elements.Fauna;
 import pt.isec.pa.javalife.model.data.elements.IElemento;
@@ -49,8 +48,8 @@ public class EcossistemaManager {
         return ecossistema.getElementos();
     }
 
-    public void evolve(IGameEngine gameEngine, long currentTime) {
-        ecossistema.evolve(gameEngine, currentTime);
+    public void evolve() throws InterruptedException {
+        getFsm().evolve();
     }
 
     public long getTimeInMillis() {
@@ -67,5 +66,12 @@ public class EcossistemaManager {
 
     public int getAltura() {
         return ecossistema.getAltura();
+    }
+
+    public void evolve (IGameEngine gameEngine, long currentTime) throws InterruptedException {
+
+         getFsm().evolve();
+         getFsm().evolve(gameEngine, currentTime);
+
     }
 }

@@ -5,6 +5,8 @@ import pt.isec.pa.javalife.model.data.elements.Fauna;
 import pt.isec.pa.javalife.model.data.elements.IElemento;
 import pt.isec.pa.javalife.model.data.fsm.states.IJavaLifeState;
 import pt.isec.pa.javalife.model.data.fsm.states.MovimentarState;
+import pt.isec.pa.javalife.model.gameengine.GameEngine;
+import pt.isec.pa.javalife.model.gameengine.interfaces.IGameEngine;
 
 import java.util.Set;
 
@@ -24,18 +26,17 @@ public class JavaLifeContext {
         this.state = state;
     }
 
-    public boolean evolve(/*GameEngine gameEngine, long currentTime*/) throws InterruptedException {
+    public boolean evolve() throws InterruptedException {
 
-       /* if(getState() == JavaLifeState.MOVIMENTAR){
-=======
-        if(getState() == JavaLifeState.MOVIMENTAR){
->>>>>>> Stashed changes
-            state.evolve();
-            return true;
-        }*/
-        state.evolve(fauna);
-        return false;
+        return state.evolve(fauna);
     }
+
+    public void evolve(IGameEngine gameEngine, long currentTime){
+
+        // a ver ecossistema.evolve;
+    }
+
+
     public Fauna getFauna() {
         return fauna;
     }

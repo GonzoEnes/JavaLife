@@ -22,6 +22,7 @@ public class TextUI {
 
     public boolean start() throws InterruptedException {
         //manager.addElemento(new Fauna(new Area(10,10,10,10), Elemento.FAUNA, null));
+
         movimentar();
         return false;
     }

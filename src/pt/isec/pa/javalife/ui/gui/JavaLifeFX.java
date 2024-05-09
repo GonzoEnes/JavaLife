@@ -26,7 +26,7 @@ public class JavaLifeFX extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        firstStage(stage);
+       /* firstStage(stage);
         GameEngine gameEngine = new GameEngine();
         gameEngine.registerClient((g, t) -> {
             Platform.runLater(() -> {
@@ -34,7 +34,7 @@ public class JavaLifeFX extends Application {
             });
         });
 
-        gameEngine.start(manager.getTimeInMillis()); // de acordo com o que o utilizador impõe
+        gameEngine.start(manager.getTimeInMillis()); */// de acordo com o que o utilizador impõe
     }
 
     private void firstStage(Stage stage) {
