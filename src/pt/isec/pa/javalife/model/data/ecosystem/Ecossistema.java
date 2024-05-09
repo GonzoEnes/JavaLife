@@ -56,31 +56,24 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
     }
 
     // LÓGICA
-    public boolean addElemento(Area area, Elemento tipo, String imagem) throws InterruptedException { // tem de ser feito com factory
-        if (!isAreaValida(area)) {
+    public boolean addElemento(IElemento elemento) throws InterruptedException { // tem de ser feito com factory
+        if (!isAreaValida(elemento.getArea())) {
             return false;
         }
 
-        return switch (tipo) {
-            case INANIMADO -> elementos.add(new Inanimado(area, tipo));
-            case FAUNA -> elementos.add(new Fauna(area, tipo,this));
-            case FLORA -> elementos.add(new Flora(area, tipo, imagem));
+        return switch (elemento.getType()) {
+            case INANIMADO -> elementos.add(new Inanimado(elemento.getArea(), elemento.getType()));
+            case FAUNA -> elementos.add(new Fauna(elemento.getArea(), elemento.getType(),this));
+            case FLORA -> elementos.add(new Flora(elemento.getArea(), elemento.getType(), ((Flora) elemento).getImagem()));
         };
     }
 
-    public boolean removeElemento(Elemento tipo, int id) {
-        if (tipo == Elemento.INANIMADO) { // não se podem remover inanimados
+    public boolean removeElemento(IElemento elemento) {
+        if (elemento.getType() == Elemento.INANIMADO) { // não se podem remover inanimados
             return false;
         }
-
-        for (IElemento elemento : elementos) {
-            if (elemento.getType() == tipo && elemento.getId() == id) {
-                elementos.remove(elemento);
-                return true;
-            }
-        }
-
-        return false;
+        elementos.remove(elemento);
+        return true;
     }
 
     public boolean editElemento(Elemento tipo, int id, ArrayList<String> parametros) { // ir reforçando, claro

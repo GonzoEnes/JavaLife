@@ -20,23 +20,25 @@ public class EcossistemaManager {
     // falta aqui depois o CmdManager e o PropertyChangeSupport (para a sinalização dos clientes) quando fizermos a GUI
 
     public EcossistemaManager(long timeInMillis) throws InterruptedException {
-
         this.ecossistema = new Ecossistema(50, 50);
         //this.ecossistema.addElemento(new Area(0, 1, 1, 1), Elemento.FAUNA, null);
         //this.ecossistema.addElemento(new Area(300, 300, 70, 400), Elemento.FLORA, null);
         //this.ecossistema.addElemento(new Area(30, 10, 20, 20), Elemento.INANIMADO, null);
-        this.ecossistema.addElemento(new Area(400, 300, 100, 400), Elemento.FAUNA, null);
+        IElemento elemento = new Fauna(new Area(10,10,10,10), Elemento.FAUNA, ecossistema);
+        this.ecossistema.addElemento(elemento);
         //this.ecossistema.addElemento(new Area(100, 300, 70, 400), Elemento.FAUNA, null);
         this.timeInMillis = timeInMillis;
-
     }
 
-    public boolean addElemento(Area area, Elemento tipo, String imagem) throws InterruptedException {
-        return ecossistema.addElemento(area, tipo, imagem);
+    public boolean addElemento(IElemento elemento) throws InterruptedException {
+        if (elemento.getType() == Elemento.FAUNA) {
+            this.context = new JavaLifeContext((Fauna)elemento);
+        }
+        return ecossistema.addElemento(elemento);
     }
-    public JavaLifeContext getFsm(){return context;}
-    public boolean removeElemento(Elemento tipo, int id) {
-        return ecossistema.removeElemento(tipo, id);
+    public JavaLifeContext getFsm() {return context;}
+    public boolean removeElemento(IElemento elemento) {
+        return ecossistema.removeElemento(elemento);
     }
 
     public boolean editElemento(Elemento tipo, int id, ArrayList<String> parametros) {

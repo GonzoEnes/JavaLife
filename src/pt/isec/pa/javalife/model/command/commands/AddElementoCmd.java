@@ -4,29 +4,23 @@ import pt.isec.pa.javalife.model.command.CommandAdapter;
 import pt.isec.pa.javalife.model.data.area.Area;
 import pt.isec.pa.javalife.model.data.ecosystem.EcossistemaManager;
 import pt.isec.pa.javalife.model.data.elements.Elemento;
+import pt.isec.pa.javalife.model.data.elements.IElemento;
 
 public class AddElementoCmd extends CommandAdapter {
-
-    private Elemento tipo;
-    private int id;
-    private Area area;
-    private String imagem;
-    public AddElementoCmd(EcossistemaManager manager, Elemento tipo, int id, Area area, String imagem) {
+    private IElemento elemento;
+    public AddElementoCmd(EcossistemaManager manager, IElemento elemento) {
         super(manager);
-        this.id = id;
-        this.area = area;
-        this.tipo = tipo;
-        this.imagem = imagem;
+        this.elemento = elemento;
     }
 
     @Override
     public boolean undo() {
-        return manager.removeElemento(tipo, id);
+        return manager.removeElemento(elemento);
     }
 
     @Override
     public boolean execute() throws InterruptedException {
-        manager.addElemento(area, tipo, imagem);
+        manager.addElemento(elemento);
         return true;
     }
 }

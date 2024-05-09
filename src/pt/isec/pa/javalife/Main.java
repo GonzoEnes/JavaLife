@@ -7,9 +7,7 @@ import pt.isec.pa.javalife.ui.TextUI;
 import pt.isec.pa.javalife.ui.gui.JavaLifeFX;
 
 public class Main {
-
     public static EcossistemaManager manager;
-
 
     static {
         try {

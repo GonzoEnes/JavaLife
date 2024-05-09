@@ -12,8 +12,8 @@ import pt.isec.pa.javalife.model.gameengine.GameEngine;
 public final class Fauna extends ElementoBase implements IElementoComForca {
     private double forca;
     private static int idS = 0;
-
     private Ecossistema ecossistema;
+    private JavaLifeContext context;
     public Fauna(Area area, Elemento tipo, Ecossistema ecossistema) throws InterruptedException {
         super(++idS, area, tipo);
         this.forca = 50;
@@ -23,7 +23,7 @@ public final class Fauna extends ElementoBase implements IElementoComForca {
 
     private void initStateMachine() throws InterruptedException {
         // Criar o contexto da máquina de estados
-        JavaLifeContext context = new JavaLifeContext( this);
+        this.context = new JavaLifeContext(this);
         // Evoluir o estado inicial
         context.evolve();
     }
@@ -42,7 +42,5 @@ public final class Fauna extends ElementoBase implements IElementoComForca {
     public Elemento getType() {
         return Elemento.FAUNA;
     }
-
-
 
 }

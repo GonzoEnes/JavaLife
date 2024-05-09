@@ -68,7 +68,7 @@ public class EcossistemaUI extends BorderPane {
 
             System.out.println("posX: " + posX + " posY: " + posY + " screenWidth: " + screenWidth + " screenHeight: " + screenHeight + " ecoWidth: " + ecoWidth + " ecoHeight: " + ecoHeight + " widthScale: " + widthScale + " heightScale: " + heightScale);
             ImageView imageView = createImageView(elemento, heightScale, widthScale);
-            board.add(imageView, (int)posX, (int)posY);
+            board.add(imageView, (int) posX, (int) posY);
         }
     }
 

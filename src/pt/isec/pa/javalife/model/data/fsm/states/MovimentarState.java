@@ -12,17 +12,15 @@ public class MovimentarState extends JavaLifeAdapter {
     public MovimentarState(JavaLifeContext context, Ecossistema ecossistema) {
         super(context,ecossistema);
     }
-
     @Override
     public JavaLifeState getState() {
         return JavaLifeState.MOVIMENTAR;
     }
-
     @Override
     public boolean evolve() throws InterruptedException {
-        sleep(5000);
+        sleep(1000);
         changeState(JavaLifeState.MORRER);
-        System.out.println(getState());
+        //System.out.println("OLA ESTADO " + getState());
         return true;
     }
 }

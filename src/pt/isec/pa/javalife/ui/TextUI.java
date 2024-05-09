@@ -21,22 +21,30 @@ public class TextUI {
 
 
     public boolean start() throws InterruptedException {
-        Set<IElemento> elementos = manager.getElementos();
-        for (IElemento elemento : elementos) {
-            if (elemento instanceof Fauna) {
-                Fauna fauna = (Fauna) elemento;
-                manager.getFsm().evolve();
-                return true;
+        movimentar();
+        return false;
+    }
+
+    public boolean movimentar() throws InterruptedException {
+        System.out.printf("\nWSexo %s\n",manager.getFsm().getState());
+        int choice = PAInput.chooseOption("Sexo", "Estado Procurar Comida", "Estado Reproduzir", "Estado Morrer", "Stop machine");
+
+        switch (choice) {
+            case 1, 2, 3 -> {
+                return manager.getFsm().evolve();
+            }
+            case 4 -> {
+                System.exit(0);
+            }
+            default -> {
+                return false;
             }
         }
         return false;
     }
-
-
-
     public boolean procurarComida() throws InterruptedException {
         System.out.printf("\nWSexo %s\n",manager.getFsm().getState());
-        int choice = PAInput.chooseOption("Sexzo", "Movimentar", "Procurar", "Estado Morrer", "Stop machine");
+        int choice = PAInput.chooseOption("Sexo", "Movimentar", "Procurar", "Estado Morrer", "Stop machine");
         switch (choice) {
             case 1, 2, 3 -> {
                 return manager.getFsm().evolve();
@@ -53,7 +61,6 @@ public class TextUI {
 
     public boolean morrer() {
         System.out.printf("\nWSexo %s\n",manager.getFsm().getState());
-
         return false;
 
     }
@@ -68,24 +75,6 @@ public class TextUI {
                 return manager.getFsm().evolve();
             }
             case 3 -> {
-                System.exit(0);
-            }
-            default -> {
-                return false;
-            }
-        }
-        return false;
-    }
-
-    public boolean movimentar() throws InterruptedException {
-        System.out.printf("\nWSexo %s\n",manager.getFsm().getState());
-        int choice = PAInput.chooseOption("Sexzo", "Estado Procurar Comida", "Estado Reproduzir", "Estado Morrer", "Stop machine");
-
-        switch (choice) {
-            case 1, 2, 3 -> {
-                return manager.getFsm().evolve();
-            }
-            case 4 -> {
                 System.exit(0);
             }
             default -> {
