@@ -63,7 +63,7 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
 
         return switch (elemento.getType()) {
             case INANIMADO -> elementos.add(new Inanimado(elemento.getArea(), elemento.getType()));
-            case FAUNA -> elementos.add(new Fauna(elemento.getArea(), elemento.getType(),this));
+            case FAUNA -> elementos.add(new Fauna(elemento.getArea(), elemento.getType()));
             case FLORA -> elementos.add(new Flora(elemento.getArea(), elemento.getType(), ((Flora) elemento).getImagem()));
         };
     }

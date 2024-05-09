@@ -17,9 +17,22 @@ public class MovimentarState extends JavaLifeAdapter {
         return JavaLifeState.MOVIMENTAR;
     }
     @Override
-    public boolean evolve() throws InterruptedException {
-        sleep(1000);
-        changeState(JavaLifeState.MORRER);
+    public boolean evolve(Fauna fauna) throws InterruptedException {
+        /*sleep(1000);
+        changeState(JavaLifeState.MORRER);*/
+        fauna.setForca(fauna.getForca()-1);
+        if (fauna.getForca()==0){
+            changeState(JavaLifeState.MORRER);
+        }
+
+        if(fauna.getForca()<35){
+            changeState(JavaLifeState.PROCURAR_COMIDA);
+        }
+        if(fauna.getForca()<70 && fauna.getForca()>55){
+
+            changeState(JavaLifeState.REPRODUZIR);
+
+        }
         //System.out.println("OLA ESTADO " + getState());
         return true;
     }

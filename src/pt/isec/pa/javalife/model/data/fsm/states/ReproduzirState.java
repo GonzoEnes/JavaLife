@@ -17,7 +17,12 @@ public class ReproduzirState extends JavaLifeAdapter {
     }
 
     @Override
-    public boolean evolve() {
+    public boolean evolve(Fauna fauna) {
+
+        fauna.setForca(fauna.getForca()-1);
+        if(fauna.getForca()<50){
+            changeState(JavaLifeState.MORRER);
+        }
         return false;
     }
 }

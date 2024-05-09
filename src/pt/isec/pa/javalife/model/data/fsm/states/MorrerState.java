@@ -17,7 +17,7 @@ public class MorrerState extends JavaLifeAdapter {
     }
 
     @Override
-    public boolean evolve() {
+    public boolean evolve(Fauna fauna) {
         return false;
     }
 }

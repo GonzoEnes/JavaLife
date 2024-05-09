@@ -17,7 +17,19 @@ public class ProcurarComidaState extends JavaLifeAdapter {
     }
 
     @Override
-    public boolean evolve() {
+    public boolean evolve(Fauna fauna) {
+
+        fauna.setForca(fauna.getForca()+1);
+        if (fauna.getForca()==0){
+            changeState(JavaLifeState.MORRER);
+        }
+
+        if(fauna.getForca()>75){
+            changeState((JavaLifeState.MOVIMENTAR));
+        }
+
+
+
         return false;
     }
 }

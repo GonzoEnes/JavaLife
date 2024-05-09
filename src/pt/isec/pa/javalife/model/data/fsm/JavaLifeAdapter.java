@@ -17,5 +17,5 @@ public abstract class JavaLifeAdapter implements IJavaLifeState {
     }
 
     @Override
-    public abstract boolean evolve() throws InterruptedException;
+    public abstract boolean evolve(Fauna fauna) throws InterruptedException;
 }

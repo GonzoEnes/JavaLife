@@ -26,10 +26,11 @@ public class JavaLifeContext {
 
     public boolean evolve(/*GameEngine gameEngine, long currentTime*/) throws InterruptedException {
 
-        if(getState() == JavaLifeState.MOVIMENTAR){
+       /* if(getState() == JavaLifeState.MOVIMENTAR){
             state.evolve();
             return true;
-        }
+        }*/
+        state.evolve(fauna);
         return false;
     }
     public Fauna getFauna() {
