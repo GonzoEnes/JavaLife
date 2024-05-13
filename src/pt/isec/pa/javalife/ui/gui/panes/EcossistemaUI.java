@@ -43,6 +43,9 @@ public class EcossistemaUI extends BorderPane {
     }
 
     public void update() {
+        for (IElemento elemento : manager.getElementos()) {
+            System.out.println(elemento.getArea());
+        }
         board.getChildren().clear();
         Set<IElemento> elementos = manager.getElementos();
         double ecoHeight = manager.getAltura();

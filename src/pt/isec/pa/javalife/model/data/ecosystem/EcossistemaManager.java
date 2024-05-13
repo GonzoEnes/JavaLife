@@ -24,7 +24,9 @@ public class EcossistemaManager {
         //this.ecossistema.addElemento(new Area(300, 300, 70, 400), Elemento.FLORA, null);
         //this.ecossistema.addElemento(new Area(30, 10, 20, 20), Elemento.INANIMADO, null);
         IElemento elemento = new Fauna(new Area(10,10,10,10), Elemento.FAUNA);
+        //IElemento elemento1 = new Fauna(new Area(15,15,15,15), Elemento.FAUNA);
         this.ecossistema.addElemento(elemento);
+        //this.ecossistema.addElemento(elemento1);
         //IElemento elemento = new Fauna(new Area(10,10,10,10), Elemento.FAUNA, ecossistema);
         //this.ecossistema.addElemento(elemento);
         //this.ecossistema.addElemento(new Area(100, 300, 70, 400), Elemento.FAUNA, null);
@@ -67,11 +69,31 @@ public class EcossistemaManager {
     public int getAltura() {
         return ecossistema.getAltura();
     }
+    int i = 0;
+    public void evolve (IGameEngine gameEngine, long currentTime) {
+/*
+        try {
+            getFsm().evolve();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        getFsm().evolve(gameEngine, currentTime);*/
+        ecossistema.evolve(gameEngine,currentTime);
+        for (IElemento elemento : ecossistema.getElementos()) {
+            if(elemento instanceof Fauna){
+                System.out.println(elemento.toString());
+            }
+        }
+        System.out.println();
 
-    public void evolve (IGameEngine gameEngine, long currentTime) throws InterruptedException {
-
-         getFsm().evolve();
-         getFsm().evolve(gameEngine, currentTime);
-
+        /*i++;
+        if(i%10 == 0){
+            IElemento elemento = new Fauna(new Area(15,15,15,15), Elemento.FAUNA);
+            try {
+                this.ecossistema.addElemento(elemento);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }*/
     }
 }

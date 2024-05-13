@@ -17,7 +17,7 @@ public class MovimentarState extends JavaLifeAdapter {
         return JavaLifeState.MOVIMENTAR;
     }
     @Override
-    public boolean evolve(Fauna fauna) throws InterruptedException {
+    public boolean evolve(Fauna fauna) {
         /*sleep(1000);
         changeState(JavaLifeState.MORRER);*/
         fauna.setForca(fauna.getForca()-1);

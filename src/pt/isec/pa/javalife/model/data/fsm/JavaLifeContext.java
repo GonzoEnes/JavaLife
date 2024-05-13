@@ -26,7 +26,7 @@ public class JavaLifeContext {
         this.state = state;
     }
 
-    public boolean evolve() throws InterruptedException {
+    public boolean evolve() {
 
         return state.evolve(fauna);
     }

@@ -44,7 +44,7 @@ public class TextUI {
         }
         return false;
     }
-    public boolean movimentar() throws InterruptedException {
+    public boolean movimentar() {
         //System.out.printf("\nWSexo %s\n",manager.getFsm().getState());
         //int choice = PAInput.chooseOption("Sexo", "Estado Procurar Comida", "Estado Reproduzir", "Estado Morrer", "Stop machine");
         ArrayList<Fauna> a = new ArrayList<>();
@@ -66,7 +66,7 @@ public class TextUI {
         }
         return false;
     }
-    public boolean procurarComida() throws InterruptedException {
+    public boolean procurarComida(){
         System.out.printf("\nWSexo %s\n",manager.getFsm().getState());
         int choice = PAInput.chooseOption("Sexo", "Movimentar", "Procurar", "Estado Morrer", "Stop machine");
         switch (choice) {
@@ -91,7 +91,7 @@ public class TextUI {
     // return true;
 
 
-    public boolean reproduzir() throws InterruptedException {
+    public boolean reproduzir()  {
         System.out.printf("\nWSexo %s\n",manager.getFsm().getState());
         int choice = PAInput.chooseOption("Sexzo", "Movimentar", "Estado Morrer", "Stop machine");
         switch (choice) {

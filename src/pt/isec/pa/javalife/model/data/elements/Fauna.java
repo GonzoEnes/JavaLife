@@ -14,13 +14,15 @@ public final class Fauna extends ElementoBase implements IElementoComForca {
     private static int idS = 0;
     private Ecossistema ecossistema;
     private JavaLifeContext context;
-    public Fauna(Area area, Elemento tipo) throws InterruptedException {
+    public Fauna(Area area, Elemento tipo) {
         super(++idS, area, tipo);
+        System.out.println(idS);
         this.forca = 50;
         this.context = new JavaLifeContext(this);
         // Evoluir o estado inicial
         //context.evolve();
         this.context.evolve();
+
     }
 
     @Override
@@ -39,11 +41,7 @@ public final class Fauna extends ElementoBase implements IElementoComForca {
     }
 
     public void evolve(){
-        try {
-            context.evolve();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        context.evolve();
     }
     public JavaLifeState getState(){
 
@@ -54,6 +52,6 @@ public final class Fauna extends ElementoBase implements IElementoComForca {
 
     @Override
     public String toString() {
-        return String.valueOf(idS);
+        return getId() + " " + context.getState();
     }
 }

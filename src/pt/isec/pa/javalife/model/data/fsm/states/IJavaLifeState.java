@@ -8,7 +8,7 @@ import pt.isec.pa.javalife.model.data.fsm.JavaLifeState;
 public interface IJavaLifeState {
    JavaLifeState getState();
 
-   boolean evolve(Fauna fauna) throws InterruptedException;
+   boolean evolve(Fauna fauna);
 
    // meter funções de transição de estados
 

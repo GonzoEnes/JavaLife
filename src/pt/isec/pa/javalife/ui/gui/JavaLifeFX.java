@@ -35,6 +35,7 @@ public class JavaLifeFX extends Application {
         });
 
         gameEngine.start(manager.getTimeInMillis()); */// de acordo com o que o utilizador impõe
+        firstStage(stage);
     }
 
     private void firstStage(Stage stage) {

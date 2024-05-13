@@ -105,6 +105,11 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
     public void evolve(IGameEngine gameEngine, long currentTime) {
         // aqui não sei o que há de ser posto mas deve ser a chamada da evolve() da fsm digo eu idk
         //provavelmente evolve com fauna
+        for (IElemento elemento : elementos) {
+            if(elemento instanceof Fauna){
+                ((Fauna) elemento).evolve();
+            }
+        }
     }
 
     private boolean isAreaValida(Area area) {
