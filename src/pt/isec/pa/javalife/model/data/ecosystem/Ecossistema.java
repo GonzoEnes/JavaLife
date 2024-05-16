@@ -30,10 +30,12 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         for (int i = 0; i < altura; i++) {
             for (int j = 0; j < largura; j++) {
                 if (i == 0 || i == altura - 1 || j == 0 || j == largura - 1) {
-                    elementos.add(new Inanimado(new Area(i+1, j, i, j + 1), Elemento.INANIMADO));
+                    elementos.add(new Inanimado(new Area(10,10,10,10), Elemento.INANIMADO,i,j));
                 }
             }
         }
+        elementos.add(new Fauna(new Area(10,10,10,10),Elemento.FAUNA,8,8));
+        elementos.add(new Fauna(new Area(10,10,10,10),Elemento.FAUNA,18,10));
     }
 
     // GETTERS & SETTERS
@@ -60,12 +62,13 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         if (!isAreaValida(elemento.getArea())) {
             return false;
         }
-
-        return switch (elemento.getType()) {
+        //Ver isto
+        /*return switch (elemento.getType()) {
             case INANIMADO -> elementos.add(new Inanimado(elemento.getArea(), elemento.getType()));
             case FAUNA -> elementos.add(new Fauna(elemento.getArea(), elemento.getType()));
             case FLORA -> elementos.add(new Flora(elemento.getArea(), elemento.getType(), ((Flora) elemento).getImagem()));
-        };
+        };*/
+        return true;
     }
 
     public boolean removeElemento(IElemento elemento) {

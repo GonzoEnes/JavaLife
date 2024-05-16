@@ -10,4 +10,7 @@ public sealed interface IElemento extends Serializable permits ElementoBase {
     Elemento getType();
 
     Area getArea();
+
+    int getX();
+    int getY();
 }

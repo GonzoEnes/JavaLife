@@ -20,7 +20,7 @@ public class MovimentarState extends JavaLifeAdapter {
     public boolean evolve(Fauna fauna) {
         /*sleep(1000);
         changeState(JavaLifeState.MORRER);*/
-        fauna.setForca(fauna.getForca()-1);
+        /*fauna.setForca(fauna.getForca()-1);
         if (fauna.getForca() == 0){
             changeState(JavaLifeState.MORRER);
         }
@@ -30,7 +30,8 @@ public class MovimentarState extends JavaLifeAdapter {
         }
         if(fauna.getForca() < 70 && fauna.getForca() > 55){
             changeState(JavaLifeState.REPRODUZIR);
-        }
+        }*/
+        fauna.setX(fauna.getX()+1);
         //System.out.println("OLA ESTADO " + getState());
         return true;
     }

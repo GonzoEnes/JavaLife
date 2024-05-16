@@ -9,16 +9,24 @@ import pt.isec.pa.javalife.model.gameengine.interfaces.IGameEngine;
 
 import java.util.ArrayList;
 import java.util.Set;
-
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 // esta classe vai servir como Facade do Ecossistema para que as outras classes não consigam manipular o Ecossistema diretamente
 public class EcossistemaManager {
     private Ecossistema ecossistema;
     private JavaLifeContext context;
     private long timeInMillis;
+    public static final String EVOLVE = "_evolve";
+    PropertyChangeSupport pcs;
+
+    public void addListener(String property, PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(property, listener);
+    }
 
     // falta aqui depois o CmdManager e o PropertyChangeSupport (para a sinalização dos clientes) quando fizermos a GUI
 
     public EcossistemaManager(long timeInMillis) throws InterruptedException {
+        pcs = new PropertyChangeSupport(this);
         this.ecossistema = new Ecossistema(50, 50);
         //this.ecossistema.addElemento(new Area(0, 1, 1, 1), Elemento.FAUNA, null);
         //this.ecossistema.addElemento(new Area(300, 300, 70, 400), Elemento.FLORA, null);
@@ -86,7 +94,7 @@ public class EcossistemaManager {
             }
         }
         System.out.println();
-
+        pcs.firePropertyChange(EVOLVE, null, null);
         /*i++;
         if(i%10 == 0){
             IElemento elemento = new Fauna(new Area(15,15,15,15), Elemento.FAUNA);

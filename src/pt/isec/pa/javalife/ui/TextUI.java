@@ -48,9 +48,9 @@ public class TextUI {
         //System.out.printf("\nWSexo %s\n",manager.getFsm().getState());
         //int choice = PAInput.chooseOption("Sexo", "Estado Procurar Comida", "Estado Reproduzir", "Estado Morrer", "Stop machine");
         ArrayList<Fauna> a = new ArrayList<>();
-        Fauna elemento = new Fauna(new Area(10,10,10,10), Elemento.FAUNA);
-        Fauna elemento1 = new Fauna(new Area(10,10,10,10), Elemento.FAUNA);
-        Fauna elemento2 = new Fauna(new Area(10,10,10,10), Elemento.FAUNA);
+        Fauna elemento = new Fauna(new Area(10,10,10,10), Elemento.FAUNA,3,3);
+        Fauna elemento1 = new Fauna(new Area(10,10,10,10), Elemento.FAUNA,6,6);
+        Fauna elemento2 = new Fauna(new Area(10,10,10,10), Elemento.FAUNA,9,9);
         a.add(elemento);
         a.add(elemento1);
         a.add(elemento2);

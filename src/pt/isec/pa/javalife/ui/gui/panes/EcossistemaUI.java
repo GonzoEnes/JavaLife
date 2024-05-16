@@ -15,6 +15,7 @@ import pt.isec.pa.javalife.model.data.ecosystem.EcossistemaManager;
 import pt.isec.pa.javalife.model.data.elements.*;
 import pt.isec.pa.javalife.ui.gui.resources.ImageManager;
 
+import java.util.Map;
 import java.util.Set;
 
 public class EcossistemaUI extends BorderPane {
@@ -33,7 +34,7 @@ public class EcossistemaUI extends BorderPane {
     }
 
     public void registerHandlers() {
-
+        manager.addListener(EcossistemaManager.EVOLVE, evt -> Platform.runLater(this::update));
     }
 
     public void createViews() {
@@ -43,7 +44,16 @@ public class EcossistemaUI extends BorderPane {
     }
 
     public void update() { // mudar para as X,Y coordenadas
-        for (IElemento elemento : manager.getElementos()) {
+
+        board.getChildren().clear();
+        Set<IElemento> elementos = manager.getElementos();
+        for (IElemento elemento : elementos) {
+            //System.out.println(elemento.toString());
+            ImageView imageView = createImageView(elemento, elemento.getArea().cima(), elemento.getArea().direita());
+            board.add(imageView, elemento.getX(),elemento.getY());
+        }
+
+        /*for (IElemento elemento : manager.getElementos()) {
             System.out.println(elemento.getArea());
         }
         board.getChildren().clear();
@@ -72,7 +82,8 @@ public class EcossistemaUI extends BorderPane {
             System.out.println("posX: " + posX + " posY: " + posY + " screenWidth: " + screenWidth + " screenHeight: " + screenHeight + " ecoWidth: " + ecoWidth + " ecoHeight: " + ecoHeight + " widthScale: " + widthScale + " heightScale: " + heightScale);
             ImageView imageView = createImageView(elemento, heightScale, widthScale);
             board.add(imageView, (int) posX, (int) posY);
-        }
+        }*/
+
     }
 
     private ImageView createImageView(IElemento elemento, double heightScale, double widthScale) {
