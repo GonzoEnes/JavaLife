@@ -23,10 +23,11 @@ public class EcossistemaManager {
         //this.ecossistema.addElemento(new Area(0, 1, 1, 1), Elemento.FAUNA, null);
         //this.ecossistema.addElemento(new Area(300, 300, 70, 400), Elemento.FLORA, null);
         //this.ecossistema.addElemento(new Area(30, 10, 20, 20), Elemento.INANIMADO, null);
-        IElemento elemento = new Fauna(new Area(10,10,10,10), Elemento.FAUNA);
+        IElemento elemento = new Fauna(new Area(10,10,10,10), Elemento.FAUNA, 10, 15);
         //IElemento elemento1 = new Fauna(new Area(15,15,15,15), Elemento.FAUNA);
         this.ecossistema.addElemento(elemento);
         //this.ecossistema.addElemento(elemento1);
+        //this.ecossistema.addElemento(elemento);
         //IElemento elemento = new Fauna(new Area(10,10,10,10), Elemento.FAUNA, ecossistema);
         //this.ecossistema.addElemento(elemento);
         //this.ecossistema.addElemento(new Area(100, 300, 70, 400), Elemento.FAUNA, null);

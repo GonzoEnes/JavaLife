@@ -42,7 +42,7 @@ public class EcossistemaUI extends BorderPane {
         this.setCenter(board);
     }
 
-    public void update() {
+    public void update() { // mudar para as X,Y coordenadas
         for (IElemento elemento : manager.getElementos()) {
             System.out.println(elemento.getArea());
         }

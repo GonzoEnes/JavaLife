@@ -9,10 +9,14 @@ public abstract sealed class ElementoBase
     private Area area;
     private Elemento tipo;
 
-    public ElementoBase(int id, Area area, Elemento tipo) {
+    private int x,y;
+
+    public ElementoBase(int id, Area area, Elemento tipo, int x, int y) {
         this.id = id;
         this.area = area;
         this.tipo = tipo;
+        this.x = x;
+        this.y = y;
     }
 
     @Override

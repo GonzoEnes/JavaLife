@@ -12,17 +12,14 @@ import pt.isec.pa.javalife.model.gameengine.GameEngine;
 public final class Fauna extends ElementoBase implements IElementoComForca {
     private double forca;
     private static int idS = 0;
-    private Ecossistema ecossistema;
     private JavaLifeContext context;
-    public Fauna(Area area, Elemento tipo) {
-        super(++idS, area, tipo);
+    public Fauna(Area area, Elemento tipo, int x, int y) {
+        super(++idS, area, tipo, x, y);
         System.out.println(idS);
         this.forca = 50;
         this.context = new JavaLifeContext(this);
-        // Evoluir o estado inicial
         //context.evolve();
         this.context.evolve();
-
     }
 
     @Override
@@ -44,10 +41,7 @@ public final class Fauna extends ElementoBase implements IElementoComForca {
         context.evolve();
     }
     public JavaLifeState getState(){
-
-
        return context.getState();
-
     }
 
     @Override
