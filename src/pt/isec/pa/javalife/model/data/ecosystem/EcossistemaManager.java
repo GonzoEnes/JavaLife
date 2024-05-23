@@ -4,7 +4,7 @@ import pt.isec.pa.javalife.model.data.area.Area;
 import pt.isec.pa.javalife.model.data.elements.Elemento;
 import pt.isec.pa.javalife.model.data.elements.Fauna;
 import pt.isec.pa.javalife.model.data.elements.IElemento;
-import pt.isec.pa.javalife.model.data.fsm.JavaLifeContext;
+import pt.isec.pa.javalife.model.data.fsm.Context;
 import pt.isec.pa.javalife.model.gameengine.interfaces.IGameEngine;
 
 import java.util.ArrayList;
@@ -14,7 +14,6 @@ import java.beans.PropertyChangeSupport;
 // esta classe vai servir como Facade do Ecossistema para que as outras classes não consigam manipular o Ecossistema diretamente
 public class EcossistemaManager {
     private Ecossistema ecossistema;
-    private JavaLifeContext context;
     private long timeInMillis;
     public static final String EVOLVE = "_evolve";
     PropertyChangeSupport pcs;
@@ -28,17 +27,8 @@ public class EcossistemaManager {
     public EcossistemaManager(long timeInMillis) throws InterruptedException {
         pcs = new PropertyChangeSupport(this);
         this.ecossistema = new Ecossistema(50, 50);
-        //this.ecossistema.addElemento(new Area(0, 1, 1, 1), Elemento.FAUNA, null);
-        //this.ecossistema.addElemento(new Area(300, 300, 70, 400), Elemento.FLORA, null);
-        //this.ecossistema.addElemento(new Area(30, 10, 20, 20), Elemento.INANIMADO, null);
-        IElemento elemento = new Fauna(new Area(10,10,10,10), Elemento.FAUNA, 10, 15);
-        //IElemento elemento1 = new Fauna(new Area(15,15,15,15), Elemento.FAUNA);
+        IElemento elemento = new Fauna(new Area(10,10,10,10), ecossistema,10, 15);
         this.ecossistema.addElemento(elemento);
-        //this.ecossistema.addElemento(elemento1);
-        //this.ecossistema.addElemento(elemento);
-        //IElemento elemento = new Fauna(new Area(10,10,10,10), Elemento.FAUNA, ecossistema);
-        //this.ecossistema.addElemento(elemento);
-        //this.ecossistema.addElemento(new Area(100, 300, 70, 400), Elemento.FAUNA, null);
         this.timeInMillis = timeInMillis;
     }
 
@@ -46,7 +36,6 @@ public class EcossistemaManager {
         //elemento = new Fauna(new Area(10,10,10,10), Elemento.FAUNA, ecossistema);
         return this.ecossistema.addElemento(elemento);
     }
-    public JavaLifeContext getFsm() {return context;}
     public boolean removeElemento(IElemento elemento) {
         return ecossistema.removeElemento(elemento);
     }
@@ -57,10 +46,6 @@ public class EcossistemaManager {
 
     public Set<IElemento> getElementos() {
         return ecossistema.getElementos();
-    }
-
-    public void evolve() throws InterruptedException {
-        getFsm().evolve();
     }
 
     public long getTimeInMillis() {

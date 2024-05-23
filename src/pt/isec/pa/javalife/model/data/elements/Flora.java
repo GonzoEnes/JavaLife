@@ -7,8 +7,8 @@ public final class Flora extends ElementoBase implements IElementoComForca, IEle
     private String imagem;
     private static int idS = 0;
 
-    public Flora(Area area, Elemento tipo, String imagem, int x, int y) {
-        super(++idS, area, tipo, x, y);
+    public Flora(Area area, String imagem, int x, int y) {
+        super(++idS, area, x, y);
         this.forca = 50;
         this.imagem = imagem;
     }

@@ -2,27 +2,34 @@ package pt.isec.pa.javalife.model.data.fsm.states;
 
 import pt.isec.pa.javalife.model.data.ecosystem.Ecossistema;
 import pt.isec.pa.javalife.model.data.elements.Fauna;
-import pt.isec.pa.javalife.model.data.fsm.JavaLifeAdapter;
-import pt.isec.pa.javalife.model.data.fsm.JavaLifeContext;
-import pt.isec.pa.javalife.model.data.fsm.JavaLifeState;
+import pt.isec.pa.javalife.model.data.elements.IElemento;
+import pt.isec.pa.javalife.model.data.fsm.StateAdapter;
+import pt.isec.pa.javalife.model.data.fsm.Context;
+import pt.isec.pa.javalife.model.data.fsm.State;
 
-public class ReproduzirState extends JavaLifeAdapter {
-    public ReproduzirState(JavaLifeContext context, Ecossistema ecossistema) {
+public class ReproduzirState extends StateAdapter {
+    public ReproduzirState(Context context, Ecossistema ecossistema) {
         super(context, ecossistema);
     }
 
     @Override
-    public JavaLifeState getState() {
-        return JavaLifeState.REPRODUZIR;
+    public State getState() {
+        return State.REPRODUZIR;
     }
 
     @Override
-    public boolean evolve(Fauna fauna) {
-
-        fauna.setForca(fauna.getForca()-1);
-        if(fauna.getForca()<50){
-            changeState(JavaLifeState.MORRER);
+    public Fauna evolve(Fauna fauna, Ecossistema ecossistema) {
+        if (fauna.getForca() < 50) {
+            changeState(State.MORRER);
+            return null;
         }
-        return false;
+        if (fauna.getForca() > 60) {
+            //fauna.setForca(50);
+            Fauna newFauna = new Fauna(fauna.getArea(), ecossistema, fauna.getX(), fauna.getY());
+            //changeState(State.MOVIMENTAR);
+            return newFauna;
+        }
+        return null;
     }
 }
+
