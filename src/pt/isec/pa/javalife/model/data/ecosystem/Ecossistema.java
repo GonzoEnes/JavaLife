@@ -2,12 +2,14 @@ package pt.isec.pa.javalife.model.data.ecosystem;
 
 import pt.isec.pa.javalife.model.data.area.Area;
 import pt.isec.pa.javalife.model.data.elements.*;
+import pt.isec.pa.javalife.model.data.fsm.State;
 import pt.isec.pa.javalife.model.gameengine.interfaces.IGameEngine;
 import pt.isec.pa.javalife.model.gameengine.interfaces.IGameEngineEvolve;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Ecossistema implements Serializable, IGameEngineEvolve {
     @Serial
@@ -19,7 +21,7 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
     public Ecossistema(int altura, int largura) {
         this.altura = altura;
         this.largura = largura;
-        this.elementos = new HashSet<>();
+        this.elementos = ConcurrentHashMap.newKeySet();
         createCerca();
     }
 
@@ -99,6 +101,7 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
     @Override
     public void evolve(IGameEngine gameEngine, long currentTime) {
         List<IElemento> newElementos = new ArrayList<>();
+        List<IElemento> deleteElementos = new ArrayList<>();
         synchronized(elementos){
             Iterator<IElemento> iterator = elementos.iterator();
             while (iterator.hasNext()) {
@@ -106,13 +109,23 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
                 if (elemento instanceof Fauna) {
                     Fauna fauna = (Fauna) elemento;
                     Fauna newFauna = fauna.evolve();
-                    if (newFauna != null) {
-                        newElementos.add(newFauna);
+                    if(fauna.getState()== State.MOVIMENTAR){
+                        if (newFauna != null) {
+                            addElemento(newFauna);
+                            newElementos.add(newFauna);
+                        }
                     }
+                    if(fauna.getState()== State.PROCURAR_COMIDA){
+                        if (newFauna != null) {
+                            deleteElementos.add(newFauna);
+                        }
+                    }
+
                 }
             }
         }
         elementos.addAll(newElementos);
+        elementos.removeAll(deleteElementos);
     }
 
     private boolean isAreaValida(Area area) {
