@@ -9,8 +9,8 @@ public final class Fauna extends ElementoBase implements IElementoComForca {
     private double forca;
     private static int idS = 0;
     private Context context;
-    public Fauna(Area area, Ecossistema ecossistema, int x, int y) {
-        super(++idS, area, x, y);
+    public Fauna(Area area, Ecossistema ecossistema) {
+        super(++idS, area);
         this.forca = 50;
         this.context = new Context(ecossistema);
     }
@@ -44,6 +44,6 @@ public final class Fauna extends ElementoBase implements IElementoComForca {
     }
 
     public void move() {
-        forca=forca-0.5;
+        this.forca = this.forca - 0.5;
     }
 }

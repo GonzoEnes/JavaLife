@@ -2,12 +2,14 @@ package pt.isec.pa.javalife.model.data.ecosystem;
 
 import pt.isec.pa.javalife.model.data.area.Area;
 import pt.isec.pa.javalife.model.data.elements.*;
+import pt.isec.pa.javalife.model.data.fsm.State;
 import pt.isec.pa.javalife.model.gameengine.interfaces.IGameEngine;
 import pt.isec.pa.javalife.model.gameengine.interfaces.IGameEngineEvolve;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 public class Ecossistema implements Serializable, IGameEngineEvolve {
     @Serial
@@ -24,13 +26,28 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
     }
 
     public void createCerca() {
-        for (int i = 0; i < altura; i++) {
+        /*for (int i = 0; i < altura; i++) {
             for (int j = 0; j < largura; j++) {
                 if (i == 0 || i == altura - 1 || j == 0 || j == largura - 1) {
-                    elementos.add(new Inanimado(new Area(10,10,10,10),i,j));
+                    elementos.add(new Inanimado(new Area(i,j,i+1,j+1)));
                 }
             }
-        }
+        }*/
+        // DUAS ALTERNATIVAS: CRIAR UM FOR LOOP COM VÁRIOS INANIMADOS OU CRIAR UM INANIMADO COM UMA ÁREA GRANDE, QUALQUER UMA DAS DUAS FUNCIONA IGUAL
+        Inanimado cima = new Inanimado(new Area(0,0,0,0));
+        Inanimado baixo = new Inanimado(new Area(0,0,0,0));
+        Inanimado esquerda = new Inanimado(new Area(0,0,0,0));
+        Inanimado direita = new Inanimado(new Area(0,0,0,0));
+
+        cima.setArea(new Area(0,0,getLargura(), 7));
+        baixo.setArea(new Area(0,getAltura()-7,getLargura(), getAltura()));
+        esquerda.setArea(new Area(0,0,7,getAltura()));
+        direita.setArea(new Area(getLargura()-7,0,getLargura(),getAltura()));
+
+        elementos.add(cima);
+        elementos.add(baixo);
+        elementos.add(esquerda);
+        elementos.add(direita);
     }
 
     // GETTERS & SETTERS
@@ -49,18 +66,35 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
     }
 
     public Set<IElemento> getElementos() {
-        return elementos;
+        Set<IElemento> toReturn = new HashSet<>();
+        for (IElemento elemento : elementos) {
+            try {
+                toReturn.add(elemento.clone());
+            } catch (CloneNotSupportedException ignored) {
+            }
+        }
+        return toReturn;
+
+        //return new HashSet<>(elementos);
     }
 
     // LÓGICA
     public boolean addElemento(IElemento elemento){ // tem de ser feito com factory
-        if (!isAreaValida(elemento.getArea())) {
-            return false;
+        switch (elemento.getType()) {
+            case INANIMADO -> {
+                elementos.add(Elemento.INANIMADO.createElemento(this, null));
+                return true;
+            }
+            case FAUNA -> {
+                elementos.add(Elemento.FAUNA.createElemento(this, null));
+                return true;
+            }
+            case FLORA -> {
+                elementos.add(Elemento.FLORA.createElemento(this, null));
+                return true;
+            }
         }
-        synchronized (elementos){
-            elementos.add(elemento);
-        }
-        return true;
+        return false;
     }
 
     public boolean removeElemento(IElemento elemento) {
@@ -98,25 +132,20 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
 
     @Override
     public void evolve(IGameEngine gameEngine, long currentTime) {
-        List<IElemento> newElementos = new ArrayList<>();
-        synchronized(elementos){
-            Iterator<IElemento> iterator = elementos.iterator();
-            while (iterator.hasNext()) {
-                IElemento elemento = iterator.next();
-                if (elemento instanceof Fauna) {
-                    Fauna fauna = (Fauna) elemento;
-                    Fauna newFauna = fauna.evolve();
-                    if (newFauna != null) {
-                        newElementos.add(newFauna);
-                    }
+        Iterator<IElemento> iterator = elementos.iterator();
+        while (iterator.hasNext()) {
+            IElemento current = iterator.next();
+            if (current instanceof Fauna) {
+                if (((Fauna) current).getForca() == 0) {
+                    iterator.remove();
                 }
             }
         }
-        elementos.addAll(newElementos);
+        // CODIGO DA FLORA
     }
 
-    private boolean isAreaValida(Area area) {
+    /*private boolean isAreaValida(Area area) {
         return area.cima() >= 0 && area.esquerda() >= 0 &&
                 area.baixo() <= altura && area.direita() <= largura;
-    }
+    }*/
 }

@@ -4,13 +4,9 @@ import pt.isec.pa.javalife.model.data.area.Area;
 
 import java.io.Serializable;
 
-public sealed interface IElemento extends Serializable permits ElementoBase {
+public sealed interface IElemento extends Serializable, Cloneable permits ElementoBase {
     int getId();
-
     Elemento getType();
-
     Area getArea();
-
-    int getX();
-    int getY();
+    IElemento clone() throws CloneNotSupportedException;
 }

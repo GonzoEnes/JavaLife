@@ -2,33 +2,15 @@ package pt.isec.pa.javalife.model.data.elements;
 
 import pt.isec.pa.javalife.model.data.area.Area;
 
-public abstract sealed class ElementoBase implements IElemento permits Inanimado, Flora, Fauna {
+import java.io.Serializable;
+
+public abstract sealed class ElementoBase implements IElemento, Cloneable, Serializable permits Inanimado, Flora, Fauna {
     private int id;
     private Area area;
 
-    private int x,y;
-
-    public ElementoBase(int id, Area area, int x, int y) {
+    public ElementoBase(int id, Area area) {
         this.id = id;
         this.area = area;
-        this.x = x;
-        this.y = y;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
     }
 
     @Override
@@ -50,8 +32,22 @@ public abstract sealed class ElementoBase implements IElemento permits Inanimado
         this.area = area;
     }
 
+    public void setPos(double x, double y) {
+        double height = area.baixo() - area.cima();
+        double width = area.direita() - area.esquerda();
+        setArea(new Area(x, y, x + width, y + height));
+    }
+
+    @Override
+    public IElemento clone() throws CloneNotSupportedException{
+        return (IElemento) super.clone();
+    }
+
     @Override
     public String toString() {
-        return "Coordenadas {" + getX() + ";" + getY() + "}";
+        return "ElementoBase{" +
+                "id=" + id +
+                ", area=" + area +
+                '}';
     }
 }

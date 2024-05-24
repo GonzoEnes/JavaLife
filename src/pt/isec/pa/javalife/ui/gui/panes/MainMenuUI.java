@@ -3,6 +3,7 @@ package pt.isec.pa.javalife.ui.gui.panes;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import pt.isec.pa.javalife.model.data.ecosystem.EcossistemaManager;
 
@@ -45,13 +46,15 @@ public class MainMenuUI extends BorderPane {
         vBox.setSpacing(20);
 
         this.setCenter(vBox);
-
     }
 
     public void registerHandlers() {
         btnStartSimul.setOnAction(actionEvent -> {
-            RootPane rootPane = (RootPane) getScene().getRoot();
-            rootPane.showEcossistemaUI();
+            /*RootPane rootPane = (RootPane) getScene().getRoot();
+            rootPane.showEcossistemaUI();*/
+            EcossistemaUI ecossistemaUI = new EcossistemaUI(manager);
+            Pane ecossistemaPane = new Pane(ecossistemaUI);
+            setCenter(ecossistemaPane);
         });
 
         btnExit.setOnAction(actionEvent -> {

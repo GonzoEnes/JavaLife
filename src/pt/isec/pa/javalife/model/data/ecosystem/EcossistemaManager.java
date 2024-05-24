@@ -7,15 +7,18 @@ import pt.isec.pa.javalife.model.data.elements.IElemento;
 import pt.isec.pa.javalife.model.data.fsm.Context;
 import pt.isec.pa.javalife.model.gameengine.interfaces.IGameEngine;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Set;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 // esta classe vai servir como Facade do Ecossistema para que as outras classes não consigam manipular o Ecossistema diretamente
 public class EcossistemaManager {
+    public static final String ECOSSISTEMA_EVOLVE = "_evolve";
+    public static final String ECOSSISTEMA_TOOLS = "_tools_";
+    public static final String ECOSSISTEMA_ELEMENTS = "_elements_";
     private Ecossistema ecossistema;
     private long timeInMillis;
-    public static final String EVOLVE = "_evolve";
     PropertyChangeSupport pcs;
 
     public void addListener(String property, PropertyChangeListener listener) {
@@ -26,8 +29,8 @@ public class EcossistemaManager {
 
     public EcossistemaManager(long timeInMillis) throws InterruptedException {
         pcs = new PropertyChangeSupport(this);
-        this.ecossistema = new Ecossistema(50, 50);
-        IElemento elemento = new Fauna(new Area(10,10,10,10), ecossistema,10, 15);
+        this.ecossistema = new Ecossistema(500, 500);
+        IElemento elemento = new Fauna(new Area(10,10,10,10), ecossistema);
         this.ecossistema.addElemento(elemento);
         this.timeInMillis = timeInMillis;
     }
@@ -63,7 +66,6 @@ public class EcossistemaManager {
     public int getAltura() {
         return ecossistema.getAltura();
     }
-    int i = 0;
     public void evolve (IGameEngine gameEngine, long currentTime) {
 /*
         try {
@@ -73,13 +75,7 @@ public class EcossistemaManager {
         }
         getFsm().evolve(gameEngine, currentTime);*/
         ecossistema.evolve(gameEngine,currentTime);
-        for (IElemento elemento : ecossistema.getElementos()) {
-            if(elemento instanceof Fauna){
-                System.out.println(elemento.toString());
-            }
-        }
-        System.out.println();
-        pcs.firePropertyChange(EVOLVE, null, null);
+        pcs.firePropertyChange(ECOSSISTEMA_EVOLVE, null, null);
         /*i++;
         if(i%10 == 0){
             IElemento elemento = new Fauna(new Area(15,15,15,15), Elemento.FAUNA);
@@ -89,5 +85,36 @@ public class EcossistemaManager {
                 throw new RuntimeException(e);
             }
         }*/
+    }
+
+    public boolean save(File file) {
+        try (
+                ObjectOutputStream oos = new ObjectOutputStream(
+                        new FileOutputStream(file) )
+        ) {
+            oos.writeObject(ecossistema);
+        } catch (Exception e) {
+            System.err.println("Erro na escrita do Ecossistema!");
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public boolean load(File file) {
+        try (
+                ObjectInputStream ois = new ObjectInputStream(
+                        new FileInputStream(file) )
+        ) {
+            ecossistema = (Ecossistema) ois.readObject();
+        } catch (Exception e) {
+            System.err.println("Erro a carregar Ecossistema!");
+            return false;
+        }
+
+        pcs.firePropertyChange(ECOSSISTEMA_ELEMENTS,null,null);
+        pcs.firePropertyChange(ECOSSISTEMA_TOOLS,null,null);
+
+        return true;
     }
 }
