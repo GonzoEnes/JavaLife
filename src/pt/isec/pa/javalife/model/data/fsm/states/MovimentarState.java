@@ -31,6 +31,6 @@ public class MovimentarState extends StateAdapter {
             //sentido do elemento fauna com mais força (notar que o elemento mais forte poderá
             //mudar e, nesse caso, o sentido seguido também mudará);
         }
-        return null;
+        return new Fauna(fauna.getArea(),ecossistema,fauna.getX(),fauna.getY());
     }
 }

@@ -34,7 +34,7 @@ public class EcossistemaUI extends BorderPane {
     }
 
     public void registerHandlers() {
-        manager.addListener(EcossistemaManager.EVOLVE, evt -> Platform.runLater(this::update));
+        manager.addClient(EcossistemaManager.EVOLVE, evt -> Platform.runLater(this::update));
     }
 
     public void createViews() {
