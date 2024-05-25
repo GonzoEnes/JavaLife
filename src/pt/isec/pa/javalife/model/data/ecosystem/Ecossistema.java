@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 
 public class Ecossistema implements Serializable, IGameEngineEvolve {
     @Serial
-    private static final long serialUID = 1L;
+    private static final long serialVersionUID = 1L;
     private Set<IElemento> elementos;
     private int altura;
     private int largura;
@@ -74,8 +74,6 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
             }
         }
         return toReturn;
-
-        //return new HashSet<>(elementos);
     }
 
     // LÓGICA
@@ -132,11 +130,25 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
 
     @Override
     public void evolve(IGameEngine gameEngine, long currentTime) {
+        /*for (IElemento current : elementos) {
+            if (current instanceof Fauna fauna) {
+                fauna.evolve();
+            }
+        }*/
+
         Iterator<IElemento> iterator = elementos.iterator();
+
         while (iterator.hasNext()) {
-            IElemento current = iterator.next();
-            if (current instanceof Fauna) {
-                if (((Fauna) current).getForca() == 0) {
+            IElemento elemento = iterator.next();
+            if (elemento instanceof Fauna fauna) {
+                //fauna.evolve();
+                if (fauna.getForca() == 0) {
+                    System.out.println(elementos.size());
+                    iterator.remove();
+                    System.out.println(elementos.size());
+                }
+            } else if (elemento instanceof Flora flora) {
+                if (flora.getForca() == 0) {
                     iterator.remove();
                 }
             }

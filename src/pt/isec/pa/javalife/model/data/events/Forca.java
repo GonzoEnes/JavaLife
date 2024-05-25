@@ -1,6 +1,7 @@
 package pt.isec.pa.javalife.model.data.events;
 
 import pt.isec.pa.javalife.model.data.ecosystem.Ecossistema;
+import pt.isec.pa.javalife.model.data.elements.Elemento;
 import pt.isec.pa.javalife.model.data.elements.Fauna;
 import pt.isec.pa.javalife.model.data.elements.IElemento;
 
@@ -11,14 +12,11 @@ public final class Forca extends EventoBase implements IEvento{
     }
 
     @Override
-    public boolean apply(int id) { // lógica de aplicar a injecao de força (pode estar errado)
-        for (IElemento elemento : ecossistema.getElementos()) {
-            if (elemento instanceof Fauna && elemento.getId() == id) {
-                ((Fauna)elemento).setForca(0);
-                return true;
-            }
+    public boolean apply(IElemento elemento) { // lógica de aplicar a injecao de força (pode estar errado)
+        if (elemento.getType() == Elemento.FAUNA) {
+            ((Fauna)elemento).setForca(((Fauna)elemento).getForca() + 50);
+            return true;
         }
-
         return false;
     }
 

@@ -20,15 +20,10 @@ public class ProcurarComidaState extends StateAdapter {
     public Fauna evolve(Fauna fauna,Ecossistema ecossistema) {
 
         fauna.setForca(fauna.getForca()+1);
-        if (fauna.getForca()==0){
-            changeState(State.MORRER);
-        }
 
         if(fauna.getForca()>75){
             changeState((State.MOVIMENTAR));
         }
-
-
 
         return null;
     }

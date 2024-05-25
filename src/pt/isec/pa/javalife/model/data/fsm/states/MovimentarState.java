@@ -22,9 +22,6 @@ public class MovimentarState extends StateAdapter {
 
         fauna.move();
 
-        if(fauna.getForca() == 0){
-            changeState(State.MORRER);
-        }
         if(fauna.getForca() < 35){
             changeState(State.PROCURAR_COMIDA);
         }

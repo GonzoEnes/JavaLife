@@ -29,7 +29,7 @@ public class EcossistemaManager {
 
     public EcossistemaManager(long timeInMillis) throws InterruptedException {
         pcs = new PropertyChangeSupport(this);
-        this.ecossistema = new Ecossistema(500, 500);
+        this.ecossistema = new Ecossistema(600, 600);
         IElemento elemento = new Fauna(new Area(10,10,10,10), ecossistema);
         this.ecossistema.addElemento(elemento);
         this.timeInMillis = timeInMillis;
@@ -95,7 +95,6 @@ public class EcossistemaManager {
             oos.writeObject(ecossistema);
         } catch (Exception e) {
             System.err.println("Erro na escrita do Ecossistema!");
-            e.printStackTrace();
             return false;
         }
         return true;

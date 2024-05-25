@@ -8,7 +8,6 @@ import java.io.Serializable;
 public abstract class StateAdapter implements IState, Serializable {
     private Context context;
     private Ecossistema ecossistema;
-
     public StateAdapter(Context context, Ecossistema ecossistema) {
         this.context = context;
         this.ecossistema = ecossistema;
