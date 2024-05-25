@@ -6,12 +6,16 @@ import pt.isec.pa.javalife.model.data.fsm.Context;
 import pt.isec.pa.javalife.model.data.fsm.State;
 
 public final class Fauna extends ElementoBase implements IElementoComForca {
+
     private double forca;
+
     private static int idS = 0;
+
     private Context context;
-    public Fauna(Area area, Ecossistema ecossistema, int x, int y) {
-        super(++idS, area, x, y);
-        this.forca = 50;
+
+    public Fauna(Area area, Ecossistema ecossistema) {
+        super(++idS, area);
+        this.forca = 0;
         this.context = new Context(ecossistema);
     }
 
@@ -34,6 +38,7 @@ public final class Fauna extends ElementoBase implements IElementoComForca {
     {
       return context.evolve(this);
     }
+
     public State getState(){
        return context.getState();
     }
@@ -44,6 +49,6 @@ public final class Fauna extends ElementoBase implements IElementoComForca {
     }
 
     public void move() {
-        forca=forca-0.5;
+        this.forca = this.forca - 0.5;
     }
 }

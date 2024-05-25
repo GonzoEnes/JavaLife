@@ -1,6 +1,7 @@
 package pt.isec.pa.javalife.model.data.events;
 
 import pt.isec.pa.javalife.model.data.ecosystem.Ecossistema;
+import pt.isec.pa.javalife.model.data.elements.IElemento;
 
 public sealed abstract class EventoBase implements IEvento permits Sol, Herbicida, Forca {
     private final Evento tipo;
@@ -18,7 +19,7 @@ public sealed abstract class EventoBase implements IEvento permits Sol, Herbicid
     }
 
     @Override
-    public boolean apply(int id) {
+    public boolean apply(IElemento elemento) {
         return false;
     }
 }

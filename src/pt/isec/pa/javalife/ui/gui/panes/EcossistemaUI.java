@@ -1,39 +1,25 @@
 package pt.isec.pa.javalife.ui.gui.panes;
 
 import javafx.application.Platform;
-import javafx.geometry.Pos;
-import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
-import pt.isec.pa.javalife.model.data.area.Area;
 import pt.isec.pa.javalife.model.data.ecosystem.EcossistemaManager;
 import pt.isec.pa.javalife.model.data.elements.*;
 import pt.isec.pa.javalife.ui.gui.resources.ImageManager;
 
-import java.util.Map;
-import java.util.Set;
-
-public class EcossistemaUI extends BorderPane {
+public class EcossistemaUI extends Canvas {
     private EcossistemaManager manager;
-    private GridPane board;
-    private Stage stage;
-
-    public EcossistemaUI(Stage stage, EcossistemaManager manager) {
-        this.stage = stage;
+    public EcossistemaUI(EcossistemaManager manager) {
+        super(100, 100);
         this.manager = manager;
-        createViews();
+
         registerHandlers();
         update();
-        this.requestFocus();
-
     }
 
     public void registerHandlers() {
+<<<<<<< HEAD
         manager.addClient(EcossistemaManager.EVOLVE, evt -> Platform.runLater(this::update));
     }
 
@@ -41,73 +27,48 @@ public class EcossistemaUI extends BorderPane {
         this.board = new GridPane();
         this.board.setStyle("-fx-background-color: black");
         this.setCenter(board);
+=======
+        manager.addListener(EcossistemaManager.ECOSSISTEMA_EVOLVE, evt -> Platform.runLater(this::update));
+>>>>>>> devBranch
     }
 
     public void update() { // mudar para as X,Y coordenadas
 
-        board.getChildren().clear();
+        /*board.getChildren().clear();
         Set<IElemento> elementos = manager.getElementos();
         for (IElemento elemento : elementos) {
             //System.out.println(elemento.toString());
             ImageView imageView = createImageView(elemento, elemento.getArea().cima(), elemento.getArea().direita());
             board.add(imageView, elemento.getX(),elemento.getY());
-        }
-
-        /*for (IElemento elemento : manager.getElementos()) {
-            System.out.println(elemento.getArea());
-        }
-        board.getChildren().clear();
-        Set<IElemento> elementos = manager.getElementos();
-        double ecoHeight = manager.getAltura();
-        double ecoWidth = manager.getLargura();
-        double screenHeight = stage.getHeight();
-        double screenWidth = stage.getWidth();
-
-        for (IElemento elemento : elementos) {
-            Area area = elemento.getArea();
-
-            double eleX = (area.esquerda() + area.direita()) / 2.0;
-            double eleY = (area.cima() + area.baixo()) / 2.0;
-
-            double heightScale = (screenHeight > ecoHeight) ? screenHeight / ecoHeight : ecoHeight / screenHeight;
-            double widthScale = (screenWidth > ecoWidth) ? screenWidth / ecoWidth : ecoWidth / screenWidth;
-
-            double posX = eleX * widthScale;
-            double posY = eleY * heightScale;
-
-            if (posX > screenWidth || posY > screenHeight) {
-                System.out.println("FORA DO PANE\n");
-            }
-
-            System.out.println("posX: " + posX + " posY: " + posY + " screenWidth: " + screenWidth + " screenHeight: " + screenHeight + " ecoWidth: " + ecoWidth + " ecoHeight: " + ecoHeight + " widthScale: " + widthScale + " heightScale: " + heightScale);
-            ImageView imageView = createImageView(elemento, heightScale, widthScale);
-            board.add(imageView, (int) posX, (int) posY);
         }*/
-
+        GraphicsContext gc = this.getGraphicsContext2D();
+        clearScreen(gc);
+        manager.getElementos().forEach(elemento -> drawElement(gc, elemento));
     }
 
-    private ImageView createImageView(IElemento elemento, double heightScale, double widthScale) {
-        Image image = getElementImage(elemento);
-        ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(widthScale);
-        imageView.setFitHeight(heightScale);
-        return imageView;
+    private void clearScreen(GraphicsContext gc) {
+        gc.setFill(Color.BLACK);
+        gc.fillRect(0,0,getWidth(), getHeight());
     }
 
+    public void updateSize(double newWidth, double newHeight) {
+        setWidth(newWidth);
+        setHeight(newHeight);
+        update();
+    }
 
-    private Image getElementImage(IElemento element) {
+    private void drawElement(GraphicsContext gc, IElemento element) {
         switch (element.getType()) {
             case FAUNA -> {
-                return ImageManager.getImage("animal.png");
+                 gc.drawImage(ImageManager.getImage("animal.png"), element.getArea().esquerda(), element.getArea().cima(), element.getArea().direita() - element.getArea().esquerda(), element.getArea().baixo() - element.getArea().cima());
             }
             case FLORA -> {
-                return ImageManager.getImage("flora.png");
+                 gc.drawImage(ImageManager.getImage("flora.png"), element.getArea().esquerda(), element.getArea().cima(), element.getArea().direita() - element.getArea().esquerda(), element.getArea().baixo() - element.getArea().cima());
             }
             case INANIMADO -> {
-                return ImageManager.getImage("pedra.png");
-            }
-            default -> {
-                return null;
+                 //gc.drawImage(ImageManager.getImage("pedra.png"), element.getArea().esquerda(), element.getArea().cima(), element.getArea().direita() - element.getArea().esquerda(), element.getArea().baixo() - element.getArea().cima());
+                 gc.setFill(Color.GRAY);
+                 gc.fillRect(element.getArea().esquerda(), element.getArea().cima(), element.getArea().direita() - element.getArea().esquerda(), element.getArea().baixo() - element.getArea().cima());
             }
         }
     }

@@ -1,6 +1,7 @@
 package pt.isec.pa.javalife.model.data.events;
 
 import pt.isec.pa.javalife.model.data.ecosystem.Ecossistema;
+import pt.isec.pa.javalife.model.data.elements.IElemento;
 
 public final class Sol extends EventoBase implements IEvento{
 
@@ -9,8 +10,9 @@ public final class Sol extends EventoBase implements IEvento{
     }
 
     @Override
-    public boolean apply(int id) {
-        return false;
+    public boolean apply(IElemento elemento) {
+        // TODO: lógica do Sol
+        return true;
     }
 
     @Override

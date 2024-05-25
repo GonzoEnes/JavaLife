@@ -17,9 +17,15 @@ public final class Flora extends ElementoBase implements IElementoComForca, IEle
     public static final int MAX_REPRODUCAO = 2;
     public static final int SER_CONSUMIDO = 1;
 
+<<<<<<< HEAD
     public Flora(Area area, String imagem, int x, int y) {
         super(++contadorId, area, x, y);
         this.forca = INIT_FORCA;
+=======
+    public Flora(Area area, String imagem) {
+        super(++idS, area);
+        this.forca = 50;
+>>>>>>> devBranch
         this.imagem = imagem;
     }
 
@@ -28,6 +34,7 @@ public final class Flora extends ElementoBase implements IElementoComForca, IEle
         return forca;
     }
 
+<<<<<<< HEAD
     public void aumentarForca(double aumento) {
         if(forca==MAX_FORCA){
             return;
@@ -46,6 +53,15 @@ public final class Flora extends ElementoBase implements IElementoComForca, IEle
     }
     public Boolean verificarReproducao(){
         return forca >= REPRODUCAO_FORCA && contadorReproducao < MAX_REPRODUCAO;
+=======
+    @Override
+    public void setForca(double forca) { // ISTO ESTÁ MAL
+        if (forca > 100 || forca < 0) {
+            return;
+        }
+
+        this.forca += forca;
+>>>>>>> devBranch
     }
 
     public Boolean reproducao(Ecossistema ecossistema){

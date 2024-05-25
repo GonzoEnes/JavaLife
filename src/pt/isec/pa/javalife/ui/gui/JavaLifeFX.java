@@ -39,10 +39,10 @@ public class JavaLifeFX extends Application {
     }
 
     private void firstStage(Stage stage) {
-        stage.initStyle(StageStyle.UNDECORATED);
-        RootPane rootPane = new RootPane(stage, manager);
-        Scene scene = new Scene(rootPane, 600,600);
+        RootPane rootPane = new RootPane(manager);
+        Scene scene = new Scene(rootPane, 800,600);
         stage.setScene(scene);
+        stage.setTitle("JavaLife - Trabalho Académico");
         stage.show();
     } // para propositos de teste, mudar para o menu depois
 }

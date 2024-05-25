@@ -19,17 +19,18 @@ public class ReproduzirState extends StateAdapter {
 
     @Override
     public Fauna evolve(Fauna fauna, Ecossistema ecossistema) {
-        if (fauna.getForca() < 50) {
+        /*if (fauna.getForca() < 50) {
             changeState(State.MORRER);
             return null;
-        }
-        if (fauna.getForca() > 60) {
+        }*/
+        //if (fauna.getForca() > 60) {
             //fauna.setForca(50);
-            Fauna newFauna = new Fauna(fauna.getArea(), ecossistema, fauna.getX(), fauna.getY());
+            Fauna newFauna = new Fauna(fauna.getArea(), ecossistema);
+            ecossistema.addElemento(newFauna);
             //changeState(State.MOVIMENTAR);
             return newFauna;
-        }
-        return null;
+        //}
+        //return null;
     }
 }
 
