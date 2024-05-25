@@ -18,28 +18,18 @@ public class EcossistemaManager {
     public static final String ECOSSISTEMA_TOOLS = "_tools_";
     public static final String ECOSSISTEMA_ELEMENTS = "_elements_";
     private Ecossistema ecossistema;
-<<<<<<< HEAD
     public static final String EVOLVE = "_evolve";
-=======
     private long timeInMillis;
->>>>>>> devBranch
     PropertyChangeSupport pcs;
-
-    public EcossistemaManager(){
-        pcs = new PropertyChangeSupport(this);
-        this.ecossistema = new Ecossistema(50, 50);
-    }
-
+    
     // observer/observable managenment
     public void addClient(String property, PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(property, listener);
     }
 
-<<<<<<< HEAD
     public void removeClient(String property, PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(property, listener);
-=======
-    // falta aqui depois o CmdManager e o PropertyChangeSupport (para a sinalização dos clientes) quando fizermos a GUI
+    }
 
     public EcossistemaManager(long timeInMillis) throws InterruptedException {
         pcs = new PropertyChangeSupport(this);
@@ -47,7 +37,6 @@ public class EcossistemaManager {
         IElemento elemento = new Fauna(new Area(10,10,10,10), ecossistema);
         this.ecossistema.addElemento(elemento);
         this.timeInMillis = timeInMillis;
->>>>>>> devBranch
     }
 
     public boolean addElemento(IElemento elemento){
@@ -75,7 +64,6 @@ public class EcossistemaManager {
     }
     public void evolve (IGameEngine gameEngine, long currentTime) {
         ecossistema.evolve(gameEngine,currentTime);
-<<<<<<< HEAD
         for (IElemento elemento : ecossistema.getElementos()) {
             if(elemento instanceof Fauna){
                 System.out.println(elemento.toString());
@@ -83,7 +71,6 @@ public class EcossistemaManager {
         }
         System.out.println();
         pcs.firePropertyChange(EVOLVE, null, null);
-=======
         pcs.firePropertyChange(ECOSSISTEMA_EVOLVE, null, null);
         /*i++;
         if(i%10 == 0){
@@ -94,7 +81,6 @@ public class EcossistemaManager {
                 throw new RuntimeException(e);
             }
         }*/
->>>>>>> devBranch
     }
 
     public boolean save(File file) {

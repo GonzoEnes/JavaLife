@@ -9,11 +9,7 @@ import pt.isec.pa.javalife.model.gameengine.interfaces.IGameEngineEvolve;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
-<<<<<<< HEAD
 import java.util.concurrent.ConcurrentHashMap;
-=======
-import java.util.concurrent.ConcurrentSkipListSet;
->>>>>>> devBranch
 
 public class Ecossistema implements Serializable, IGameEngineEvolve {
     @Serial
@@ -134,7 +130,6 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
 
     @Override
     public void evolve(IGameEngine gameEngine, long currentTime) {
-<<<<<<< HEAD
         List<IElemento> newElementos = new ArrayList<>();
         List<IElemento> deleteElementos = new ArrayList<>();
         synchronized(elementos){
@@ -161,7 +156,6 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         }
         elementos.addAll(newElementos);
         elementos.removeAll(deleteElementos);
-=======
         /*for (IElemento current : elementos) {
             if (current instanceof Fauna fauna) {
                 fauna.evolve();
@@ -185,12 +179,5 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
                 }
             }
         }
-        // CODIGO DA FLORA
->>>>>>> devBranch
     }
-
-    /*private boolean isAreaValida(Area area) {
-        return area.cima() >= 0 && area.esquerda() >= 0 &&
-                area.baixo() <= altura && area.direita() <= largura;
-    }*/
 }

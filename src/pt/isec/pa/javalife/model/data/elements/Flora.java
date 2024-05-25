@@ -17,15 +17,13 @@ public final class Flora extends ElementoBase implements IElementoComForca, IEle
     public static final int MAX_REPRODUCAO = 2;
     public static final int SER_CONSUMIDO = 1;
 
-<<<<<<< HEAD
     public Flora(Area area, String imagem, int x, int y) {
-        super(++contadorId, area, x, y);
+        super(++contadorId, area);
         this.forca = INIT_FORCA;
-=======
+    }
     public Flora(Area area, String imagem) {
-        super(++idS, area);
+        super(++contadorId, area);
         this.forca = 50;
->>>>>>> devBranch
         this.imagem = imagem;
     }
 
@@ -33,8 +31,6 @@ public final class Flora extends ElementoBase implements IElementoComForca, IEle
     public double getForca() {
         return forca;
     }
-
-<<<<<<< HEAD
     public void aumentarForca(double aumento) {
         if(forca==MAX_FORCA){
             return;
@@ -43,6 +39,7 @@ public final class Flora extends ElementoBase implements IElementoComForca, IEle
         if(forca>MAX_FORCA)
             forca=MAX_FORCA;
     }
+
     public void diminuirForca(double diminuir) {
         if(forca==MIN_FORCA){
             return;
@@ -51,9 +48,11 @@ public final class Flora extends ElementoBase implements IElementoComForca, IEle
         if(forca<MIN_FORCA)
             forca=MIN_FORCA;
     }
+
     public Boolean verificarReproducao(){
         return forca >= REPRODUCAO_FORCA && contadorReproducao < MAX_REPRODUCAO;
-=======
+    }
+
     @Override
     public void setForca(double forca) { // ISTO ESTÁ MAL
         if (forca > 100 || forca < 0) {
@@ -61,26 +60,26 @@ public final class Flora extends ElementoBase implements IElementoComForca, IEle
         }
 
         this.forca += forca;
->>>>>>> devBranch
     }
 
     public Boolean reproducao(Ecossistema ecossistema){
-        if(ecossistema.existeEspacoLivre(getX(),getY())!=-1){
-            Flora novaFlora = new Flora(getArea(), getImagem(), getX(), getY());
-            ecossistema.adicionarElemento(novaFlora);
-            forca=POS_REPRODUCAO_FORCA;
+        //if(ecossistema.existeEspacoLivre(getX(),getY())!=-1){
+          //  Flora novaFlora = new Flora(getArea(), getImagem(), getX(), getY());
+            //ecossistema.adicionarElemento(novaFlora);
+            //forca=POS_REPRODUCAO_FORCA;
             contadorReproducao++;
             return true;
-        }
-        return false;
+      //  }
+       // return false;
     }
 
     public void evolve(){
         aumentarForca(AUMENTO_FORCA);
         if(verificarReproducao()){
-            reproducao(getEcossistema());
+            //reproducao(getEcossistema());
         }
     }
+
     @Override
     public String getImagem() {
         return imagem;

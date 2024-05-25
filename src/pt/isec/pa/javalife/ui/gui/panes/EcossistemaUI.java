@@ -1,5 +1,4 @@
 package pt.isec.pa.javalife.ui.gui.panes;
-
 import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -19,17 +18,7 @@ public class EcossistemaUI extends Canvas {
     }
 
     public void registerHandlers() {
-<<<<<<< HEAD
-        manager.addClient(EcossistemaManager.EVOLVE, evt -> Platform.runLater(this::update));
-    }
-
-    public void createViews() {
-        this.board = new GridPane();
-        this.board.setStyle("-fx-background-color: black");
-        this.setCenter(board);
-=======
-        manager.addListener(EcossistemaManager.ECOSSISTEMA_EVOLVE, evt -> Platform.runLater(this::update));
->>>>>>> devBranch
+        manager.addClient(EcossistemaManager.ECOSSISTEMA_EVOLVE, evt -> Platform.runLater(this::update));
     }
 
     public void update() { // mudar para as X,Y coordenadas
@@ -60,15 +49,15 @@ public class EcossistemaUI extends Canvas {
     private void drawElement(GraphicsContext gc, IElemento element) {
         switch (element.getType()) {
             case FAUNA -> {
-                 gc.drawImage(ImageManager.getImage("animal.png"), element.getArea().esquerda(), element.getArea().cima(), element.getArea().direita() - element.getArea().esquerda(), element.getArea().baixo() - element.getArea().cima());
+                gc.drawImage(ImageManager.getImage("animal.png"), element.getArea().esquerda(), element.getArea().cima(), element.getArea().direita() - element.getArea().esquerda(), element.getArea().baixo() - element.getArea().cima());
             }
             case FLORA -> {
-                 gc.drawImage(ImageManager.getImage("flora.png"), element.getArea().esquerda(), element.getArea().cima(), element.getArea().direita() - element.getArea().esquerda(), element.getArea().baixo() - element.getArea().cima());
+                gc.drawImage(ImageManager.getImage("flora.png"), element.getArea().esquerda(), element.getArea().cima(), element.getArea().direita() - element.getArea().esquerda(), element.getArea().baixo() - element.getArea().cima());
             }
             case INANIMADO -> {
-                 //gc.drawImage(ImageManager.getImage("pedra.png"), element.getArea().esquerda(), element.getArea().cima(), element.getArea().direita() - element.getArea().esquerda(), element.getArea().baixo() - element.getArea().cima());
-                 gc.setFill(Color.GRAY);
-                 gc.fillRect(element.getArea().esquerda(), element.getArea().cima(), element.getArea().direita() - element.getArea().esquerda(), element.getArea().baixo() - element.getArea().cima());
+                //gc.drawImage(ImageManager.getImage("pedra.png"), element.getArea().esquerda(), element.getArea().cima(), element.getArea().direita() - element.getArea().esquerda(), element.getArea().baixo() - element.getArea().cima());
+                gc.setFill(Color.GRAY);
+                gc.fillRect(element.getArea().esquerda(), element.getArea().cima(), element.getArea().direita() - element.getArea().esquerda(), element.getArea().baixo() - element.getArea().cima());
             }
         }
     }
