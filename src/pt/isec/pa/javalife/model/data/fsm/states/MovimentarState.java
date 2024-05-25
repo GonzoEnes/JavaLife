@@ -19,18 +19,9 @@ public class MovimentarState extends StateAdapter {
 
     @Override
     public Fauna evolve(Fauna fauna,Ecossistema ecossistema){
-
-        fauna.move();
-
-        if(fauna.getForca() < 35){
+        //fauna.perdeForca();
+        if(fauna.getForca() <35){
             changeState(State.PROCURAR_COMIDA);
         }
-        if(fauna.getForca() > 50){
-            changeState(State.REPRODUZIR);
-            //fazer o moviumento normal Quando a sua força está acima de 50 e não está em procura de comida, dirigir-se-á no
-            //sentido do elemento fauna com mais força (notar que o elemento mais forte poderá
-            //mudar e, nesse caso, o sentido seguido também mudará);
-        }
-        return new Fauna(fauna.getArea(),ecossistema);
     }
 }

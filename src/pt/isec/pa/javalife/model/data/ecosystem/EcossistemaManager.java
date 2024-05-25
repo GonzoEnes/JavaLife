@@ -21,7 +21,7 @@ public class EcossistemaManager {
     public static final String EVOLVE = "_evolve";
     private long timeInMillis;
     PropertyChangeSupport pcs;
-    
+
     // observer/observable managenment
     public void addClient(String property, PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(property, listener);
@@ -34,7 +34,7 @@ public class EcossistemaManager {
     public EcossistemaManager(long timeInMillis) throws InterruptedException {
         pcs = new PropertyChangeSupport(this);
         this.ecossistema = new Ecossistema(600, 600);
-        IElemento elemento = new Fauna(new Area(10,10,10,10), ecossistema);
+        IElemento elemento = new Fauna(new Area(10,10,11,11), ecossistema);
         this.ecossistema.addElemento(elemento);
         this.timeInMillis = timeInMillis;
     }
