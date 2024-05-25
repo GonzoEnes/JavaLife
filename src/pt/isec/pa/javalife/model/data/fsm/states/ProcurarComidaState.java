@@ -2,34 +2,34 @@ package pt.isec.pa.javalife.model.data.fsm.states;
 
 import pt.isec.pa.javalife.model.data.ecosystem.Ecossistema;
 import pt.isec.pa.javalife.model.data.elements.Fauna;
-import pt.isec.pa.javalife.model.data.fsm.JavaLifeAdapter;
-import pt.isec.pa.javalife.model.data.fsm.JavaLifeContext;
-import pt.isec.pa.javalife.model.data.fsm.JavaLifeState;
+import pt.isec.pa.javalife.model.data.fsm.StateAdapter;
+import pt.isec.pa.javalife.model.data.fsm.Context;
+import pt.isec.pa.javalife.model.data.fsm.State;
 
-public class ProcurarComidaState extends JavaLifeAdapter {
-    public ProcurarComidaState(JavaLifeContext context, Ecossistema ecossistema) {
+public class ProcurarComidaState extends StateAdapter {
+    public ProcurarComidaState(Context context, Ecossistema ecossistema) {
         super(context, ecossistema);
     }
 
     @Override
-    public JavaLifeState getState() {
-        return JavaLifeState.PROCURAR_COMIDA;
+    public State getState() {
+        return State.PROCURAR_COMIDA;
     }
 
     @Override
-    public boolean evolve(Fauna fauna) {
+    public Fauna evolve(Fauna fauna,Ecossistema ecossistema) {
 
         fauna.setForca(fauna.getForca()+1);
         if (fauna.getForca()==0){
-            changeState(JavaLifeState.MORRER);
+            changeState(State.MORRER);
         }
 
         if(fauna.getForca()>75){
-            changeState((JavaLifeState.MOVIMENTAR));
+            changeState((State.MOVIMENTAR));
         }
 
 
 
-        return false;
+        return null;
     }
 }

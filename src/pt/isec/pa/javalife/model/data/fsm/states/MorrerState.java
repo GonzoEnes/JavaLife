@@ -2,22 +2,22 @@ package pt.isec.pa.javalife.model.data.fsm.states;
 
 import pt.isec.pa.javalife.model.data.ecosystem.Ecossistema;
 import pt.isec.pa.javalife.model.data.elements.Fauna;
-import pt.isec.pa.javalife.model.data.fsm.JavaLifeAdapter;
-import pt.isec.pa.javalife.model.data.fsm.JavaLifeContext;
-import pt.isec.pa.javalife.model.data.fsm.JavaLifeState;
+import pt.isec.pa.javalife.model.data.fsm.StateAdapter;
+import pt.isec.pa.javalife.model.data.fsm.Context;
+import pt.isec.pa.javalife.model.data.fsm.State;
 
-public class MorrerState extends JavaLifeAdapter {
-    public MorrerState(JavaLifeContext context, Ecossistema ecossistema) {
+public class MorrerState extends StateAdapter {
+    public MorrerState(Context context, Ecossistema ecossistema) {
         super(context, ecossistema);
     }
 
     @Override
-    public JavaLifeState getState() {
-        return JavaLifeState.MORRER;
+    public State getState() {
+        return State.MORRER;
     }
 
     @Override
-    public boolean evolve(Fauna fauna) {
-        return false;
+    public Fauna evolve(Fauna fauna,Ecossistema ecossistema) {
+        return null;
     }
 }

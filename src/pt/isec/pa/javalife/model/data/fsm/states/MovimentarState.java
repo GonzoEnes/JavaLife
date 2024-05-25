@@ -2,37 +2,35 @@ package pt.isec.pa.javalife.model.data.fsm.states;
 
 import pt.isec.pa.javalife.model.data.ecosystem.Ecossistema;
 import pt.isec.pa.javalife.model.data.elements.Fauna;
-import pt.isec.pa.javalife.model.data.fsm.JavaLifeAdapter;
-import pt.isec.pa.javalife.model.data.fsm.JavaLifeContext;
-import pt.isec.pa.javalife.model.data.fsm.JavaLifeState;
+import pt.isec.pa.javalife.model.data.fsm.StateAdapter;
+import pt.isec.pa.javalife.model.data.fsm.Context;
+import pt.isec.pa.javalife.model.data.fsm.State;
 
 import static java.lang.Thread.sleep;
 
-public class MovimentarState extends JavaLifeAdapter {
-    public MovimentarState(JavaLifeContext context, Ecossistema ecossistema) {
+public class MovimentarState extends StateAdapter {
+    public MovimentarState(Context context, Ecossistema ecossistema) {
         super(context,ecossistema);
     }
     @Override
-    public JavaLifeState getState() {
-        return JavaLifeState.MOVIMENTAR;
+    public State getState() {
+        return State.MOVIMENTAR;
     }
-    @Override
-    public boolean evolve(Fauna fauna) {
-        /*sleep(1000);
-        changeState(JavaLifeState.MORRER);*/
-        /*fauna.setForca(fauna.getForca()-1);
-        if (fauna.getForca() == 0){
-            changeState(JavaLifeState.MORRER);
-        }
 
-        if(fauna.getForca()<35){
-            changeState(JavaLifeState.PROCURAR_COMIDA);
+    @Override
+    public Fauna evolve(Fauna fauna,Ecossistema ecossistema){
+        fauna.move();
+        if(fauna.getForca()==0){
+            changeState(State.MORRER);
         }
-        if(fauna.getForca() < 70 && fauna.getForca() > 55){
-            changeState(JavaLifeState.REPRODUZIR);
-        }*/
-        fauna.setX(fauna.getX()+1);
-        //System.out.println("OLA ESTADO " + getState());
-        return true;
+        if(fauna.getForca()<35){
+            changeState(State.PROCURAR_COMIDA);
+        }
+        if(fauna.getForca()>50){
+            //fazer o moviumento normal Quando a sua força está acima de 50 e não está em procura de comida, dirigir-se-á no
+            //sentido do elemento fauna com mais força (notar que o elemento mais forte poderá
+            //mudar e, nesse caso, o sentido seguido também mudará);
+        }
+        return new Fauna(fauna.getArea(),ecossistema,fauna.getX(),fauna.getY());
     }
 }

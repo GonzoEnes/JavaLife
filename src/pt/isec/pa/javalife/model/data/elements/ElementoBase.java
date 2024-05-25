@@ -2,19 +2,15 @@ package pt.isec.pa.javalife.model.data.elements;
 
 import pt.isec.pa.javalife.model.data.area.Area;
 
-public abstract sealed class ElementoBase
-        implements IElemento
-        permits Inanimado, Flora, Fauna {
+public abstract sealed class ElementoBase implements IElemento permits Inanimado, Flora, Fauna {
     private int id;
     private Area area;
-    private Elemento tipo;
 
     private int x,y;
 
-    public ElementoBase(int id, Area area, Elemento tipo, int x, int y) {
+    public ElementoBase(int id, Area area, int x, int y) {
         this.id = id;
         this.area = area;
-        this.tipo = tipo;
         this.x = x;
         this.y = y;
     }
@@ -47,15 +43,11 @@ public abstract sealed class ElementoBase
 
     @Override
     public Elemento getType() {
-        return tipo;
+        return null;
     }
 
     public void setArea(Area area) {
         this.area = area;
-    }
-
-    public void setTipo(Elemento tipo) {
-        this.tipo = tipo;
     }
 
     @Override
