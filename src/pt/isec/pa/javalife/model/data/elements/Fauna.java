@@ -53,4 +53,11 @@ public final class Fauna extends ElementoBase implements IElementoComForca {
         return getId() + " " + context.getState();
     }
 
+    public void perderForca() {
+        forca-=PERDA_FORCA;
+    }
+
+    public int getVelocidade() {
+        return 1;
+    }
 }
