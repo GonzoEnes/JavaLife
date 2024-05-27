@@ -3,6 +3,7 @@ package pt.isec.pa.javalife.model.data.ecosystem;
 import pt.isec.pa.javalife.model.data.area.Area;
 import pt.isec.pa.javalife.model.data.elements.Elemento;
 import pt.isec.pa.javalife.model.data.elements.Fauna;
+import pt.isec.pa.javalife.model.data.elements.Flora;
 import pt.isec.pa.javalife.model.data.elements.IElemento;
 import pt.isec.pa.javalife.model.data.fsm.Context;
 import pt.isec.pa.javalife.model.gameengine.interfaces.IGameEngine;
@@ -34,8 +35,10 @@ public class EcossistemaManager {
     public EcossistemaManager(long timeInMillis) throws InterruptedException {
         pcs = new PropertyChangeSupport(this);
         this.ecossistema = new Ecossistema(600, 600);
-        IElemento elemento = new Fauna(new Area(10,10,14,14), ecossistema);
+        IElemento elemento = new Fauna(new Area(400,300,450,320), ecossistema);
+        IElemento elemento1 = new Flora(new Area(200,150,250,180));
         this.ecossistema.addElemento(elemento);
+        this.ecossistema.addElemento(elemento1);
         this.timeInMillis = timeInMillis;
     }
 

@@ -58,6 +58,6 @@ public final class Fauna extends ElementoBase implements IElementoComForca {
     }
 
     public int getVelocidade() {
-        return 1;
+        return 3;
     }
 }

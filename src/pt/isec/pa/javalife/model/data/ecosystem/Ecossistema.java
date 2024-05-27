@@ -38,7 +38,6 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         Inanimado baixo = new Inanimado(new Area(0,0,0,0));
         Inanimado esquerda = new Inanimado(new Area(0,0,0,0));
         Inanimado direita = new Inanimado(new Area(0,0,0,0));
-
         cima.setArea(new Area(0,0,getLargura(), 7));
         baixo.setArea(new Area(0,getAltura()-7,getLargura(), getAltura()));
         esquerda.setArea(new Area(0,0,7,getAltura()));
@@ -73,7 +72,7 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
             } catch (CloneNotSupportedException ignored) {
             }
         }
-        return toReturn;
+        return elementos;
     }
 
     // LÓGICA
@@ -125,16 +124,18 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
     }
 
     public Area getFloraMaisProxima(Area area) {
-        double pontoMedioX = area.direita() - area.esquerda();
-        double pontoMedioY = area.baixo() - area.cima();
+        double pontoMedioX = (area.direita() + area.esquerda())/2;
+        double pontoMedioY = (area.baixo() + area.cima())/2;
+        System.out.println(pontoMedioX + " " + pontoMedioY);
         Area toReturn = null;
         double resultado=1000;
         double x;
         double y;
         for (IElemento elemento : elementos) {
             if (elemento instanceof Flora flora) {
-                double auxPontoMedioX= flora.getArea().direita() - flora.getArea().esquerda();
-                double auxPontoMedioY = flora.getArea().baixo() - flora.getArea().cima();
+                double auxPontoMedioX= (flora.getArea().direita() + flora.getArea().esquerda())/2;
+                double auxPontoMedioY = (flora.getArea().baixo() + flora.getArea().cima())/2;
+                System.out.println(auxPontoMedioX + " " + auxPontoMedioY);
                 if(auxPontoMedioX >= pontoMedioX) {
                     x = auxPontoMedioX - pontoMedioX;
                     if(auxPontoMedioY >= pontoMedioY) {

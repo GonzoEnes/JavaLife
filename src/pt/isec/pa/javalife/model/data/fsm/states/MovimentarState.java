@@ -30,6 +30,8 @@ public class MovimentarState extends StateAdapter {
                         fauna.getArea().baixo(),
                         ecossistema.getLargura()-1-(fauna.getArea().esquerda()-fauna.getArea().direita())));
                 fauna.perderForca();
+                if(fauna.getForca()<=35)
+                    changeState(State.PROCURAR_COMIDA);
                 return;
             }
             fauna.setArea(new Area(fauna.getArea().cima(),
@@ -37,6 +39,8 @@ public class MovimentarState extends StateAdapter {
                     fauna.getArea().baixo(),
                     fauna.getArea().direita() + fauna.getVelocidade()));
             fauna.perderForca();
+            if(fauna.getForca()<=35)
+                changeState(State.PROCURAR_COMIDA);
         }else if(aux < 181) {
             if(fauna.getArea().cima() - fauna.getVelocidade()<0){
                 fauna.setArea(new Area(0,
@@ -44,6 +48,8 @@ public class MovimentarState extends StateAdapter {
                         fauna.getArea().baixo()-fauna.getArea().cima()-1,
                         fauna.getArea().direita()));
                 fauna.perderForca();
+                if(fauna.getForca()<=35)
+                    changeState(State.PROCURAR_COMIDA);
                 return;
             }
             fauna.setArea(new Area(fauna.getArea().cima() - fauna.getVelocidade(),
@@ -51,6 +57,8 @@ public class MovimentarState extends StateAdapter {
                     fauna.getArea().baixo() - fauna.getVelocidade(),
                     fauna.getArea().direita()));
             fauna.perderForca();
+            if(fauna.getForca()<=35)
+                changeState(State.PROCURAR_COMIDA);
         }else if(aux < 271) {
             if(fauna.getArea().esquerda() - fauna.getVelocidade()<0){
                 fauna.setArea(new Area(fauna.getArea().cima(),
@@ -58,6 +66,8 @@ public class MovimentarState extends StateAdapter {
                         fauna.getArea().baixo(),
                         fauna.getArea().direita()-fauna.getArea().esquerda()-1));
                 fauna.perderForca();
+                if(fauna.getForca()<=35)
+                    changeState(State.PROCURAR_COMIDA);
                 return;
             }
             fauna.setArea(new Area(fauna.getArea().cima(),
@@ -65,6 +75,8 @@ public class MovimentarState extends StateAdapter {
                     fauna.getArea().baixo(),
                     fauna.getArea().direita() - fauna.getVelocidade()));
             fauna.perderForca();
+            if(fauna.getForca()<=35)
+                changeState(State.PROCURAR_COMIDA);
         }else if(aux < 361) {
             if(fauna.getArea().baixo() + fauna.getVelocidade()>=ecossistema.getAltura()){
                 fauna.setArea(new Area(ecossistema.getAltura()-1-(fauna.getArea().baixo()-fauna.getArea().cima()),
@@ -72,6 +84,8 @@ public class MovimentarState extends StateAdapter {
                         ecossistema.getAltura()-1,
                         fauna.getArea().direita()));
                 fauna.perderForca();
+                if(fauna.getForca()<=35)
+                    changeState(State.PROCURAR_COMIDA);
                 return;
             }
             fauna.setArea(new Area(fauna.getArea().cima() + fauna.getVelocidade(),
@@ -79,9 +93,11 @@ public class MovimentarState extends StateAdapter {
                     fauna.getArea().baixo() + fauna.getVelocidade(),
                     fauna.getArea().direita()));
             fauna.perderForca();
+            if(fauna.getForca()<=35)
+                changeState(State.PROCURAR_COMIDA);
         }
     }
-    
+
     public int getRandomNumberInRange(int maxNumber) {
         Random r = new Random();
         return r.nextInt(maxNumber);

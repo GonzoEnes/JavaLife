@@ -17,7 +17,7 @@ public final class Flora extends ElementoBase implements IElementoComForca, IEle
     public static final int MAX_REPRODUCAO = 2;
     public static final int SER_CONSUMIDO = 1;
 
-    public Flora(Area area, String imagem, int x, int y) {
+    public Flora(Area area) {
         super(++contadorId, area);
         this.forca = INIT_FORCA;
     }

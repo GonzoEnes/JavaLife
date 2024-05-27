@@ -14,7 +14,7 @@ public class Context implements Serializable {
 
     public Context(Ecossistema ecossistema) {
         this.ecossistema = ecossistema;
-        this.state = State.createState(State.MORRER, this, ecossistema);
+        this.state = State.createState(State.MOVIMENTAR, this, ecossistema);
     }
     void changeState(IState state) {
         this.state = state;

@@ -25,63 +25,71 @@ public class ProcurarComidaState extends StateAdapter {
     }
     @Override
     public void evolve(Fauna fauna, Ecossistema ecossistema) {
+
         //se esta em cima de uma flora consume a flora
         Area area = ecossistema.getFloraMaisProxima(fauna.getArea());
         if (area == null) {
+            System.out.println("Nao existe flora no ecossistema");
             area = ecossistema.getFaunaMaisProximaComMenorForca(fauna.getArea(),fauna.getId());
+            //consumirFauna
             if(area == null){
                 //nao exite mais fauna nem flora no ecossitema
                 return;
             }
         }
-        double pontox= area.direita() - area.esquerda();
-        double pontoy= area.baixo() - area.cima();
+        double pontox= (area.direita() + area.esquerda())/2;
+        double pontoy= (area.baixo() + area.cima())/2;
 
-        //falta saber lidar com as pedras no meio do ecossistema
-        if(fauna.getArea().cima() > pontox
-                && (fauna.getArea().cima() - pontox)>0.5
-                && fauna.getArea().esquerda()>pontoy
-                && (fauna.getArea().esquerda()-pontoy)>0.5) {
-            fauna.setArea(new Area(fauna.getArea().cima()-1,fauna.getArea().esquerda()-1,fauna.getArea().baixo()-1,fauna.getArea().direita()-1));
+        double pontoXFauna = (fauna.getArea().direita() + fauna.getArea().esquerda())/2;
+        double pontoYFauna = (fauna.getArea().baixo() + fauna.getArea().cima())/2;
+        if(((pontoXFauna>pontox && pontoXFauna-pontox<(area.direita() - area.esquerda())/2) && (pontoYFauna>pontoy && pontoYFauna-pontoy<(area.baixo() - area.cima())/2)) ||
+                ((pontoXFauna<pontox && pontox-pontoXFauna<(area.direita() - area.esquerda())/2) && (pontoYFauna<pontoy && pontoy-pontoYFauna<(area.baixo() - area.cima())/2)) ||
+                ((pontoXFauna<pontox && pontox-pontoXFauna<(area.direita() - area.esquerda())/2) && (pontoYFauna>pontoy && pontoYFauna-pontoy<(area.baixo() - area.cima())/2)) ||
+                ((pontoXFauna>pontox && pontoXFauna-pontox<(area.direita() - area.esquerda())/2) && (pontoYFauna<pontoy && pontoy-pontoYFauna<(area.baixo() - area.cima())/2))){
+            //cosumirFlora
             return;
-        }else if(fauna.getArea().cima() > pontox
-                && (fauna.getArea().cima() - pontox)>0.5
-                && fauna.getArea().esquerda()<pontoy
-                && (fauna.getArea().esquerda()-pontoy)<0.5) {
-            fauna.setArea(new Area(fauna.getArea().cima()-1,fauna.getArea().esquerda()+1,fauna.getArea().baixo()-1,fauna.getArea().direita()+1));
-            return;
-        }else if(fauna.getArea().cima() < pontox
-                && (fauna.getArea().cima() - pontox)>0.5
-                && fauna.getArea().esquerda()>pontoy
-                && (fauna.getArea().esquerda()-pontoy)>0.5) {
-            fauna.setArea(new Area(fauna.getArea().cima()+1,fauna.getArea().esquerda()-1,fauna.getArea().baixo()+1,fauna.getArea().direita()-1));
-            return;
-        }else if(fauna.getArea().cima() < pontox
-                && (fauna.getArea().cima() - pontox)>0.5
-                && fauna.getArea().esquerda()<pontoy
-                && (fauna.getArea().esquerda()-pontoy)<0.5) {
-            fauna.setArea(new Area(fauna.getArea().cima()+1,fauna.getArea().esquerda()+1,fauna.getArea().baixo()+1,fauna.getArea().direita()+1));
-            return;
-        }else if((fauna.getArea().cima() - pontox)<0.5
-                && fauna.getArea().esquerda()>pontoy
-                && (fauna.getArea().esquerda()-pontoy)>0.5) {
-            fauna.setArea(new Area(fauna.getArea().cima(),fauna.getArea().esquerda()-1,fauna.getArea().baixo(),fauna.getArea().direita()-1));
-            return;
-        }else if((fauna.getArea().cima() - pontox)<0.5
-                && fauna.getArea().esquerda()<pontoy
-                && (fauna.getArea().esquerda()-pontoy)<0.5) {
-            fauna.setArea(new Area(fauna.getArea().cima(),fauna.getArea().esquerda()+1,fauna.getArea().baixo(),fauna.getArea().direita()+1));
-            return;
-        }else if((fauna.getArea().esquerda() - pontoy)<0.5
-                && fauna.getArea().cima()>pontox
-                && (fauna.getArea().cima()-pontox)>0.5) {
-            fauna.setArea(new Area(fauna.getArea().cima()-1,fauna.getArea().esquerda(),fauna.getArea().baixo()-1,fauna.getArea().direita()));
-            return;
-        }else if((fauna.getArea().esquerda() - pontoy)<0.5
-                && fauna.getArea().cima()<pontox
-                && (fauna.getArea().cima()-pontox)<0.5) {
-            fauna.setArea(new Area(fauna.getArea().cima()+1,fauna.getArea().esquerda(),fauna.getArea().baixo()+1,fauna.getArea().direita()));
-            return;
+        }
+
+        if(pontoXFauna > pontox  && pontoYFauna > pontoy){
+            fauna.setArea(new Area(fauna.getArea().cima()-fauna.getVelocidade(),
+                    fauna.getArea().esquerda()-fauna.getVelocidade(),
+                    fauna.getArea().baixo()-fauna.getVelocidade(),
+                    fauna.getArea().direita()-fauna.getVelocidade()));
+        }else if(pontoXFauna > pontox  && pontoYFauna < pontoy){
+            fauna.setArea(new Area(fauna.getArea().cima()+fauna.getVelocidade(),
+                    fauna.getArea().esquerda()-fauna.getVelocidade(),
+                    fauna.getArea().baixo()+fauna.getVelocidade(),
+                    fauna.getArea().direita()-fauna.getVelocidade()));
+        }else if(pontoXFauna < pontox  && pontoYFauna > pontoy){
+            fauna.setArea(new Area(fauna.getArea().cima()-fauna.getVelocidade(),
+                    fauna.getArea().esquerda()+fauna.getVelocidade(),
+                    fauna.getArea().baixo()-fauna.getVelocidade(),
+                    fauna.getArea().direita()+fauna.getVelocidade()));
+        }else if(pontoXFauna < pontox  && pontoYFauna < pontoy){
+            fauna.setArea(new Area(fauna.getArea().cima()+fauna.getVelocidade(),
+                    fauna.getArea().esquerda()+fauna.getVelocidade(),
+                    fauna.getArea().baixo()+fauna.getVelocidade(),
+                    fauna.getArea().direita()+fauna.getVelocidade()));
+        }else if(pontoXFauna-pontox<2 && pontoYFauna<pontoy){
+            fauna.setArea(new Area(fauna.getArea().cima()+fauna.getVelocidade(),
+                    fauna.getArea().esquerda(),
+                    fauna.getArea().baixo()+fauna.getVelocidade(),
+                    fauna.getArea().direita()));
+        }else if(pontoXFauna-pontox<2 && pontoYFauna>pontoy){
+            fauna.setArea(new Area(fauna.getArea().cima()-fauna.getVelocidade(),
+                    fauna.getArea().esquerda(),
+                    fauna.getArea().baixo()-fauna.getVelocidade(),
+                    fauna.getArea().direita()));
+        }else if(pontoXFauna<pontox && pontoYFauna-pontoy<2){
+            fauna.setArea(new Area(fauna.getArea().cima(),
+                    fauna.getArea().esquerda()+fauna.getVelocidade(),
+                    fauna.getArea().baixo(),
+                    fauna.getArea().direita()+fauna.getVelocidade()));
+        }else if(pontoXFauna>pontox && pontoYFauna-pontoy<2){
+            fauna.setArea(new Area(fauna.getArea().cima(),
+                    fauna.getArea().esquerda()-fauna.getVelocidade(),
+                    fauna.getArea().baixo(),
+                    fauna.getArea().direita()-fauna.getVelocidade()));
         }
     }
 }
