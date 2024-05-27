@@ -24,8 +24,8 @@ public class Context implements Serializable {
         return state.getState();
     }
 
-    public Fauna evolve(Fauna fauna) {
-        return state.evolve(fauna,ecossistema);
+    public void evolve(Fauna fauna) {
+        state.evolve(fauna, ecossistema);
     }
 
     public void evolve(IGameEngine gameEngine, long currentTime){

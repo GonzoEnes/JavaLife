@@ -24,12 +24,13 @@ public class ProcurarComidaState extends StateAdapter {
         return r.nextBoolean();
     }
     @Override
-    public void evolve(Fauna fauna,Ecossistema ecossistema) {
+    public void evolve(Fauna fauna, Ecossistema ecossistema) {
         //se esta em cima de uma flora consume a flora
         Area area = ecossistema.getFloraMaisProxima(fauna.getArea());
         if (area == null) {
-            area = ecossistema.getFaunaMaisProximaComMenorForca(fauna.getArea());
+            area = ecossistema.getFaunaMaisProximaComMenorForca(fauna.getArea(),fauna.getId());
             if(area == null){
+                //nao exite mais fauna nem flora no ecossitema
                 return;
             }
         }

@@ -78,21 +78,8 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
 
     // LÓGICA
     public boolean addElemento(IElemento elemento){ // tem de ser feito com factory
-        switch (elemento.getType()) {
-            case INANIMADO -> {
-                elementos.add(Elemento.INANIMADO.createElemento(this, null));
-                return true;
-            }
-            case FAUNA -> {
-                elementos.add(Elemento.FAUNA.createElemento(this, null));
-                return true;
-            }
-            case FLORA -> {
-                elementos.add(Elemento.FLORA.createElemento(this, null));
-                return true;
-            }
-        }
-        return false;
+        elementos.add(elemento);
+        return true;
     }
 
     public boolean removeElemento(IElemento elemento) {
@@ -130,54 +117,85 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
 
     @Override
     public void evolve(IGameEngine gameEngine, long currentTime) {
-        List<IElemento> newElementos = new ArrayList<>();
-        List<IElemento> deleteElementos = new ArrayList<>();
-        synchronized(elementos){
-            Iterator<IElemento> iterator = elementos.iterator();
-            while (iterator.hasNext()) {
-                IElemento elemento = iterator.next();
-                if (elemento instanceof Fauna) {
-                    Fauna fauna = (Fauna) elemento;
-                    Fauna newFauna = fauna.evolve();
-                    if(fauna.getState()== State.MOVIMENTAR){
-                        if (newFauna != null) {
-                            addElemento(newFauna);
-                            newElementos.add(newFauna);
-                        }
-                    }
-                    if(fauna.getState()== State.PROCURAR_COMIDA){
-                        if (newFauna != null) {
-                            deleteElementos.add(newFauna);
-                        }
-                    }
-
-                }
-            }
-        }
-        elementos.addAll(newElementos);
-        elementos.removeAll(deleteElementos);
-        /*for (IElemento current : elementos) {
-            if (current instanceof Fauna fauna) {
+        for (IElemento elemento : elementos) {
+            if (elemento instanceof Fauna fauna) {
                 fauna.evolve();
             }
-        }*/
+        }
+    }
 
-        Iterator<IElemento> iterator = elementos.iterator();
+    public Area getFloraMaisProxima(Area area) {
+        double pontoMedioX = area.direita() - area.esquerda();
+        double pontoMedioY = area.baixo() - area.cima();
+        Area toReturn = null;
+        double resultado=1000;
+        double x;
+        double y;
+        for (IElemento elemento : elementos) {
+            if (elemento instanceof Flora flora) {
+                double auxPontoMedioX= flora.getArea().direita() - flora.getArea().esquerda();
+                double auxPontoMedioY = flora.getArea().baixo() - flora.getArea().cima();
+                if(auxPontoMedioX >= pontoMedioX) {
+                    x = auxPontoMedioX - pontoMedioX;
+                    if(auxPontoMedioY >= pontoMedioY) {
+                        y = auxPontoMedioY - pontoMedioY;
+                    }else
+                        y= pontoMedioY - auxPontoMedioY;
+                    if(resultado>x+y){
+                        resultado=x+y;
+                        toReturn=flora.getArea();
+                    }
 
-        while (iterator.hasNext()) {
-            IElemento elemento = iterator.next();
-            if (elemento instanceof Fauna fauna) {
-                //fauna.evolve();
-                if (fauna.getForca() == 0) {
-                    System.out.println(elementos.size());
-                    iterator.remove();
-                    System.out.println(elementos.size());
-                }
-            } else if (elemento instanceof Flora flora) {
-                if (flora.getForca() == 0) {
-                    iterator.remove();
+                }else{
+                    x = pontoMedioX - auxPontoMedioX;
+                    if(auxPontoMedioY >= pontoMedioY) {
+                        y = auxPontoMedioY - pontoMedioY;
+                    }else
+                        y= pontoMedioY - auxPontoMedioY;
+                    if(resultado>x+y){
+                        resultado=x+y;
+                        toReturn=flora.getArea();
+                    }
                 }
             }
         }
+        return toReturn;
+    }
+
+    public Area getFaunaMaisProximaComMenorForca(Area area, int id) {
+        double pontoMedioX = area.direita() - area.esquerda();
+        double pontoMedioY = area.baixo() - area.cima();
+        Area toReturn = null;
+        double resultado=1000;
+        double x;
+        double y;
+        for (IElemento elemento : elementos) {
+            if (elemento instanceof Fauna fauna && fauna.getId()!=id) {
+                double auxPontoMedioX= fauna.getArea().direita() - fauna.getArea().esquerda();
+                double auxPontoMedioY = fauna.getArea().baixo() - fauna.getArea().cima();
+                if(auxPontoMedioX >= pontoMedioX) {
+                    x = auxPontoMedioX - pontoMedioX;
+                    if(auxPontoMedioY >= pontoMedioY) {
+                        y = auxPontoMedioY - pontoMedioY;
+                    }else
+                        y= pontoMedioY - auxPontoMedioY;
+                    if(resultado>x+y){
+                        resultado=x+y;
+                        toReturn=fauna.getArea();
+                    }
+                }else{
+                    x = pontoMedioX - auxPontoMedioX;
+                    if(auxPontoMedioY >= pontoMedioY) {
+                        y = auxPontoMedioY - pontoMedioY;
+                    }else
+                        y= pontoMedioY - auxPontoMedioY;
+                    if(resultado>x+y){
+                        resultado=x+y;
+                        toReturn=fauna.getArea();
+                    }
+                }
+            }
+        }
+        return toReturn;
     }
 }

@@ -18,7 +18,7 @@ public class MovimentarState extends StateAdapter {
     }
 
     @Override
-    public Fauna evolve(Fauna fauna,Ecossistema ecossistema){
+    public void evolve(Fauna fauna, Ecossistema ecossistema){
         //fauna.perdeForca();
         if(fauna.getForca() <35){
             changeState(State.PROCURAR_COMIDA);

@@ -40,8 +40,8 @@ public final class Fauna extends ElementoBase implements IElementoComForca {
         return Elemento.FAUNA;
     }
 
-    public Fauna evolve(){
-      return context.evolve(this);
+    public void evolve(){
+        context.evolve(this);
     }
 
     public State getState(){

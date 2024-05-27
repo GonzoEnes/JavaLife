@@ -17,8 +17,7 @@ public class MorrerState extends StateAdapter {
     }
 
     @Override
-    public Fauna evolve(Fauna fauna, Ecossistema ecossistema) {
+    public void evolve(Fauna fauna, Ecossistema ecossistema) {
         ecossistema.removeElemento(fauna);
-        return fauna;
     }
 }
