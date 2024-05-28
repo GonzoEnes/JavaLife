@@ -30,10 +30,10 @@ public class ReproduzirState extends StateAdapter {
            fauna.decreaseStrengthByMovement();
            return;
         }
-        double x = (fauna.getArea().right()-fauna.getArea().left())/2;
-        double y = (fauna.getArea().down()-fauna.getArea().up())/2;
-        double xStrongestFauna = (position.right()-position.left())/2;
-        double yStrongestFauna = (position.down()-position.up())/2;
+        double x = fauna.getArea().left()+(fauna.getArea().right() - fauna.getArea().left()) / 2;
+        double y =fauna.getArea().up()+ (fauna.getArea().down() - fauna.getArea().up()) / 2;
+        double xStrongestFauna =position.left()+ (position.right() - position.left()) / 2;
+        double yStrongestFauna =position.up()+ (position.down() - position.up()) / 2;
         if (x < xStrongestFauna && (xStrongestFauna-x)>=1){
             if(!ecossistema.hasAnInanimadoOrFauna(new Area(fauna.getArea().up(), fauna.getArea().down(), fauna.getArea().right() + fauna.getSpeed(), fauna.getArea().left() + fauna.getSpeed()))){
                 fauna.setArea(new Area(fauna.getArea().up(), fauna.getArea().down(), fauna.getArea().right() + fauna.getSpeed(), fauna.getArea().left() + fauna.getSpeed()));

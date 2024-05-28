@@ -5,12 +5,13 @@ import pt.isec.pa.javalife.model.data.ecosystem.Ecossistema;
 import pt.isec.pa.javalife.model.data.fsm.Context;
 import pt.isec.pa.javalife.model.data.fsm.State;
 
-public sealed class Fauna extends ElementoBase implements IElementoComForca permits Animal {
+public sealed class Fauna extends ElementoBase implements IElementoComForca, IElementoComImagem permits Animal {
     //esta sempre em movimento a nao ser q se esteja a alimentar(mesma posicao q alguma flora)
 //movimento tem velocidade por tick e direcao (0-359) direita esquerda cima baixo
 // considerando-se adjacente uma área de igual dimensão à sua (em cima, em baixo, à esquerda ou à direita);
     private Context stateMachine;
     private double strength;
+    private String image;
     private static int idCounter = 0;
     private int reproductionCounter = 0;
     private int speed;
@@ -104,4 +105,13 @@ public sealed class Fauna extends ElementoBase implements IElementoComForca perm
         stateMachine.evolve(this);
     }
 
+    @Override
+    public String getImage() {
+        return image;
+    }
+
+    @Override
+    public void setImage(String image) {
+        this.image = image;
+    }
 }

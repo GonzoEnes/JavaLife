@@ -133,7 +133,7 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
 
     public boolean hasAnInanimadoOrFauna(Area area) {
         //verificar senao tem uma pedra nesta area para ser possivel movimentar se
-        return true;
+        return false;
     }
 
     public Area getStrongestFauna(int id) {
@@ -166,8 +166,8 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
     }
 
     public Area getClosestFlora(Fauna fauna) {
-        double x = (fauna.getArea().right() - fauna.getArea().left()) / 2;
-        double y = (fauna.getArea().down() - fauna.getArea().up()) / 2;
+        double x = fauna.getArea().left()+(fauna.getArea().right() - fauna.getArea().left()) / 2;
+        double y = fauna.getArea().up()+(fauna.getArea().down() - fauna.getArea().up()) / 2;
         double xClosestFlora;
         double yClosestFlora;
         double distance=-1;
@@ -175,8 +175,8 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         Area aux=null;
         for(IElemento elemento :elementos){
             if(elemento instanceof Flora flora){
-                xClosestFlora = (flora.getArea().right() - flora.getArea().left()) / 2;
-                yClosestFlora = (flora.getArea().down() - flora.getArea().up()) / 2;
+                xClosestFlora =flora.getArea().right()+ (flora.getArea().right() - flora.getArea().left()) / 2;
+                yClosestFlora = flora.getArea().up()+(flora.getArea().down() - flora.getArea().up()) / 2;
                 distanceClosestFauna = Math.abs(x-xClosestFlora)+Math.abs(y-yClosestFlora);
                 if(distance==-1) {
                     aux = flora.getArea();
@@ -190,5 +190,4 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         }
         return aux;
     }
-
 }

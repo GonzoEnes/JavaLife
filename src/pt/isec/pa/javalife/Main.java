@@ -11,7 +11,7 @@ public class Main {
         manager = new EcossistemaManager(100);
         GameEngine gameEngine = new GameEngine();
         gameEngine.registerClient((g,t) -> manager.evolve(gameEngine,t));
-        gameEngine.start(500);
+        gameEngine.start(100);
         Application.launch(JavaLifeFX.class, args);
         gameEngine.waitForTheEnd();
 

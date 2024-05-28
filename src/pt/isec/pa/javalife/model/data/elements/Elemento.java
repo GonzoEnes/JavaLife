@@ -9,7 +9,7 @@ public enum Elemento {
     public IElemento createElemento(Ecossistema ecossistema, String imagem) {
         return switch (this) {
             case INANIMADO -> new Pedra(new Area(0,0,0,0));
-            case FLORA -> new Erva(new Area(0,0,0,0), imagem);
+            case FLORA -> new Erva(new Area(0,0,0,0));
             case FAUNA -> new Animal(new Area(0,0,0,0), ecossistema);
         };
     }

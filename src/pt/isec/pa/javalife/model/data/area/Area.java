@@ -7,24 +7,11 @@ import java.io.Serializable;
 public record Area(double up, double down, double right, double left) implements Serializable {
 
     @Override
-    public double up() {
-        return up;
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Area area = (Area) obj;
+        return this.up <= area.down && this.down >= area.up && this.right >= area.left && this.left <= area.right;
     }
-
-    @Override
-    public double down() {
-        return down;
-    }
-
-    @Override
-    public double right() {
-        return right;
-    }
-
-    @Override
-    public double left() {
-        return left;
-    }
-
 }
 

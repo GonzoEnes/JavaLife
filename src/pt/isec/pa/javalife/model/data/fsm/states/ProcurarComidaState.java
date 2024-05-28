@@ -39,11 +39,12 @@ public class ProcurarComidaState extends StateAdapter {
             changeState(State.ATAQUE);
             return;
         } else if (position != null) {
-            double x = (fauna.getArea().right() - fauna.getArea().left()) / 2;
-            double y = (fauna.getArea().down() - fauna.getArea().up()) / 2;
-            double xClosestFlora = (position.right() - position.left()) / 2;
-            double yClosestFlora = (position.down() - position.up()) / 2;
-            if (x < xClosestFlora && (xClosestFlora - x) >= 1) {
+            double x = fauna.getArea().left()+(fauna.getArea().right() - fauna.getArea().left()) / 2;
+            double y =fauna.getArea().up()+ (fauna.getArea().down() - fauna.getArea().up()) / 2;
+            double xClosestFlora =position.left()+ (position.right() - position.left()) / 2;
+            double yClosestFlora =position.up()+ (position.down() - position.up()) / 2;
+            System.out.println(x+" "+y+" "+xClosestFlora+" "+yClosestFlora);
+            if (x < xClosestFlora && (xClosestFlora - x) > (fauna.getArea().right() - fauna.getArea().left()) / 2+2) {
                 if (!ecossistema.hasAnInanimadoOrFauna(new Area(fauna.getArea().up(), fauna.getArea().down(), fauna.getArea().right() + fauna.getSpeed(), fauna.getArea().left() + fauna.getSpeed()))) {
                     fauna.setArea(new Area(fauna.getArea().up(), fauna.getArea().down(), fauna.getArea().right() + fauna.getSpeed(), fauna.getArea().left() + fauna.getSpeed()));
                 } else {
@@ -58,7 +59,7 @@ public class ProcurarComidaState extends StateAdapter {
                     } while (!ecossistema.hasAnInanimadoOrFauna(aux));
                     fauna.setArea(aux);
                 }
-            } else if (x > xClosestFlora && (x - xClosestFlora) >= 1) {
+            } else if (x > xClosestFlora && (x - xClosestFlora) > (fauna.getArea().right() - fauna.getArea().left()) / 2-2) {
                 if (!ecossistema.hasAnInanimadoOrFauna(new Area(fauna.getArea().up(), fauna.getArea().down(), fauna.getArea().right() - fauna.getSpeed(), fauna.getArea().left() - fauna.getSpeed()))) {
                     fauna.setArea(new Area(fauna.getArea().up(), fauna.getArea().down(), fauna.getArea().right() - fauna.getSpeed(), fauna.getArea().left() - fauna.getSpeed()));
                 } else {
@@ -73,7 +74,7 @@ public class ProcurarComidaState extends StateAdapter {
                     } while (!ecossistema.hasAnInanimadoOrFauna(aux));
                     fauna.setArea(aux);
                 }
-            } else if (y < yClosestFlora && (yClosestFlora - y) >= 1) {
+            } else if (y < yClosestFlora && (yClosestFlora - y) > (fauna.getArea().down() - fauna.getArea().up()) / 2+2) {
                 if (!ecossistema.hasAnInanimadoOrFauna(new Area(fauna.getArea().up() + fauna.getSpeed(), fauna.getArea().down() + fauna.getSpeed(), fauna.getArea().right(), fauna.getArea().left()))) {
                     fauna.setArea(new Area(fauna.getArea().up() + fauna.getSpeed(), fauna.getArea().down() + fauna.getSpeed(), fauna.getArea().right(), fauna.getArea().left()));
                 } else {
@@ -88,7 +89,7 @@ public class ProcurarComidaState extends StateAdapter {
                     } while (!ecossistema.hasAnInanimadoOrFauna(aux));
                     fauna.setArea(aux);
                 }
-            } else if (y > yClosestFlora && (y - yClosestFlora) >= 1) {
+            } else if (y > yClosestFlora && (y - yClosestFlora) > (fauna.getArea().down() - fauna.getArea().up()) / 2-2) {
                 if (!ecossistema.hasAnInanimadoOrFauna(new Area(fauna.getArea().up() - fauna.getSpeed(), fauna.getArea().down() - fauna.getSpeed(), fauna.getArea().right(), fauna.getArea().left()))) {
                     fauna.setArea(new Area(fauna.getArea().up() - fauna.getSpeed(), fauna.getArea().down() - fauna.getSpeed(), fauna.getArea().right(), fauna.getArea().left()));
                 } else {
@@ -112,6 +113,7 @@ public class ProcurarComidaState extends StateAdapter {
         if(flora != null && flora.getStrength()!= fauna.getMaximumStrength()){
             flora.beConsumed();
             fauna.increaseStrength(flora.getReduceStrength());
+            System.out.println("Flora consumed");
             return true;
         }else if((flora != null && flora.getStrength()== fauna.getMaximumStrength())|| (fauna.getStrength()>=80)){
             changeState(State.MOVIMENTAR);
