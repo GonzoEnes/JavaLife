@@ -27,15 +27,8 @@ public abstract sealed class ElementoBase implements IElemento, Cloneable, Seria
     public Elemento getType() {
         return null;
     }
-
     public void setArea(Area area) {
         this.area = area;
-    }
-
-    public void setPos(double x, double y) {
-        double height = area.baixo() - area.cima();
-        double width = area.direita() - area.esquerda();
-        setArea(new Area(x, y, x + width, y + height));
     }
 
     @Override

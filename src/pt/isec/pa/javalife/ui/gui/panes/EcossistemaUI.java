@@ -49,15 +49,15 @@ public class EcossistemaUI extends Canvas {
     private void drawElement(GraphicsContext gc, IElemento element) {
         switch (element.getType()) {
             case FAUNA -> {
-                gc.drawImage(ImageManager.getImage("animal.png"), element.getArea().esquerda(), element.getArea().cima(), element.getArea().direita() - element.getArea().esquerda(), element.getArea().baixo() - element.getArea().cima());
+                gc.drawImage(ImageManager.getImage("animal.png"), element.getArea().left(), element.getArea().up(), element.getArea().right() - element.getArea().left(), element.getArea().down() - element.getArea().up());
             }
             case FLORA -> {
-                gc.drawImage(ImageManager.getImage("flora.png"), element.getArea().esquerda(), element.getArea().cima(), element.getArea().direita() - element.getArea().esquerda(), element.getArea().baixo() - element.getArea().cima());
+                gc.drawImage(ImageManager.getImage("flora.png"), element.getArea().left(), element.getArea().up(), element.getArea().right() - element.getArea().left(), element.getArea().down() - element.getArea().up());
             }
             case INANIMADO -> {
                 //gc.drawImage(ImageManager.getImage("pedra.png"), element.getArea().esquerda(), element.getArea().cima(), element.getArea().direita() - element.getArea().esquerda(), element.getArea().baixo() - element.getArea().cima());
                 gc.setFill(Color.GRAY);
-                gc.fillRect(element.getArea().esquerda(), element.getArea().cima(), element.getArea().direita() - element.getArea().esquerda(), element.getArea().baixo() - element.getArea().cima());
+                gc.fillRect(element.getArea().left(), element.getArea().up(), element.getArea().right() - element.getArea().left(), element.getArea().down() - element.getArea().up());
             }
         }
     }

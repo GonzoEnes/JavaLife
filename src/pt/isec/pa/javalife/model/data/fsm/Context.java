@@ -7,9 +7,7 @@ import pt.isec.pa.javalife.model.gameengine.interfaces.IGameEngine;
 import java.io.Serializable;
 
 public class Context implements Serializable {
-
     private IState state;
-
     private Ecossistema ecossistema;
 
     public Context(Ecossistema ecossistema) {

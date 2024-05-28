@@ -2,7 +2,6 @@ package pt.isec.pa.javalife.model.data.ecosystem;
 
 import pt.isec.pa.javalife.model.data.area.Area;
 import pt.isec.pa.javalife.model.data.elements.*;
-import pt.isec.pa.javalife.model.data.fsm.State;
 import pt.isec.pa.javalife.model.gameengine.interfaces.IGameEngine;
 import pt.isec.pa.javalife.model.gameengine.interfaces.IGameEngineEvolve;
 
@@ -96,15 +95,15 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
                 switch (tipo) {
                     case FAUNA -> {
                         //parametrosOld.add(Double.toString(((Animal)elemento).getForca()));
-                        ((Fauna)elemento).setForca(Double.parseDouble(parametros.get(0)));
+                        ((Fauna)elemento).setStrength(Double.parseDouble(parametros.get(0)));
                         return true;
                     }
                     case FLORA -> { // a flora pode editar a força ou a imagem dela acho eu
                         //parametrosOld.add(Double.toString(((Erva)elemento).getForca()));
-                        ((Flora)elemento).setForca(Double.parseDouble(parametros.get(0)));
+                        ((Flora)elemento).setStrength(Double.parseDouble(parametros.get(0)));
                         if (!parametros.get(1).isBlank()) { // se o campo da edição de imagem estiver vazio não vale a pena meter nada
                             //parametrosOld.add(((Erva)elemento).getImagem());
-                            ((Flora)elemento).setImagem("files/" + parametros.get(1));
+                            ((Flora)elemento).setImage("files/" + parametros.get(1));
                         }
                         return true; // devolver os parâmetros antigos para se dar undo() no editar
                     }
@@ -123,80 +122,73 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         }
     }
 
-    public Area getFloraMaisProxima(Area area) {
-        double pontoMedioX = (area.direita() + area.esquerda())/2;
-        double pontoMedioY = (area.baixo() + area.cima())/2;
-        System.out.println(pontoMedioX + " " + pontoMedioY);
-        Area toReturn = null;
-        double resultado=1000;
-        double x;
-        double y;
+    public Fauna getFaunaById(int preseguir) {
         for (IElemento elemento : elementos) {
-            if (elemento instanceof Flora flora) {
-                double auxPontoMedioX= (flora.getArea().direita() + flora.getArea().esquerda())/2;
-                double auxPontoMedioY = (flora.getArea().baixo() + flora.getArea().cima())/2;
-                System.out.println(auxPontoMedioX + " " + auxPontoMedioY);
-                if(auxPontoMedioX >= pontoMedioX) {
-                    x = auxPontoMedioX - pontoMedioX;
-                    if(auxPontoMedioY >= pontoMedioY) {
-                        y = auxPontoMedioY - pontoMedioY;
-                    }else
-                        y= pontoMedioY - auxPontoMedioY;
-                    if(resultado>x+y){
-                        resultado=x+y;
-                        toReturn=flora.getArea();
-                    }
-
-                }else{
-                    x = pontoMedioX - auxPontoMedioX;
-                    if(auxPontoMedioY >= pontoMedioY) {
-                        y = auxPontoMedioY - pontoMedioY;
-                    }else
-                        y= pontoMedioY - auxPontoMedioY;
-                    if(resultado>x+y){
-                        resultado=x+y;
-                        toReturn=flora.getArea();
-                    }
-                }
+            if (elemento instanceof Fauna fauna && fauna.getId() == preseguir) {
+                return fauna;
             }
         }
-        return toReturn;
+        return null;
     }
 
-    public Area getFaunaMaisProximaComMenorForca(Area area, int id) {
-        double pontoMedioX = area.direita() - area.esquerda();
-        double pontoMedioY = area.baixo() - area.cima();
-        Area toReturn = null;
-        double resultado=1000;
-        double x;
-        double y;
+    public boolean hasAnInanimadoOrFauna(Area area) {
+        //verificar senao tem uma pedra nesta area para ser possivel movimentar se
+        return true;
+    }
+
+    public Area getStrongestFauna(int id) {
+        double strength = 0;
+        Area aux=null;
         for (IElemento elemento : elementos) {
-            if (elemento instanceof Fauna fauna && fauna.getId()!=id) {
-                double auxPontoMedioX= fauna.getArea().direita() - fauna.getArea().esquerda();
-                double auxPontoMedioY = fauna.getArea().baixo() - fauna.getArea().cima();
-                if(auxPontoMedioX >= pontoMedioX) {
-                    x = auxPontoMedioX - pontoMedioX;
-                    if(auxPontoMedioY >= pontoMedioY) {
-                        y = auxPontoMedioY - pontoMedioY;
-                    }else
-                        y= pontoMedioY - auxPontoMedioY;
-                    if(resultado>x+y){
-                        resultado=x+y;
-                        toReturn=fauna.getArea();
-                    }
-                }else{
-                    x = pontoMedioX - auxPontoMedioX;
-                    if(auxPontoMedioY >= pontoMedioY) {
-                        y = auxPontoMedioY - pontoMedioY;
-                    }else
-                        y= pontoMedioY - auxPontoMedioY;
-                    if(resultado>x+y){
-                        resultado=x+y;
-                        toReturn=fauna.getArea();
-                    }
+            if (elemento instanceof Fauna fauna && fauna.getId() != id && fauna.getStrength() > strength){
+                    strength = fauna.getStrength();
+                    aux = fauna.getArea();
                 }
             }
-        }
-        return toReturn;
+        return aux;
     }
+
+    public boolean hasAFaunaWithinRange(int id, int maximumReproductionRange) {
+        return false;
+    }
+
+    public Area hasSpaceForNewFauna(Area area) {
+            return null;
+    }
+
+    public Flora hasFloraInThisArea(Area area) {
+        for (IElemento elemento : elementos) {
+            if (elemento instanceof Flora flora && flora.getArea().equals(area)) {
+                return flora;
+            }
+        }
+        return null;
+    }
+
+    public Area getClosestFlora(Fauna fauna) {
+        double x = (fauna.getArea().right() - fauna.getArea().left()) / 2;
+        double y = (fauna.getArea().down() - fauna.getArea().up()) / 2;
+        double xClosestFlora;
+        double yClosestFlora;
+        double distance=-1;
+        double distanceClosestFauna;
+        Area aux=null;
+        for(IElemento elemento :elementos){
+            if(elemento instanceof Flora flora){
+                xClosestFlora = (flora.getArea().right() - flora.getArea().left()) / 2;
+                yClosestFlora = (flora.getArea().down() - flora.getArea().up()) / 2;
+                distanceClosestFauna = Math.abs(x-xClosestFlora)+Math.abs(y-yClosestFlora);
+                if(distance==-1) {
+                    aux = flora.getArea();
+                    distance=distanceClosestFauna;
+                } else
+                    if(distance>distanceClosestFauna){
+                        aux=flora.getArea();
+                        distance =distanceClosestFauna;
+                    }
+            }
+        }
+        return aux;
+    }
+
 }

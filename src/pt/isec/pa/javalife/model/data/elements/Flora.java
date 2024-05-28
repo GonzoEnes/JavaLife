@@ -3,93 +3,61 @@ package pt.isec.pa.javalife.model.data.elements;
 import pt.isec.pa.javalife.model.data.area.Area;
 import pt.isec.pa.javalife.model.data.ecosystem.Ecossistema;
 
-public final class Flora extends ElementoBase implements IElementoComForca, IElementoComImagem {
-    private double forca;
-    private String imagem;
-    private static int contadorId = 0;
-    private int contadorReproducao = 0;
-    public static final int MAX_FORCA = 100;
-    public static final int MIN_FORCA = 0;
-    public static final int INIT_FORCA = 50;
-    public static final int AUMENTO_FORCA = 1;
-    public static final int REPRODUCAO_FORCA = 90;
-    public static final int POS_REPRODUCAO_FORCA = 60;
-    public static final int MAX_REPRODUCAO = 2;
-    public static final int SER_CONSUMIDO = 1;
+public sealed class Flora extends ElementoBase implements IElementoComForca, IElementoComImagem permits Erva {
+    private double strength;
+    private String image;
+    private static int idCounter = 0;
+    private int reproductionCounter = 0;
+
+    private static final double initialStrength = 50;
+    private static final double minimumStrength = 0;
+    private static final double maximumStrength = 100;
+    private static final double increaseStrength = 0.5;
+    private static final double reduceStrength = 0.5;
+    private static final double maximumReproduction = 2;
+
 
     public Flora(Area area) {
-        super(++contadorId, area);
-        this.forca = INIT_FORCA;
+        super(++idCounter, area);
+        this.strength = initialStrength;
     }
     public Flora(Area area, String imagem) {
-        super(++contadorId, area);
-        this.forca = 50;
-        this.imagem = imagem;
+        super(++idCounter, area);
+        this.strength = 50;
+        this.image = imagem;
+    }
+
+    public double getReduceStrength() {
+        return reduceStrength;
     }
 
     @Override
-    public double getForca() {
-        return forca;
+    public double getStrength() {
+        return strength;
     }
-    public void aumentarForca(double aumento) {
-        if(forca==MAX_FORCA){
-            return;
+    @Override
+    public void setStrength(double strength) {
+        if (strength > maximumStrength) {
+            this.strength = maximumStrength;
+        } else if (strength < minimumStrength) {
+            this.strength = minimumStrength;
         }
-        forca += aumento;
-        if(forca>MAX_FORCA)
-            forca=MAX_FORCA;
-    }
-
-    public void diminuirForca(double diminuir) {
-        if(forca==MIN_FORCA){
-            return;
-        }
-        forca -= diminuir;
-        if(forca<MIN_FORCA)
-            forca=MIN_FORCA;
-    }
-
-    public Boolean verificarReproducao(){
-        return forca >= REPRODUCAO_FORCA && contadorReproducao < MAX_REPRODUCAO;
+        this.strength = strength;
     }
 
     @Override
-    public void setForca(double forca) { // ISTO ESTÁ MAL
-        if (forca > 100 || forca < 0) {
-            return;
-        }
-
-        this.forca += forca;
-    }
-
-    public Boolean reproducao(Ecossistema ecossistema){
-        //if(ecossistema.existeEspacoLivre(getX(),getY())!=-1){
-          //  Flora novaFlora = new Flora(getArea(), getImagem(), getX(), getY());
-            //ecossistema.adicionarElemento(novaFlora);
-            //forca=POS_REPRODUCAO_FORCA;
-            contadorReproducao++;
-            return true;
-      //  }
-       // return false;
-    }
-
-    public void evolve(){
-        aumentarForca(AUMENTO_FORCA);
-        if(verificarReproducao()){
-            //reproducao(getEcossistema());
-        }
+    public String getImage() {
+        return "";
     }
 
     @Override
-    public String getImagem() {
-        return imagem;
+    public void setImage(String imagem) {
+
     }
 
-    @Override
-    public void setImagem(String imagem) {
-        this.imagem = imagem;
+    public void beConsumed() {
+        strength -= reduceStrength;
     }
-
     @Override
     public Elemento getType() {
         return Elemento.FLORA;

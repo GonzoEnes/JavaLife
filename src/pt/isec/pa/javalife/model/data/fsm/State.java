@@ -7,12 +7,12 @@ public enum State {
     // EM PRINCIPIO, OS ESTADOS SERÃO ESTES
     // ABAIXO MAS POSSO ESTAR ENGANADO
 
-    PROCURAR_COMIDA, MOVIMENTAR, REPRODUZIR, MORRER;
+    PROCURAR_COMIDA, MOVIMENTAR, REPRODUZIR, ATAQUE;
 
-    static IState createState(State type, Context context,Ecossistema ecossistema) { // factory de objetos
+    public static IState createState(State type, Context context, Ecossistema ecossistema) { // factory de objetos
         return switch (type) {
             case PROCURAR_COMIDA -> new ProcurarComidaState(context,ecossistema);
-            case MORRER -> new MorrerState(context,ecossistema);
+            case ATAQUE -> new Ataque(context,ecossistema);
             case REPRODUZIR -> new ReproduzirState(context,ecossistema);
             case MOVIMENTAR -> new MovimentarState(context,ecossistema);
         };

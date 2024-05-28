@@ -14,7 +14,7 @@ public final class Forca extends EventoBase implements IEvento{
     @Override
     public boolean apply(IElemento elemento) { // lógica de aplicar a injecao de força (pode estar errado)
         if (elemento.getType() == Elemento.FAUNA) {
-            ((Fauna)elemento).setForca(((Fauna)elemento).getForca() + 50);
+            ((Fauna)elemento).setStrength(((Fauna)elemento).getStrength() + 50);
             return true;
         }
         return false;

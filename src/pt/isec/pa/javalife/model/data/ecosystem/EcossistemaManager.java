@@ -65,6 +65,7 @@ public class EcossistemaManager {
     public int getAltura() {
         return ecossistema.getAltura();
     }
+
     public void evolve (IGameEngine gameEngine, long currentTime) {
         ecossistema.evolve(gameEngine,currentTime);
         for (IElemento elemento : ecossistema.getElementos()) {

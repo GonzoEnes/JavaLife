@@ -14,7 +14,7 @@ public final class Herbicida extends EventoBase implements IEvento{
     @Override
     public boolean apply(IElemento elemento) { // lógica de aplicar herbicida (pode estar errado)
         if (elemento.getType() == Elemento.FLORA) {
-            ((Flora)elemento).setForca(0);
+            ((Flora)elemento).setStrength(0);
             return true;
         }
         return false;
