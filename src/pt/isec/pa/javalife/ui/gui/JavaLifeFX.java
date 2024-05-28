@@ -14,6 +14,7 @@ import pt.isec.pa.javalife.ui.gui.panes.RootPane;
 
 public class JavaLifeFX extends Application {
     private EcossistemaManager manager;
+
     public static void main(String[] args) {
         launch(args);
     }

@@ -19,11 +19,11 @@ public class Main {
         //Application.launch(JavaLifeFX.class, args);
         /*TextUI ui = new TextUI(manager);
         ui.start()*/;
-        GameEngine gameEngine = new GameEngine();
-        gameEngine.registerClient((g,t) -> manager.evolve(gameEngine,t));
-        gameEngine.start(500);
+        //GameEngine gameEngine = new GameEngine();
+        //gameEngine.registerClient((g,t) -> manager.evolve(gameEngine,t));
+        //gameEngine.start(500);
         Application.launch(JavaLifeFX.class, args);
-        gameEngine.waitForTheEnd();
+        //gameEngine.waitForTheEnd();
 
     }
 }

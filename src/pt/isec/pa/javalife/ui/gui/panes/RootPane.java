@@ -11,8 +11,8 @@ import java.util.Stack;
 
 public class RootPane extends BorderPane {
     EcossistemaManager manager;
-    EcossistemaUI ecossistemaUI;
-    Pane ecossistemaPane;
+
+    Pane configPane;
 
     public RootPane(EcossistemaManager manager) {
         this.manager = manager;
@@ -23,29 +23,19 @@ public class RootPane extends BorderPane {
 
     private void createViews() {
         setTop(new VBox(new EcossistemaMenu(manager)));
-        ecossistemaUI = new EcossistemaUI(manager);
-        ecossistemaPane = new Pane(ecossistemaUI);
-        setCenter(ecossistemaPane);
+        InitialConfigScreen initialConfigScreen = new InitialConfigScreen(manager);
+        configPane = new Pane(initialConfigScreen);
+        setCenter(configPane);
+
         /*mainMenuUI = new MainMenuUI(manager);
         this.stackPane = new StackPane(mainMenuUI);
         this.setCenter(stackPane);*/
     }
 
     private void registerHandlers() {
-        ecossistemaPane.widthProperty().addListener(observable -> ecossistemaUI.updateSize(ecossistemaPane.getWidth(),ecossistemaUI.getHeight()));
-        ecossistemaPane.heightProperty().addListener(observable -> ecossistemaUI.updateSize(ecossistemaPane.getWidth(),ecossistemaPane.getHeight()));
+
     }
 
     private void update() {
-
     }
-
-    /*public void showEcossistemaUI() {
-        StackPane stackPane = (StackPane)this.getCenter();
-        stackPane.getChildren().clear();
-
-        EcossistemaUI ecossistemaUI = new EcossistemaUI(manager);
-        stackPane.getChildren().add(ecossistemaUI);
-        ecossistemaUI.requestFocus();
-    }*/
 }

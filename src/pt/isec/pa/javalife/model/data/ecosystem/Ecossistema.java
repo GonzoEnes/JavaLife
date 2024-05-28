@@ -26,23 +26,10 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
     }
 
     public void createCerca() {
-        /*for (int i = 0; i < altura; i++) {
-            for (int j = 0; j < largura; j++) {
-                if (i == 0 || i == altura - 1 || j == 0 || j == largura - 1) {
-                    elementos.add(new Inanimado(new Area(i,j,i+1,j+1)));
-                }
-            }
-        }*/
-        // DUAS ALTERNATIVAS: CRIAR UM FOR LOOP COM VÁRIOS INANIMADOS OU CRIAR UM INANIMADO COM UMA ÁREA GRANDE, QUALQUER UMA DAS DUAS FUNCIONA IGUAL
-        Inanimado cima = new Inanimado(new Area(0,0,0,0));
-        Inanimado baixo = new Inanimado(new Area(0,0,0,0));
-        Inanimado esquerda = new Inanimado(new Area(0,0,0,0));
-        Inanimado direita = new Inanimado(new Area(0,0,0,0));
-
-        cima.setArea(new Area(0,0,getLargura(), 7));
-        baixo.setArea(new Area(0,getAltura()-7,getLargura(), getAltura()));
-        esquerda.setArea(new Area(0,0,7,getAltura()));
-        direita.setArea(new Area(getLargura()-7,0,getLargura(),getAltura()));
+        Inanimado cima = new Inanimado(new Area(0, 0, getLargura(), 1));
+        Inanimado baixo = new Inanimado(new Area(0, getAltura() - 1, getLargura(), getAltura()));
+        Inanimado esquerda = new Inanimado(new Area(0, 0, 1, getAltura()));
+        Inanimado direita = new Inanimado(new Area(getLargura() - 1, 0, getLargura(), getAltura()));
 
         elementos.add(cima);
         elementos.add(baixo);

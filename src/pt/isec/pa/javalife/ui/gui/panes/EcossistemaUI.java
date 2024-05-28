@@ -10,6 +10,7 @@ import pt.isec.pa.javalife.ui.gui.resources.ImageManager;
 
 public class EcossistemaUI extends Canvas {
     private EcossistemaManager manager;
+
     public EcossistemaUI(EcossistemaManager manager) {
         super(100, 100);
         this.manager = manager;
@@ -34,11 +35,12 @@ public class EcossistemaUI extends Canvas {
         GraphicsContext gc = this.getGraphicsContext2D();
         clearScreen(gc);
         manager.getElementos().forEach(elemento -> drawElement(gc, elemento));
+        manager.setInitialEcossistemaConfigs((int)getHeight(), (int)getWidth());
     }
 
     private void clearScreen(GraphicsContext gc) {
-        gc.setFill(Color.BLACK);
-        gc.fillRect(0,0,getWidth(), getHeight());
+        gc.setFill(Color.LIGHTGREEN);
+        gc.fillRect(0,0,manager.getLargura(), manager.getAltura());
     }
 
     public void updateSize(double newWidth, double newHeight) {
