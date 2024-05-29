@@ -6,14 +6,18 @@ import pt.isec.pa.javalife.model.data.elements.Fauna;
 import java.io.Serializable;
 
 public abstract class StateAdapter implements IState, Serializable {
-    private Context context;
-    private Ecossistema ecossistema;
-    public StateAdapter(Context context, Ecossistema ecossistema) {
+    protected Context context;
+    protected Fauna fauna;
+
+    public StateAdapter(Context context, Fauna fauna) {
         this.context = context;
-        this.ecossistema = ecossistema;
+        this.fauna = fauna;
     }
 
     public void changeState(State state) {
-        context.changeState(State.createState(state, context,ecossistema));
+        context.changeState(State.createState(state, context,fauna));
+    }
+    @Override
+    public void evolve() {
     }
 }

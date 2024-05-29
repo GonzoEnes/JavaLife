@@ -1,20 +1,19 @@
 package pt.isec.pa.javalife.model.data.fsm;
 
-import pt.isec.pa.javalife.model.data.ecosystem.Ecossistema;
+import pt.isec.pa.javalife.model.data.elements.Fauna;
 import pt.isec.pa.javalife.model.data.fsm.states.*;
 
 public enum State {
-    // EM PRINCIPIO, OS ESTADOS SERÃO ESTES
-    // ABAIXO MAS POSSO ESTAR ENGANADO
-
-    PROCURAR_COMIDA, MOVIMENTAR, REPRODUZIR, ATAQUE;
-
-    public static IState createState(State type, Context context, Ecossistema ecossistema) { // factory de objetos
+    ATTACK,
+    MOVE,
+    REPRODUCE,
+    LOOKINGFORFOOD;
+    public static IState createState(State type, Context context,Fauna fauna) { // factory de objetos
         return switch (type) {
-            case PROCURAR_COMIDA -> new ProcurarComidaState(context,ecossistema);
-            case ATAQUE -> new Ataque(context,ecossistema);
-            case REPRODUZIR -> new ReproduzirState(context,ecossistema);
-            case MOVIMENTAR -> new MovimentarState(context,ecossistema);
+            case ATTACK -> new AttackState(context,fauna);
+            case MOVE -> new MoveState(context,fauna);
+            case REPRODUCE -> new ReproduceState(context,fauna);
+            case LOOKINGFORFOOD -> new LookingForFoodState(context,fauna);
         };
     }
 }

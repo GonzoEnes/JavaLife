@@ -6,18 +6,21 @@ import pt.isec.pa.javalife.model.data.fsm.StateAdapter;
 import pt.isec.pa.javalife.model.data.fsm.Context;
 import pt.isec.pa.javalife.model.data.fsm.State;
 
-public class Ataque extends StateAdapter {
-    public Ataque(Context context, Ecossistema ecossistema) {
-        super(context, ecossistema);
+public class ReproduceState extends StateAdapter {
+    public ReproduceState(Context context, Fauna fauna) {
+        super(context, fauna);
     }
 
     @Override
     public State getState() {
-        return State.ATAQUE;
+        return State.REPRODUCE;
     }
 
     @Override
-    public void evolve(Fauna fauna, Ecossistema ecossistema) {
-
+    public void evolve() {
+        if(fauna.reproduce()){
+            changeState(State.MOVE);
+        }
     }
 }
+

@@ -22,8 +22,7 @@ public class RootPane extends BorderPane {
     }
     private void createViews() {
         setTop(new VBox(new EcossistemaMenu(manager)));
-        //InitialConfigScreen initialConfigScreen = new InitialConfigScreen(manager);
-        MainMenuUI mainMenuUI = new MainMenuUI(manager);
+        EcossistemaUI mainMenuUI = new EcossistemaUI(manager);
         configPane = new Pane(mainMenuUI);
         setCenter(configPane);
     }

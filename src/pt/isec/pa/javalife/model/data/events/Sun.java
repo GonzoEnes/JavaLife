@@ -3,9 +3,9 @@ package pt.isec.pa.javalife.model.data.events;
 import pt.isec.pa.javalife.model.data.ecosystem.Ecossistema;
 import pt.isec.pa.javalife.model.data.elements.IElemento;
 
-public final class Sol extends EventoBase implements IEvento{
+public final class Sun extends BaseEvent implements IEvent {
 
-    public Sol(Evento tipo, Ecossistema ecossistema) {
+    public Sun(Event tipo, Ecossistema ecossistema) {
         super(tipo, ecossistema);
     }
 
@@ -16,7 +16,7 @@ public final class Sol extends EventoBase implements IEvento{
     }
 
     @Override
-    public Evento getTipo() {
-        return Evento.SOL;
+    public Event getTipo() {
+        return Event.SUN;
     }
 }

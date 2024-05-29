@@ -4,6 +4,7 @@ import pt.isec.pa.javalife.model.data.area.Area;
 import pt.isec.pa.javalife.model.data.elements.*;
 import pt.isec.pa.javalife.model.gameengine.interfaces.IGameEngine;
 import pt.isec.pa.javalife.model.gameengine.interfaces.IGameEngineEvolve;
+import pt.isec.pa.javalife.ui.gui.resources.ImageLoader;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -23,46 +24,27 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         this.elementos = ConcurrentHashMap.newKeySet();
         createCerca();
     }
-
     public void createCerca() {
-        /*for (int i = 0; i < altura; i++) {
-            for (int j = 0; j < largura; j++) {
-                if (i == 0 || i == altura - 1 || j == 0 || j == largura - 1) {
-                    elementos.add(new Inanimado(new Area(i,j,i+1,j+1)));
-                }
-            }
-        }*/
-        // DUAS ALTERNATIVAS: CRIAR UM FOR LOOP COM VÁRIOS INANIMADOS OU CRIAR UM INANIMADO COM UMA ÁREA GRANDE, QUALQUER UMA DAS DUAS FUNCIONA IGUAL
-        Inanimado cima = new Inanimado(new Area(0,0,0,0));
-        Inanimado baixo = new Inanimado(new Area(0,0,0,0));
-        Inanimado esquerda = new Inanimado(new Area(0,0,0,0));
-        Inanimado direita = new Inanimado(new Area(0,0,0,0));
-        cima.setArea(new Area(0,0,getLargura(), 7));
-        baixo.setArea(new Area(0,getAltura()-7,getLargura(), getAltura()));
-        esquerda.setArea(new Area(0,0,7,getAltura()));
-        direita.setArea(new Area(getLargura()-7,0,getLargura(),getAltura()));
-
+        Pedra cima = new Pedra(new Area(0,0,getLargura(), 7));
+        Pedra baixo = new Pedra(new Area(0,getAltura()-7,getLargura(), getAltura()));
+        Pedra esquerda = new Pedra(new Area(0,0,7,getAltura()));
+        Pedra direita = new Pedra(new Area(getLargura()-7,0,getLargura(),getAltura()));
         elementos.add(cima);
         elementos.add(baixo);
         elementos.add(esquerda);
         elementos.add(direita);
     }
-
     // GETTERS & SETTERS
     public int getLargura() {
         return largura;
     }
-
     public void setLargura(int largura) {
         this.largura = largura;
     }
-
     public int getAltura() { return altura; }
-
     public void setAltura(int altura) {
         this.altura = altura;
     }
-
     public Set<IElemento> getElementos() {
         Set<IElemento> toReturn = new HashSet<>();
         for (IElemento elemento : elementos) {
@@ -71,15 +53,30 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
             } catch (CloneNotSupportedException ignored) {
             }
         }
+        System.out.println(elementos.size());
         return elementos;
     }
-
     // LÓGICA
-    public boolean addElemento(IElemento elemento){ // tem de ser feito com factory
+    public void addElemento(IElemento elemento){ // tem de ser feito com factory
         elementos.add(elemento);
-        return true;
     }
-
+    public void addElemento(Area area, Ecossistema ecossistema, String image, Elemento type) {
+        IElemento elemento=null;
+        switch (type) {
+            case INANIMADO -> {
+                elemento = new Pedra(area);
+            }
+            case FLORA -> {
+                elemento = new Erva(area, ecossistema, "flora.png");
+            }
+            case FAUNA -> {
+                elemento = new Animal(area, ecossistema, image);
+            }
+        }
+        if (elemento != null) {
+            elementos.add(elemento);
+        }
+    }
     public boolean removeElemento(IElemento elemento) {
         if (elemento.getType() == Elemento.INANIMADO) { // não se podem remover inanimados
             return false;
@@ -87,9 +84,7 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         elementos.remove(elemento);
         return true;
     }
-
     public boolean editElemento(Elemento tipo, int id, ArrayList<String> parametros) { // ir reforçando, claro
-        //ArrayList<String> parametrosOld = new ArrayList<>();
         for (IElemento elemento : elementos) {
             if (elemento.getId() == id && elemento.getType() == tipo) {
                 switch (tipo) {
@@ -112,27 +107,24 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         }
         return false;
     }
-
     @Override
     public void evolve(IGameEngine gameEngine, long currentTime) {
         for (IElemento elemento : elementos) {
             if (elemento instanceof Fauna fauna) {
                 fauna.evolve();
-            }
+            }else if(elemento instanceof Flora flora)
+                flora.evolve();
         }
     }
-
-    public Fauna getFaunaById(int preseguir) {
+    public boolean hasAnInanimadoOrFauna(Area area,int id) {
         for (IElemento elemento : elementos) {
-            if (elemento instanceof Fauna fauna && fauna.getId() == preseguir) {
-                return fauna;
+            if (elemento instanceof Inanimado inanimado && inanimado.getArea().equals(area)) {
+                return true;
+            }
+            if (elemento instanceof Fauna fauna && fauna.getId() != id && fauna.getArea().equals(area)) {
+                return true;
             }
         }
-        return null;
-    }
-
-    public boolean hasAnInanimadoOrFauna(Area area) {
-        //verificar senao tem uma pedra nesta area para ser possivel movimentar se
         return false;
     }
     public Area getStrongestFauna(int id) {
@@ -146,11 +138,47 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
             }
         return aux;
     }
-    public boolean hasAFaunaWithinRange(int id, int maximumReproductionRange) {
+    public Fauna getWeakestFauna(int id) {
+        Fauna aux=null;
+        for (IElemento elemento : elementos) {
+            if (elemento instanceof Fauna fauna && fauna.getId() != id){
+                if(aux==null)
+                    aux = fauna;
+                else if(aux.getStrength()>fauna.getStrength())
+                    aux = fauna;
+            }
+        }
+        return aux;
+    }
+    public boolean hasAFaunaWithinRange(Area area, int maximumReproductionRange) {
+        Area aux =null;
+        for(int i=0;i<4;i++){
+            switch (i){
+                case 0 -> aux = new Area(area.up() - maximumReproductionRange,area.down() - maximumReproductionRange,area.left(),area.right());
+                case 1 -> aux = new Area(area.up() + maximumReproductionRange,area.down() + maximumReproductionRange,area.left(),area.right());
+                case 2 -> aux = new Area(area.up(),area.down(),area.left() - maximumReproductionRange,area.right() - maximumReproductionRange);
+                case 3 -> aux = new Area(area.up(),area.down(),area.left()+ maximumReproductionRange,area.right()+maximumReproductionRange);
+            }
+            if(!hasAnInanimadoOrFauna(aux,-1))
+                return true;
+        }
         return false;
     }
     public Area hasSpaceForNewFauna(Area area) {
-            return null;
+        double x = area.right() - area.left();
+        double y = area.down() - area.up();
+        Area aux =null;
+        for(int i=0;i<4;i++){
+            switch (i){
+                case 0 -> aux = new Area(area.up() - y,area.down() - y,area.left(),area.right());
+                case 1 -> aux = new Area(area.up() + y,area.down() + y,area.left(),area.right());
+                case 2 -> aux = new Area(area.up(),area.down(),area.left() - x,area.right() - x);
+                case 3 -> aux = new Area(area.up(),area.down(),area.left()+ x,area.right()+x);
+            }
+            if(!hasAnInanimadoOrFauna(aux,-1))
+                return aux;
+        }
+        return null;
     }
     public Flora hasFloraInThisArea(Area area) {
         for (IElemento elemento : elementos) {
@@ -184,5 +212,9 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
             }
         }
         return aux;
+    }
+    public boolean isFaunaBeingAttackedNearyby(Area hunter,double speed,Area prey) {
+        Area aux= new Area(hunter.up()+speed,hunter.left()+speed,hunter.down()+speed,hunter.right()+speed);
+        return aux.equals(prey);
     }
 }

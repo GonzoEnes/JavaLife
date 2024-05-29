@@ -5,9 +5,9 @@ import pt.isec.pa.javalife.model.data.elements.Elemento;
 import pt.isec.pa.javalife.model.data.elements.Flora;
 import pt.isec.pa.javalife.model.data.elements.IElemento;
 
-public final class Herbicida extends EventoBase implements IEvento{
+public final class Herbicide extends BaseEvent implements IEvent {
 
-    public Herbicida(Evento tipo, Ecossistema ecossistema) {
+    public Herbicide(Event tipo, Ecossistema ecossistema) {
         super(tipo, ecossistema);
     }
 
@@ -21,7 +21,7 @@ public final class Herbicida extends EventoBase implements IEvento{
     }
 
     @Override
-    public Evento getTipo() {
-        return Evento.HERBICIDA;
+    public Event getTipo() {
+        return Event.HERBICIDE;
     }
 }

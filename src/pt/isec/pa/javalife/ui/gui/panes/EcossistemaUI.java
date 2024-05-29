@@ -3,6 +3,7 @@ package pt.isec.pa.javalife.ui.gui.panes;
 import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import pt.isec.pa.javalife.model.data.ecosystem.EcossistemaManager;
 import pt.isec.pa.javalife.model.data.elements.*;
@@ -10,11 +11,9 @@ import pt.isec.pa.javalife.ui.gui.resources.ImageLoader;
 
 public class EcossistemaUI extends Canvas {
     private EcossistemaManager manager;
-
     public EcossistemaUI(EcossistemaManager manager) {
-        super(100, 100);
+        super(manager.getAltura(), manager.getLargura());
         this.manager = manager;
-
         registerHandlers();
         update();
     }
@@ -24,18 +23,9 @@ public class EcossistemaUI extends Canvas {
     }
 
     public void update() { // mudar para as X,Y coordenadas
-
-        /*board.getChildren().clear();
-        Set<IElemento> elementos = manager.getElementos();
-        for (IElemento elemento : elementos) {
-            //System.out.println(elemento.toString());
-            ImageView imageView = createImageView(elemento, elemento.getArea().cima(), elemento.getArea().direita());
-            board.add(imageView, elemento.getX(),elemento.getY());
-        }*/
         GraphicsContext gc = this.getGraphicsContext2D();
         clearScreen(gc);
         manager.getElementos().forEach(elemento -> drawElement(gc, elemento));
-        //manager.setInitialEcossistemaConfigs((int)getHeight(), (int)getWidth());
     }
 
     private void clearScreen(GraphicsContext gc) {
@@ -50,15 +40,15 @@ public class EcossistemaUI extends Canvas {
     }
 
     private void drawElement(GraphicsContext gc, IElemento element) {
+        System.out.println(element.getType());
         switch (element.getType()) {
             case FAUNA -> {
-                gc.drawImage(ImageLoader.getImage("animal.png"), element.getArea().left(), element.getArea().up(), element.getArea().right() - element.getArea().left(), element.getArea().down() - element.getArea().up());
+                gc.drawImage(ImageLoader.getImageFauna(((Fauna)element).getImage()), element.getArea().left(), element.getArea().up(), element.getArea().right() - element.getArea().left(), element.getArea().down() - element.getArea().up());
             }
             case FLORA -> {
                 gc.drawImage(ImageLoader.getImage("erva.png"), element.getArea().left(), element.getArea().up(), element.getArea().right() - element.getArea().left(), element.getArea().down() - element.getArea().up());
             }
             case INANIMADO -> {
-                //gc.drawImage(ImageManager.getImage("pedra.png"), element.getArea().esquerda(), element.getArea().cima(), element.getArea().direita() - element.getArea().esquerda(), element.getArea().baixo() - element.getArea().cima());
                 gc.setFill(Color.GRAY);
                 gc.fillRect(element.getArea().left(), element.getArea().up(), element.getArea().right() - element.getArea().left(), element.getArea().down() - element.getArea().up());
             }

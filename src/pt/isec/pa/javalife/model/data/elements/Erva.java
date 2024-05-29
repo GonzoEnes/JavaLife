@@ -4,7 +4,8 @@ import pt.isec.pa.javalife.model.data.area.Area;
 import pt.isec.pa.javalife.model.data.ecosystem.Ecossistema;
 
 public final class Erva extends Flora {
-    public Erva(Area area) {
-        super(area);
+
+    public Erva(Area area, Ecossistema ecossistema, String image) {
+        super(area, ecossistema, image);
     }
 }

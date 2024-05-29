@@ -9,10 +9,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import pt.isec.pa.javalife.model.data.area.Area;
 import pt.isec.pa.javalife.model.data.ecosystem.EcossistemaManager;
-import pt.isec.pa.javalife.model.data.elements.Fauna;
-import pt.isec.pa.javalife.model.data.elements.Flora;
-import pt.isec.pa.javalife.model.data.elements.IElemento;
-import pt.isec.pa.javalife.model.data.elements.Inanimado;
+import pt.isec.pa.javalife.model.data.elements.*;
 
 import java.io.File;
 import java.util.Arrays;
@@ -75,10 +72,7 @@ public class MenuItemPageUI {
                         double direitaValue = Double.parseDouble(direita);
                         double esquerdaValue = Double.parseDouble(esquerda);
 
-                        Area area = new Area(cimaValue, esquerdaValue, baixoValue, direitaValue);
-                        // MUDAR A CRIAÇÃO DISTO
-                        Fauna fauna = new Fauna(area, null);
-                        manager.addElemento(fauna);
+                        manager.addElemento(new Area(cimaValue, esquerdaValue, baixoValue, direitaValue),tipoComboBox.getValue(),Elemento.FAUNA);
                         popupStage.close();
                     } catch (NumberFormatException e) {
                         showErrorDialog("Valores inválidos! Por favor insira números inteiros.");

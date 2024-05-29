@@ -22,6 +22,7 @@ public class InitialConfigScreen extends BorderPane {
     public void configInitialSettings() {
         TextField larguraField = new TextField();
         TextField alturaField = new TextField();
+        TextField timeField = new TextField();
 
         GridPane gridPane = new GridPane();
         gridPane.setPadding(new Insets(10));
@@ -36,18 +37,22 @@ public class InitialConfigScreen extends BorderPane {
         gridPane.add(new Label("Largura:"), 0, 1);
         gridPane.add(larguraField, 1, 1);
 
+        gridPane.add(new Label("Time:"), 0, 1);
+        gridPane.add(timeField, 1, 2);
+
         Button btnCreate = new Button("Criar Ecossistema");
 
         btnCreate.setOnAction(event -> {
             String largura = larguraField.getText();
             String altura = alturaField.getText();
-
+            String time = timeField.getText();
             if (!largura.isEmpty() && !altura.isEmpty()) {
                 try {
                     int larguraValue = Integer.parseInt(largura);
                     int alturaValue = Integer.parseInt(altura);
+                    int timeValue = Integer.parseInt(time);
 
-                    manager.setInitialEcossistemaConfigs(alturaValue,larguraValue);
+                    manager.setInitialEcossistemaConfigs(alturaValue,larguraValue,timeValue);
 
                     System.out.println(manager.getAltura() + " " + manager.getLargura());
 

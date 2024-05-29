@@ -5,23 +5,22 @@ import pt.isec.pa.javalife.model.data.elements.Elemento;
 import pt.isec.pa.javalife.model.data.elements.Fauna;
 import pt.isec.pa.javalife.model.data.elements.IElemento;
 
-public final class Forca extends EventoBase implements IEvento{
+public final class Strength extends BaseEvent implements IEvent {
 
-    public Forca(Evento tipo, Ecossistema ecossistema) {
+    public Strength(Event tipo, Ecossistema ecossistema) {
         super(tipo, ecossistema);
     }
 
     @Override
     public boolean apply(IElemento elemento) { // lógica de aplicar a injecao de força (pode estar errado)
         if (elemento.getType() == Elemento.FAUNA) {
-            ((Fauna)elemento).setStrength(((Fauna)elemento).getStrength() + 50);
-            return true;
+            ((Fauna)elemento).increaseStrength(50);
         }
         return false;
     }
 
     @Override
-    public Evento getTipo() {
-        return Evento.FORCA;
+    public Event getTipo() {
+        return Event.STRENGTH;
     }
 }

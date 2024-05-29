@@ -21,7 +21,6 @@ public class EcossistemaManager {
     public static final String ECOSSISTEMA_EVOLVE = "_evolve";
     public static final String ECOSSISTEMA_TOOLS = "_tools_";
     public static final String ECOSSISTEMA_ELEMENTS = "_elements_";
-    public static final String EVOLVE = "_evolve";
 
     public EcossistemaManager() {
         this.gameEngine = new GameEngine();
@@ -35,21 +34,16 @@ public class EcossistemaManager {
     public void removeClient(String property, PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(property, listener);
     }
-    public boolean setInitialEcossistemaConfigs(int largura, int altura) {
-        pcs.firePropertyChange(null,null,null);
-        //this.ecossistema = new Ecossistema(altura, largura);
-        //this.ecossistema.setLargura(largura);
-        //this.ecossistema.setAltura(altura);
-        return true;
-        /*if (isEcossistemaCreated) {
-
-            return true;
-        }
-        isEcossistemaCreated = true;
-        return true;*/
+    public void setInitialEcossistemaConfigs(int largura, int altura,int time) {
+        ecossistema = new Ecossistema(altura, largura);
+        gameEngine.start(time);
+        pcs.firePropertyChange(ECOSSISTEMA_EVOLVE,null,null);
     }
-    public boolean addElemento(IElemento elemento){
-        return this.ecossistema.addElemento(elemento);
+    public void addElemento(IElemento element) {
+        ecossistema.addElemento(element);
+    }
+    public void addElemento(Area area, String image,Elemento type) {
+        ecossistema.addElemento(area,this.ecossistema,image,type);
     }
     public boolean removeElemento(IElemento elemento) {
         return ecossistema.removeElemento(elemento);
@@ -60,22 +54,17 @@ public class EcossistemaManager {
     public Set<IElemento> getElementos() {
         return ecossistema.getElementos();
     }
-
     public int getLargura() {
         return ecossistema.getLargura();
     }
-
     public int getAltura() {
         return ecossistema.getAltura();
     }
-
     public void evolve (IGameEngine gameEngine, long currentTime) {
-
         ecossistema.evolve(gameEngine,currentTime);
-        pcs.firePropertyChange(EVOLVE, null, null);
+        System.out.println("Evolve");
         pcs.firePropertyChange(ECOSSISTEMA_EVOLVE, null, null);
     }
-
     public boolean save(File file) {
         try (
                 ObjectOutputStream oos = new ObjectOutputStream(
@@ -126,14 +115,16 @@ public class EcossistemaManager {
                 switch (type.toUpperCase()) {
                     case "FAUNA":
                         double forcaFauna = Double.parseDouble(fields[5]);
-                        Fauna fauna = new Fauna(area, ecossistema);
-                        fauna.setStrength(forcaFauna);
+                        IElemento fauna = Elemento.createElemento(Elemento.FAUNA, area, ecossistema);
+                        assert fauna != null;
+                        ((Fauna)fauna).setStrength(forcaFauna);
                         importedElements.add(fauna);
                         break;
                     case "FLORA":
                         double forcaFlora = Double.parseDouble(fields[5]);
-                        Flora flora = new Flora(area, "");
-                        flora.setStrength(forcaFlora);
+                        IElemento flora = Elemento.createElemento(Elemento.FLORA, area, ecossistema);
+                        assert flora != null;
+                        ((Flora)flora).setStrength(forcaFlora);
                         importedElements.add(flora);
                         break;
                     case "INANIMADO":
