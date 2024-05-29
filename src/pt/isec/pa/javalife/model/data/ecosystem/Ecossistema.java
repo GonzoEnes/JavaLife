@@ -25,10 +25,10 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         createCerca();
     }
     public void createCerca() {
-        Pedra cima = new Pedra(new Area(0,0,getLargura(), 7));
-        Pedra baixo = new Pedra(new Area(0,getAltura()-7,getLargura(), getAltura()));
-        Pedra esquerda = new Pedra(new Area(0,0,7,getAltura()));
-        Pedra direita = new Pedra(new Area(getLargura()-7,0,getLargura(),getAltura()));
+        Pedra cima = new Pedra(new Area(0,7,0, getLargura()));
+        Pedra baixo = new Pedra(new Area(getAltura()-7,getAltura(),0,getLargura()));
+        Pedra esquerda = new Pedra(new Area(0,getAltura(),0,7));
+        Pedra direita = new Pedra(new Area(0,getAltura(),getLargura()-7,getLargura()));
         elementos.add(cima);
         elementos.add(baixo);
         elementos.add(esquerda);
@@ -50,11 +50,12 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         for (IElemento elemento : elementos) {
             try {
                 toReturn.add(elemento.clone());
+                System.out.println(elemento.getArea().right() + " " + " " +elemento.getArea().down()+ " "  +   elemento.getArea().left()+ " "  + elemento.getArea().up());
             } catch (CloneNotSupportedException ignored) {
             }
         }
         System.out.println(elementos.size());
-        return elementos;
+        return toReturn;
     }
     // LÓGICA
     public void addElemento(IElemento elemento){ // tem de ser feito com factory
@@ -115,7 +116,23 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
             }else if(elemento instanceof Flora flora)
                 flora.evolve();
         }
+        checkStrength();
     }
+
+    private void checkStrength() {
+        for (IElemento elemento : elementos) {
+            if(elemento instanceof Fauna fauna && fauna.getStrength()>0){
+                System.out.println(fauna.getStrength());
+            }
+            if (elemento instanceof Fauna fauna && fauna.getStrength() <= 0) {
+                elementos.remove(fauna);
+            }
+            if(elemento instanceof Flora flora && flora.getStrength()<=0){
+                elementos.remove(flora);
+            }
+        }
+    }
+
     public boolean hasAnInanimadoOrFauna(Area area,int id) {
         for (IElemento elemento : elementos) {
             if (elemento instanceof Inanimado inanimado && inanimado.getArea().equals(area)) {
@@ -127,6 +144,15 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         }
         return false;
     }
+public boolean hasAnElemento(Area area) {
+        for (IElemento elemento : elementos) {
+            if (elemento.getArea().equals(area)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public Area getStrongestFauna(int id) {
         double strength = 0;
         Area aux=null;
@@ -165,8 +191,8 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         return false;
     }
     public Area hasSpaceForNewFauna(Area area) {
-        double x = area.right() - area.left();
-        double y = area.down() - area.up();
+        double x = area.right() - area.left()+1;
+        double y = area.down() - area.up()+1;
         Area aux =null;
         for(int i=0;i<4;i++){
             switch (i){
@@ -175,7 +201,7 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
                 case 2 -> aux = new Area(area.up(),area.down(),area.left() - x,area.right() - x);
                 case 3 -> aux = new Area(area.up(),area.down(),area.left()+ x,area.right()+x);
             }
-            if(!hasAnInanimadoOrFauna(aux,-1))
+            if(!hasAnElemento(aux))
                 return aux;
         }
         return null;

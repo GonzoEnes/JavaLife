@@ -21,7 +21,7 @@ public sealed class Fauna extends ElementoBase implements IElementoComForca, IEl
     private static final double maximumStrength = 100;
     private static final double reduceStrength = 0.5;
     private static final double maximumReproduction = 2;
-    private static final int minimumSpeed = 1;
+    private static final int minimumSpeed = 3;
     private static final int strengthToChangeStateForProcurarComida = 35;
     private static final int strengthToChangeStateForReproduzir = 50;
     private static final int strengthToChangeStateForMovimentar = 80;
@@ -216,6 +216,7 @@ public sealed class Fauna extends ElementoBase implements IElementoComForca, IEl
             System.out.println("Flora consumed");
             return true;
         }
+        decreaseStrengthByMovement();
         return false;
     }
     public  void moveTowardsTheStrongestFauna() {
@@ -304,6 +305,7 @@ public sealed class Fauna extends ElementoBase implements IElementoComForca, IEl
             faunaBeingAttacked = ecossistema.getWeakestFauna(getId());
         }
         if(faunaBeingAttacked == null){
+            decreaseStrengthByMovement();
             return false;
         }
         if(ecossistema.isFaunaBeingAttackedNearyby(getArea(),speed,faunaBeingAttacked.getArea())){

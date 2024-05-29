@@ -7,7 +7,6 @@ public sealed class Inanimado extends ElementoBase permits Pedra {
     public Inanimado(Area area) {
         super(++idCounter, area);
     }
-
     @Override
     public Elemento getType() {
         return Elemento.INANIMADO;

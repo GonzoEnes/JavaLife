@@ -34,9 +34,12 @@ public class EcossistemaManager {
     public void removeClient(String property, PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(property, listener);
     }
-    public void setInitialEcossistemaConfigs(int largura, int altura,int time) {
+    public void setInitialEcossistemaConfigs(int altura, int largura,int time) {
         ecossistema = new Ecossistema(altura, largura);
         gameEngine.start(time);
+        addElemento(new Fauna(new Area(100,120,130,150),this.ecossistema,"animal.png"));
+        addElemento(new Flora(new Area(400,420,400,450),this.ecossistema,"erva.png"));
+
         pcs.firePropertyChange(ECOSSISTEMA_EVOLVE,null,null);
     }
     public void addElemento(IElemento element) {

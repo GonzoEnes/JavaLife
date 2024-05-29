@@ -22,12 +22,14 @@ public class ImageLoader {
         return image;
     }
 
-    public static Image getImageFauna(String name) {
-        Image image  = images.get(name);
-        if (image == null) {
-            image = new Image(Objects.requireNonNull(ImageLoader.class.getResourceAsStream("images/fauna" + name)));
-            images.put(name,image);
-        }
+    public static Image getImageFauna(String filename) {
+        Image image = images.get(filename);
+        if (image == null)
+            try (InputStream is = ImageLoader.class.getResourceAsStream("images/fauna/"+filename)) {
+                assert is != null;
+                image = new Image(is);
+                images.put(filename,image);
+            } catch (Exception e) { return null; }
         return image;
     }
 

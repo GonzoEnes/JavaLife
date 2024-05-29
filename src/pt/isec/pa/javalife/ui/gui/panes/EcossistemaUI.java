@@ -12,7 +12,7 @@ import pt.isec.pa.javalife.ui.gui.resources.ImageLoader;
 public class EcossistemaUI extends Canvas {
     private EcossistemaManager manager;
     public EcossistemaUI(EcossistemaManager manager) {
-        super(manager.getAltura(), manager.getLargura());
+        super(manager.getLargura(), manager.getAltura());
         this.manager = manager;
         registerHandlers();
         update();
@@ -23,6 +23,7 @@ public class EcossistemaUI extends Canvas {
     }
 
     public void update() { // mudar para as X,Y coordenadas
+        System.out.println("update");
         GraphicsContext gc = this.getGraphicsContext2D();
         clearScreen(gc);
         manager.getElementos().forEach(elemento -> drawElement(gc, elemento));
@@ -40,7 +41,6 @@ public class EcossistemaUI extends Canvas {
     }
 
     private void drawElement(GraphicsContext gc, IElemento element) {
-        System.out.println(element.getType());
         switch (element.getType()) {
             case FAUNA -> {
                 gc.drawImage(ImageLoader.getImageFauna(((Fauna)element).getImage()), element.getArea().left(), element.getArea().up(), element.getArea().right() - element.getArea().left(), element.getArea().down() - element.getArea().up());
