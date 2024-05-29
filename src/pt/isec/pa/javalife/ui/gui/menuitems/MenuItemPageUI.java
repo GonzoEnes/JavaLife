@@ -10,9 +10,6 @@ import javafx.stage.Stage;
 import pt.isec.pa.javalife.model.data.area.Area;
 import pt.isec.pa.javalife.model.data.ecosystem.EcossistemaManager;
 import pt.isec.pa.javalife.model.data.elements.Fauna;
-import pt.isec.pa.javalife.model.data.elements.Flora;
-import pt.isec.pa.javalife.model.data.elements.IElemento;
-import pt.isec.pa.javalife.model.data.elements.Inanimado;
 
 import java.io.File;
 import java.util.Arrays;

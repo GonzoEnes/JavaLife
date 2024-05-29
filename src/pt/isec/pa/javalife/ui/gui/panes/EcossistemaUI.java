@@ -35,7 +35,7 @@ public class EcossistemaUI extends Canvas {
         GraphicsContext gc = this.getGraphicsContext2D();
         clearScreen(gc);
         manager.getElementos().forEach(elemento -> drawElement(gc, elemento));
-        manager.setInitialEcossistemaConfigs((int)getHeight(), (int)getWidth());
+        //manager.setInitialEcossistemaConfigs((int)getHeight(), (int)getWidth());
     }
 
     private void clearScreen(GraphicsContext gc) {

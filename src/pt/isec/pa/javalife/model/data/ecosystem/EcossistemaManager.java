@@ -35,6 +35,7 @@ public class EcossistemaManager {
 
     public EcossistemaManager(long timeInMillis) throws InterruptedException {
         pcs = new PropertyChangeSupport(this);
+        this.ecossistema = new Ecossistema(500,500);
         //IElemento elemento = new Fauna(new Area(30,100,100,100), ecossistema);
         //this.ecossistema.addElemento(elemento);
         this.timeInMillis = timeInMillis;
@@ -42,7 +43,7 @@ public class EcossistemaManager {
 
     public boolean setInitialEcossistemaConfigs(int largura, int altura) {
         pcs.firePropertyChange(null,null,null);
-        this.ecossistema = new Ecossistema(altura, largura);
+        //this.ecossistema = new Ecossistema(altura, largura);
         //this.ecossistema.setLargura(largura);
         //this.ecossistema.setAltura(altura);
         return true;

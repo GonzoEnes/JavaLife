@@ -25,7 +25,9 @@ public class RootPane extends BorderPane {
         setTop(new VBox(new EcossistemaMenu(manager)));
         InitialConfigScreen initialConfigScreen = new InitialConfigScreen(manager);
         configPane = new Pane(initialConfigScreen);
-        setCenter(configPane);
+        //EcossistemaUI ecossistemaUI = new EcossistemaUI(manager);
+        //Pane ecossistemaPane = new Pane(ecossistemaUI);
+        setCenter(initialConfigScreen);
 
         /*mainMenuUI = new MainMenuUI(manager);
         this.stackPane = new StackPane(mainMenuUI);
