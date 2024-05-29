@@ -50,11 +50,9 @@ public class MainMenuUI extends BorderPane {
 
     public void registerHandlers() {
         btnStartSimul.setOnAction(actionEvent -> {
-            /*RootPane rootPane = (RootPane) getScene().getRoot();
-            rootPane.showEcossistemaUI();*/
-            EcossistemaUI ecossistemaUI = new EcossistemaUI(manager);
-            Pane ecossistemaPane = new Pane(ecossistemaUI);
-            setCenter(ecossistemaPane);
+            InitialConfigScreen initialConfigScreen = new InitialConfigScreen(manager);
+            Pane configPane = new Pane(initialConfigScreen);
+            setCenter(configPane);
         });
 
         btnExit.setOnAction(actionEvent -> {

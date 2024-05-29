@@ -135,7 +135,6 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         //verificar senao tem uma pedra nesta area para ser possivel movimentar se
         return false;
     }
-
     public Area getStrongestFauna(int id) {
         double strength = 0;
         Area aux=null;
@@ -147,15 +146,12 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
             }
         return aux;
     }
-
     public boolean hasAFaunaWithinRange(int id, int maximumReproductionRange) {
         return false;
     }
-
     public Area hasSpaceForNewFauna(Area area) {
             return null;
     }
-
     public Flora hasFloraInThisArea(Area area) {
         for (IElemento elemento : elementos) {
             if (elemento instanceof Flora flora && flora.getArea().equals(area)) {
@@ -164,7 +160,6 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         }
         return null;
     }
-
     public Area getClosestFlora(Fauna fauna) {
         double x = fauna.getArea().left()+(fauna.getArea().right() - fauna.getArea().left()) / 2;
         double y = fauna.getArea().up()+(fauna.getArea().down() - fauna.getArea().up()) / 2;
