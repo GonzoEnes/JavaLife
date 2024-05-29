@@ -26,7 +26,7 @@ public class JavaLifeFX extends Application {
 
     private void firstStage(Stage stage) {
         RootPane rootPane = new RootPane(manager);
-        Scene scene = new Scene(rootPane, 1000,1000);
+        Scene scene = new Scene(rootPane, 700,700);
         stage.setScene(scene);
         stage.setTitle("JavaLife - Trabalho Académico");
         stage.show();

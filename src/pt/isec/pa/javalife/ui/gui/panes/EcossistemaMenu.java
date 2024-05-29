@@ -82,6 +82,7 @@ public class EcossistemaMenu extends MenuBar {
         });
 
         mnOpen.setOnAction(e -> {
+            manager.pauseEngine();
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("File open...");
             fileChooser.setInitialDirectory(new File("."));
@@ -93,9 +94,11 @@ public class EcossistemaMenu extends MenuBar {
             if (hFile != null) {
                 manager.load(hFile);
             }
+            manager.resumeEngine();
         });
 
         mnSave.setOnAction(e -> {
+            manager.pauseEngine();
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("File save...");
             fileChooser.setInitialDirectory(new File("."));
@@ -107,11 +110,46 @@ public class EcossistemaMenu extends MenuBar {
             if (hFile != null) {
                 manager.save(hFile);
             }
+            manager.resumeEngine();
         });
 
         mnAddFauna.setOnAction(actionEvent -> {
+            manager.pauseEngine();
             MenuItemPageUI menuItemPageUI = new MenuItemPageUI(manager);
             menuItemPageUI.configureAddFaunaMenuItem(mnAddFauna);
+            manager.resumeEngine();
+        });
+
+        mnExport.setOnAction(actionEvent -> {
+            manager.pauseEngine();
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("File save...");
+            fileChooser.setInitialDirectory(new File("."));
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("Ecossistema (*.csv)", "*.csv"),
+                    new FileChooser.ExtensionFilter("All", "*.*")
+            );
+            File hFile = fileChooser.showSaveDialog(this.getScene().getWindow());
+            if (hFile != null) {
+                manager.exportCSVElements(hFile);
+            }
+            manager.resumeEngine();
+        });
+
+        mnImport.setOnAction(actionEvent -> {
+            manager.pauseEngine();
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("File open...");
+            fileChooser.setInitialDirectory(new File("."));
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("Ecossistema (*.csv)", "*.csv"),
+                    new FileChooser.ExtensionFilter("All", "*.*")
+            );
+            File hFile = fileChooser.showOpenDialog(this.getScene().getWindow());
+            if (hFile != null) {
+                manager.importCSVElements(hFile);
+            }
+            manager.resumeEngine();
         });
     }
 

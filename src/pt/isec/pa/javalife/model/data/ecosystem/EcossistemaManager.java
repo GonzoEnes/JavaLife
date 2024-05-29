@@ -17,7 +17,7 @@ public class EcossistemaManager {
     private GameEngine gameEngine;
     private Ecossistema ecossistema;
     private PropertyChangeSupport pcs;
-    private long timeBetweenTicks=1000;
+    private long timeBetweenTicks = 1000;
     public static final String ECOSSISTEMA_EVOLVE = "_evolve";
     public static final String ECOSSISTEMA_TOOLS = "_tools_";
     public static final String ECOSSISTEMA_ELEMENTS = "_elements_";
@@ -39,7 +39,6 @@ public class EcossistemaManager {
         gameEngine.start(time);
         addElemento(new Fauna(new Area(100,120,130,150),this.ecossistema,"animal.png"));
         addElemento(new Flora(new Area(400,420,400,450),this.ecossistema,"erva.png"));
-
         pcs.firePropertyChange(ECOSSISTEMA_EVOLVE,null,null);
     }
     public void addElemento(IElemento element) {
@@ -103,17 +102,16 @@ public class EcossistemaManager {
                 BufferedReader br = new BufferedReader(new FileReader(file))
         ) {
             String line;
-
             Set<IElemento> importedElements = new HashSet<>();
 
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(",");
                 String type = fields[0];
-                int cima = Integer.parseInt(fields[1]);
-                int baixo = Integer.parseInt(fields[2]);
-                int direita = Integer.parseInt(fields[3]);
-                int esquerda = Integer.parseInt(fields[4]);
-                Area area = new Area(cima, baixo, direita, esquerda);
+                double cima = Double.parseDouble(fields[1]);
+                double baixo = Double.parseDouble(fields[2]);
+                double esquerda = Double.parseDouble(fields[3]);
+                double direita = Double.parseDouble(fields[4]);
+                Area area = new Area(cima,baixo,esquerda,direita);
 
                 switch (type.toUpperCase()) {
                     case "FAUNA":
@@ -131,7 +129,7 @@ public class EcossistemaManager {
                         importedElements.add(flora);
                         break;
                     case "INANIMADO":
-                        Inanimado inanimado = new Inanimado(area);
+                        IElemento inanimado = Elemento.createElemento(Elemento.INANIMADO, area, ecossistema);
                         importedElements.add(inanimado);
                         break;
                     default:
@@ -148,6 +146,10 @@ public class EcossistemaManager {
             System.err.println("Erro a importar elementos do CSV: " + e.getMessage());
             return false;
         }
+
+        pcs.firePropertyChange(ECOSSISTEMA_ELEMENTS,null,null);
+        pcs.firePropertyChange(ECOSSISTEMA_TOOLS,null,null);
+
         return true;
     }
 
@@ -189,11 +191,29 @@ public class EcossistemaManager {
                 }
                 bw.write(line.toString());
                 bw.newLine();
+
+                pcs.firePropertyChange(ECOSSISTEMA_ELEMENTS,null,null);
             }
         } catch (IOException e) {
             System.err.println("Erro ao exportar elementos para o CSV: " + e.getMessage());
             return false;
         }
         return true;
+    }
+
+    public void stopEngine() {
+        gameEngine.stop();
+    }
+
+    public void pauseEngine() {
+        gameEngine.pause();
+    }
+
+    public void resumeEngine() {
+        gameEngine.resume();
+    }
+
+    public void startEngine() {
+        gameEngine.start(timeBetweenTicks);
     }
 }
