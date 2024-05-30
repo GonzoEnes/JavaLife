@@ -147,6 +147,37 @@ public class EcossistemaMenu extends MenuBar {
             manager.resumeEngine();
         });
 
+        mnAddFlora.setOnAction(actionEvent -> {
+            manager.pauseEngine();
+            MenuItemPageUI menuItemPageUI = new MenuItemPageUI(manager);
+            menuItemPageUI.configureAddFloraMenuItem(mnAddFlora);
+            manager.resumeEngine();
+
+        });
+
+        mnAddInanimado.setOnAction(actionEvent -> {
+            manager.pauseEngine();
+            MenuItemPageUI menuItemPageUI = new MenuItemPageUI(manager);
+            menuItemPageUI.configureAddInanimadoMenuItem(mnAddInanimado);
+            manager.resumeEngine();
+
+        });
+
+        mnEditarElemento.setOnAction(actionEvent -> {
+            manager.pauseEngine();
+            MenuItemPageUI menuItemPageUI = new MenuItemPageUI(manager);
+            menuItemPageUI.configureEditElementoMenuItem(mnEditarElemento);
+            manager.resumeEngine();
+        });
+
+        mnEliminarElemento.setOnAction(actionEvent -> {
+            manager.pauseEngine();
+            MenuItemPageUI menuItemPageUI = new MenuItemPageUI(manager);
+            menuItemPageUI.configureDeleteElementoMenuItem(mnEliminarElemento);
+            manager.resumeEngine();
+
+        });
+
         mnExport.setOnAction(actionEvent -> {
             manager.pauseEngine();
             FileChooser fileChooser = new FileChooser();
