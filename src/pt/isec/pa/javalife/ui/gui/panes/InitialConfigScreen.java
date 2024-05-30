@@ -20,6 +20,8 @@ public class InitialConfigScreen extends BorderPane {
     }
 
     public void configInitialSettings() {
+        Label title = new Label("Insira as dimensões e configurações do Ecossistema");
+        title.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: black; -fx-alignment: center; -fx-padding: 10px;");
         TextField larguraField = new TextField();
         TextField alturaField = new TextField();
         TextField timeField = new TextField();
@@ -28,8 +30,7 @@ public class InitialConfigScreen extends BorderPane {
         gridPane.setPadding(new Insets(10));
         gridPane.setHgap(10);
         gridPane.setVgap(10);
-
-        gridPane.setAlignment(Pos.CENTER);
+        gridPane.setAlignment(Pos.CENTER); // Centralizar elementos verticalmente
 
         gridPane.add(new Label("Altura:"), 0, 0);
         gridPane.add(alturaField, 1, 0);
@@ -37,7 +38,7 @@ public class InitialConfigScreen extends BorderPane {
         gridPane.add(new Label("Largura:"), 0, 1);
         gridPane.add(larguraField, 1, 1);
 
-        gridPane.add(new Label("Time:"), 0, 1);
+        gridPane.add(new Label("Tempo:"), 0, 2);
         gridPane.add(timeField, 1, 2);
 
         Button btnCreate = new Button("Criar Ecossistema");
@@ -57,7 +58,7 @@ public class InitialConfigScreen extends BorderPane {
                     System.out.println(manager.getAltura() + " " + manager.getLargura());
 
                     ecossistemaUI = new EcossistemaUI(manager);
-                    ecossistemaPane = new Pane(ecossistemaUI);
+                    ecossistemaPane = new BorderPane(ecossistemaUI);
                     setCenter(ecossistemaPane);
 
                     registerHandlers();
@@ -70,9 +71,10 @@ public class InitialConfigScreen extends BorderPane {
             }
         });
 
-        VBox vbox = new VBox(gridPane, btnCreate);
+        VBox vbox = new VBox(title, gridPane, btnCreate);
         vbox.setPadding(new Insets(10));
         vbox.setSpacing(10);
+        vbox.setAlignment(Pos.CENTER); // Centralizar elementos verticalmente
 
         setCenter(vbox);
     }

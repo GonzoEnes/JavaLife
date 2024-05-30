@@ -4,7 +4,6 @@ import pt.isec.pa.javalife.model.data.area.Area;
 import pt.isec.pa.javalife.model.data.elements.*;
 import pt.isec.pa.javalife.model.gameengine.interfaces.IGameEngine;
 import pt.isec.pa.javalife.model.gameengine.interfaces.IGameEngineEvolve;
-import pt.isec.pa.javalife.ui.gui.resources.ImageLoader;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -42,6 +41,7 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         this.largura = largura;
     }
     public int getAltura() { return altura; }
+
     public void setAltura(int altura) {
         this.altura = altura;
     }
@@ -54,15 +54,27 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
             } catch (CloneNotSupportedException ignored) {
             }
         }
-        System.out.println(elementos.size());
         return toReturn;
     }
     // LÓGICA
-    public void addElemento(IElemento elemento){ // tem de ser feito com factory
+
+    public boolean getIsAreaValid(Area area) {
+        return area.left() > 7 && area.right() < getLargura()-7 && area.up() > 7 && area.down() < getAltura()-7;
+    }
+
+    public void addElemento(IElemento elemento){
+        if (!getIsAreaValid(elemento.getArea())) {
+            return;
+        }
         elementos.add(elemento);
     }
+
     public void addElemento(Area area, Ecossistema ecossistema, String image, Elemento type) {
-        IElemento elemento=null;
+        if (!getIsAreaValid(area)) {
+            return;
+        }
+
+        IElemento elemento = null;
         switch (type) {
             case INANIMADO -> {
                 elemento = new Pedra(area);
@@ -79,9 +91,10 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         }
     }
     public boolean removeElemento(IElemento elemento) {
-        if (elemento.getType() == Elemento.INANIMADO) { // não se podem remover inanimados
+        if (elemento.getType() == Elemento.INANIMADO) { // não se podem remover inanimados da cerca CORRIGIR
             return false;
         }
+
         elementos.remove(elemento);
         return true;
     }
@@ -240,7 +253,7 @@ public boolean hasAnElemento(Area area) {
         return aux;
     }
     public boolean isFaunaBeingAttackedNearyby(Area hunter,double speed,Area prey) {
-        Area aux= new Area(hunter.up()+speed,hunter.left()+speed,hunter.down()+speed,hunter.right()+speed);
+        Area aux = new Area(hunter.up()+speed,hunter.left()+speed,hunter.down()+speed,hunter.right()+speed);
         return aux.equals(prey);
     }
 }

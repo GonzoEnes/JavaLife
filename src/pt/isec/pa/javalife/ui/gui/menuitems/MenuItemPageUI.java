@@ -73,6 +73,7 @@ public class MenuItemPageUI {
                         double esquerdaValue = Double.parseDouble(esquerda);
 
                         manager.addElemento(new Area(cimaValue, esquerdaValue, baixoValue, direitaValue),tipoComboBox.getValue(),Elemento.FAUNA);
+
                         popupStage.close();
                     } catch (NumberFormatException e) {
                         showErrorDialog("Valores inválidos! Por favor insira números inteiros.");

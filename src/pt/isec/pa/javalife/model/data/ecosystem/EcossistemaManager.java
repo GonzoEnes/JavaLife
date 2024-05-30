@@ -3,6 +3,10 @@ package pt.isec.pa.javalife.model.data.ecosystem;
 import pt.isec.pa.javalife.model.data.area.Area;
 import pt.isec.pa.javalife.model.data.elements.*;
 import pt.isec.pa.javalife.model.data.fsm.Context;
+import pt.isec.pa.javalife.model.data.memento.CareTaker;
+import pt.isec.pa.javalife.model.data.memento.IMemento;
+import pt.isec.pa.javalife.model.data.memento.IOriginator;
+import pt.isec.pa.javalife.model.data.memento.Memento;
 import pt.isec.pa.javalife.model.gameengine.GameEngine;
 import pt.isec.pa.javalife.model.gameengine.interfaces.IGameEngine;
 
@@ -13,11 +17,15 @@ import java.util.Set;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 // esta classe vai servir como Facade do Ecossistema para que as outras classes não consigam manipular o Ecossistema diretamente
-public class EcossistemaManager {
+public class EcossistemaManager implements IOriginator, Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private GameEngine gameEngine;
     private Ecossistema ecossistema;
     private PropertyChangeSupport pcs;
     private long timeBetweenTicks = 1000;
+    private CareTaker careTaker;
     public static final String ECOSSISTEMA_EVOLVE = "_evolve";
     public static final String ECOSSISTEMA_TOOLS = "_tools_";
     public static final String ECOSSISTEMA_ELEMENTS = "_elements_";
@@ -25,9 +33,35 @@ public class EcossistemaManager {
     public EcossistemaManager() {
         this.gameEngine = new GameEngine();
         pcs = new PropertyChangeSupport(this);
-        gameEngine.registerClient((g,t) ->evolve(gameEngine,t));
+        this.careTaker = new CareTaker(this);
+        gameEngine.registerClient((g,t) -> evolve(gameEngine,t));
     }
-    // observer/observable managenment
+
+    public void saveState() {
+        careTaker.save();
+    }
+
+    public void undo() {
+        careTaker.undo();
+    }
+
+    public void redo() {
+        careTaker.redo();
+    }
+
+    public void reset() {
+        careTaker.reset();
+    }
+
+    public boolean hasUndo() {
+        return careTaker.hasUndo();
+    }
+
+    public boolean hasRedo() {
+        return careTaker.hasRedo();
+    }
+
+    // observer/observable management
     public void addClient(String property, PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(property, listener);
     }
@@ -64,9 +98,9 @@ public class EcossistemaManager {
     }
     public void evolve (IGameEngine gameEngine, long currentTime) {
         ecossistema.evolve(gameEngine,currentTime);
-        System.out.println("Evolve");
         pcs.firePropertyChange(ECOSSISTEMA_EVOLVE, null, null);
     }
+
     public boolean save(File file) {
         try (
                 ObjectOutputStream oos = new ObjectOutputStream(
@@ -93,7 +127,6 @@ public class EcossistemaManager {
 
         pcs.firePropertyChange(ECOSSISTEMA_ELEMENTS,null,null);
         pcs.firePropertyChange(ECOSSISTEMA_TOOLS,null,null);
-
         return true;
     }
 
@@ -101,6 +134,10 @@ public class EcossistemaManager {
         try (
                 BufferedReader br = new BufferedReader(new FileReader(file))
         ) {
+            if (ecossistema == null) {
+                return false;
+            }
+
             String line;
             Set<IElemento> importedElements = new HashSet<>();
 
@@ -215,5 +252,20 @@ public class EcossistemaManager {
 
     public void startEngine() {
         gameEngine.start(timeBetweenTicks);
+    }
+
+    @Override
+    public IMemento save() {
+        return new Memento(this);
+    }
+
+    @Override
+    public void restore(IMemento memento) {
+        Object obj = memento.getSnapshot();
+        if (obj instanceof EcossistemaManager manager) {
+            this.ecossistema = manager.ecossistema;
+            this.gameEngine = manager.gameEngine;
+            this.timeBetweenTicks = manager.timeBetweenTicks;
+        }
     }
 }

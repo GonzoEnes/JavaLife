@@ -4,7 +4,9 @@ import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -15,12 +17,14 @@ import pt.isec.pa.javalife.model.data.elements.Fauna;
 import pt.isec.pa.javalife.model.data.elements.Flora;
 import pt.isec.pa.javalife.model.data.elements.IElemento;
 import pt.isec.pa.javalife.model.data.elements.Inanimado;
+import pt.isec.pa.javalife.model.data.memento.Memento;
 import pt.isec.pa.javalife.ui.gui.menuitems.MenuItemPageUI;
 
 import java.io.File;
 
 public class EcossistemaMenu extends MenuBar {
     EcossistemaManager manager;
+    Stage stage;
     Menu mnFile;
     Menu mnEcossistema;
     Menu mnSimulacao;
@@ -34,8 +38,9 @@ public class EcossistemaMenu extends MenuBar {
     MenuItem mnSaveSnap, mnRestoreSnap;
     MenuItem mnSol, mnHerbicida, mnForca;
 
-    public EcossistemaMenu(EcossistemaManager manager) {
+    public EcossistemaMenu(EcossistemaManager manager, Stage stage) {
         this.manager = manager;
+        this.stage = stage;
         createViews();
         registerHandlers();
         update();
@@ -81,6 +86,13 @@ public class EcossistemaMenu extends MenuBar {
             Platform.exit();
         });
 
+        mnNew.setOnAction(actionEvent -> {
+            manager.pauseEngine();
+            InitialConfigScreen initialConfigScreen = new InitialConfigScreen(manager);
+            initialConfigScreen.configInitialSettings();
+            manager.resumeEngine();
+        });
+
         mnOpen.setOnAction(e -> {
             manager.pauseEngine();
             FileChooser fileChooser = new FileChooser();
@@ -92,7 +104,11 @@ public class EcossistemaMenu extends MenuBar {
             );
             File hFile = fileChooser.showOpenDialog(this.getScene().getWindow());
             if (hFile != null) {
-                manager.load(hFile);
+                if (manager.load(hFile)) {
+                    EcossistemaUI ecossistemaUI = new EcossistemaUI(manager);
+                    BorderPane ecossistemaPane = new BorderPane(ecossistemaUI);
+                    stage.setScene(new Scene(ecossistemaPane, 800, 600));
+                }
             }
             manager.resumeEngine();
         });
@@ -130,6 +146,7 @@ public class EcossistemaMenu extends MenuBar {
                     new FileChooser.ExtensionFilter("All", "*.*")
             );
             File hFile = fileChooser.showSaveDialog(this.getScene().getWindow());
+
             if (hFile != null) {
                 manager.exportCSVElements(hFile);
             }
@@ -150,6 +167,30 @@ public class EcossistemaMenu extends MenuBar {
                 manager.importCSVElements(hFile);
             }
             manager.resumeEngine();
+        });
+
+        mnParar.setOnAction(actionEvent -> {
+            manager.stopEngine();
+        });
+
+        mnExecutar.setOnAction(actionEvent -> {
+            manager.startEngine();
+        });
+
+        mnContinuar.setOnAction(actionEvent -> {
+            manager.resumeEngine();
+        });
+
+        mnPausar.setOnAction(actionEvent -> {
+            manager.pauseEngine();
+        });
+
+        mnSaveSnap.setOnAction(actionEvent -> {
+            manager.save();
+        });
+
+        mnRestoreSnap.setOnAction(actionEvent -> {
+            //manager.restore(); ACABAR AMANHÃ
         });
     }
 
