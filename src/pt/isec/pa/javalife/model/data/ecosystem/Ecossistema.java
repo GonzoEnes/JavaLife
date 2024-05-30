@@ -23,6 +23,7 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         this.elementos = ConcurrentHashMap.newKeySet();
         createCerca();
     }
+
     public void createCerca() {
         Pedra cima = new Pedra(new Area(0,7,0, getLargura()));
         Pedra baixo = new Pedra(new Area(getAltura()-7,getAltura(),0,getLargura()));
@@ -50,7 +51,7 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         for (IElemento elemento : elementos) {
             try {
                 toReturn.add(elemento.clone());
-                System.out.println(elemento.getArea().right() + " " + " " +elemento.getArea().down()+ " "  +   elemento.getArea().left()+ " "  + elemento.getArea().up());
+                //System.out.println(elemento.getArea().right() + " " + " " +elemento.getArea().down()+ " "  +   elemento.getArea().left()+ " "  + elemento.getArea().up());
             } catch (CloneNotSupportedException ignored) {
             }
         }
@@ -134,13 +135,10 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
 
     private void checkStrength() {
         for (IElemento elemento : elementos) {
-            if(elemento instanceof Fauna fauna && fauna.getStrength()>0){
-                System.out.println(fauna.getStrength());
-            }
             if (elemento instanceof Fauna fauna && fauna.getStrength() <= 0) {
                 elementos.remove(fauna);
             }
-            if(elemento instanceof Flora flora && flora.getStrength()<=0){
+            if(elemento instanceof Flora flora && flora.getStrength() <= 0){
                 elementos.remove(flora);
             }
         }

@@ -3,10 +3,7 @@ package pt.isec.pa.javalife.model.data.ecosystem;
 import pt.isec.pa.javalife.model.data.area.Area;
 import pt.isec.pa.javalife.model.data.elements.*;
 import pt.isec.pa.javalife.model.data.fsm.Context;
-import pt.isec.pa.javalife.model.data.memento.CareTaker;
-import pt.isec.pa.javalife.model.data.memento.IMemento;
-import pt.isec.pa.javalife.model.data.memento.IOriginator;
-import pt.isec.pa.javalife.model.data.memento.Memento;
+import pt.isec.pa.javalife.model.data.memento.*;
 import pt.isec.pa.javalife.model.gameengine.GameEngine;
 import pt.isec.pa.javalife.model.gameengine.interfaces.IGameEngine;
 
@@ -20,7 +17,6 @@ import java.beans.PropertyChangeSupport;
 public class EcossistemaManager implements IOriginator, Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-
     private GameEngine gameEngine;
     private Ecossistema ecossistema;
     private PropertyChangeSupport pcs;
@@ -33,7 +29,8 @@ public class EcossistemaManager implements IOriginator, Serializable {
     public EcossistemaManager() {
         this.gameEngine = new GameEngine();
         pcs = new PropertyChangeSupport(this);
-        this.careTaker = new CareTaker(this);
+        MyOriginator originator = new MyOriginator();
+        this.careTaker = new CareTaker(originator);
         gameEngine.registerClient((g,t) -> evolve(gameEngine,t));
     }
 

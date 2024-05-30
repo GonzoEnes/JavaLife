@@ -17,6 +17,9 @@ import pt.isec.pa.javalife.model.data.elements.Fauna;
 import pt.isec.pa.javalife.model.data.elements.Flora;
 import pt.isec.pa.javalife.model.data.elements.IElemento;
 import pt.isec.pa.javalife.model.data.elements.Inanimado;
+import pt.isec.pa.javalife.model.data.events.Event;
+import pt.isec.pa.javalife.model.data.events.IEvent;
+import pt.isec.pa.javalife.model.data.events.Sun;
 import pt.isec.pa.javalife.model.data.memento.Memento;
 import pt.isec.pa.javalife.ui.gui.menuitems.MenuItemPageUI;
 
@@ -93,21 +96,29 @@ public class EcossistemaMenu extends MenuBar {
             manager.resumeEngine();
         });
 
+        mnSol.setOnAction(actionEvent -> {
+            IEvent evento = new Sun(Event.SUN, null); // dar fix a isto porque o ecossistema não pode ser null, MÁXIMO MUDA O CONSTRUTOR DOS EVENTOS
+            for (IElemento elemento : manager.getElementos()) {
+                evento.apply(elemento);
+            }
+        });
+
         mnOpen.setOnAction(e -> {
             manager.pauseEngine();
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("File open...");
             fileChooser.setInitialDirectory(new File("."));
             fileChooser.getExtensionFilters().addAll(
-                    new FileChooser.ExtensionFilter("Ecossistema (*.csv)", "*.csv"),
+                    new FileChooser.ExtensionFilter("Ecossistema (*.dat)", "*.dat"),
                     new FileChooser.ExtensionFilter("All", "*.*")
             );
             File hFile = fileChooser.showOpenDialog(this.getScene().getWindow());
             if (hFile != null) {
                 if (manager.load(hFile)) {
-                    EcossistemaUI ecossistemaUI = new EcossistemaUI(manager);
-                    BorderPane ecossistemaPane = new BorderPane(ecossistemaUI);
-                    stage.setScene(new Scene(ecossistemaPane, 800, 600));
+                    //EcossistemaUI ecossistemaUI = new EcossistemaUI(manager);
+                    //BorderPane ecossistemaPane = new BorderPane(ecossistemaUI);
+                    //stage.setScene(new Scene(ecossistemaPane, 800, 600));
+                    System.out.println("Save carregado!\n");
                 }
             }
             manager.resumeEngine();
@@ -119,7 +130,7 @@ public class EcossistemaMenu extends MenuBar {
             fileChooser.setTitle("File save...");
             fileChooser.setInitialDirectory(new File("."));
             fileChooser.getExtensionFilters().addAll(
-                    new FileChooser.ExtensionFilter("Ecossistema (*.csv)", "*.csv"),
+                    new FileChooser.ExtensionFilter("Ecossistema (*.dat)", "*.dat"),
                     new FileChooser.ExtensionFilter("All", "*.*")
             );
             File hFile = fileChooser.showSaveDialog(this.getScene().getWindow());

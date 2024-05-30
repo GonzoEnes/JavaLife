@@ -10,9 +10,7 @@ public class MyOriginator implements Serializable, IOriginator {
 
     @Serial
     private static final long serialVersionUID = 1L;
-
     EcossistemaManager manager;
-
     @Override
     public IMemento save() {
         return new Memento(this);

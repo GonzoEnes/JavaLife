@@ -10,7 +10,6 @@ import pt.isec.pa.javalife.model.data.elements.*;
 import pt.isec.pa.javalife.ui.gui.resources.ImageLoader;
 
 public class EcossistemaUI extends Canvas {
-
     private EcossistemaManager manager;
 
     public EcossistemaUI(EcossistemaManager manager) {
