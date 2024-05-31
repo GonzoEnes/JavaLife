@@ -7,29 +7,20 @@ import pt.isec.pa.javalife.model.gameengine.interfaces.IGameEngine;
 import java.io.Serializable;
 
 public class Context implements Serializable {
-
     private IState state;
+    private Fauna fauna;
 
-    private Ecossistema ecossistema;
-
-    public Context(Ecossistema ecossistema) {
-        this.ecossistema = ecossistema;
-        this.state = State.createState(State.MORRER, this, ecossistema);
+    public Context(Fauna fauna) {
+        this.fauna = fauna;
+        this.state = State.createState(State.MOVE,this,fauna);
     }
     void changeState(IState state) {
         this.state = state;
     }
-
     public State getState() {
         return state.getState();
     }
-
-    public Fauna evolve(Fauna fauna) {
-        return state.evolve(fauna,ecossistema);
+    public void evolve() {
+        state.evolve();
     }
-
-    public void evolve(IGameEngine gameEngine, long currentTime){
-        // a ver ecossistema.evolve;
-    }
-
 }

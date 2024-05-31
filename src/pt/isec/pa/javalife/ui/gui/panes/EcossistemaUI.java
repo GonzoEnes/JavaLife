@@ -3,52 +3,35 @@ package pt.isec.pa.javalife.ui.gui.panes;
 import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import pt.isec.pa.javalife.model.data.ecosystem.EcossistemaManager;
 import pt.isec.pa.javalife.model.data.elements.*;
-import pt.isec.pa.javalife.ui.gui.resources.ImageManager;
+import pt.isec.pa.javalife.ui.gui.resources.ImageLoader;
 
 public class EcossistemaUI extends Canvas {
     private EcossistemaManager manager;
-    public EcossistemaUI(EcossistemaManager manager) {
-        super(100, 100);
-        this.manager = manager;
 
+    public EcossistemaUI(EcossistemaManager manager) {
+        super(manager.getLargura(), manager.getAltura());
+        this.manager = manager;
         registerHandlers();
         update();
     }
 
     public void registerHandlers() {
-<<<<<<< HEAD
-        manager.addClient(EcossistemaManager.EVOLVE, evt -> Platform.runLater(this::update));
+        manager.addClient(EcossistemaManager.ECOSSISTEMA_EVOLVE, evt -> Platform.runLater(this::update));
     }
 
-    public void createViews() {
-        this.board = new GridPane();
-        this.board.setStyle("-fx-background-color: black");
-        this.setCenter(board);
-=======
-        manager.addListener(EcossistemaManager.ECOSSISTEMA_EVOLVE, evt -> Platform.runLater(this::update));
->>>>>>> devBranch
-    }
-
-    public void update() { // mudar para as X,Y coordenadas
-
-        /*board.getChildren().clear();
-        Set<IElemento> elementos = manager.getElementos();
-        for (IElemento elemento : elementos) {
-            //System.out.println(elemento.toString());
-            ImageView imageView = createImageView(elemento, elemento.getArea().cima(), elemento.getArea().direita());
-            board.add(imageView, elemento.getX(),elemento.getY());
-        }*/
+    public void update() {
         GraphicsContext gc = this.getGraphicsContext2D();
         clearScreen(gc);
         manager.getElementos().forEach(elemento -> drawElement(gc, elemento));
     }
 
     private void clearScreen(GraphicsContext gc) {
-        gc.setFill(Color.BLACK);
-        gc.fillRect(0,0,getWidth(), getHeight());
+        gc.setFill(Color.LIGHTGREEN);
+        gc.fillRect(0,0, manager.getLargura(), manager.getAltura());
     }
 
     public void updateSize(double newWidth, double newHeight) {
@@ -60,15 +43,14 @@ public class EcossistemaUI extends Canvas {
     private void drawElement(GraphicsContext gc, IElemento element) {
         switch (element.getType()) {
             case FAUNA -> {
-                 gc.drawImage(ImageManager.getImage("animal.png"), element.getArea().esquerda(), element.getArea().cima(), element.getArea().direita() - element.getArea().esquerda(), element.getArea().baixo() - element.getArea().cima());
+                gc.drawImage(ImageLoader.getImageFauna(((Fauna)element).getImage()), element.getArea().left(), element.getArea().up(), element.getArea().right() - element.getArea().left(), element.getArea().down() - element.getArea().up());
             }
             case FLORA -> {
-                 gc.drawImage(ImageManager.getImage("flora.png"), element.getArea().esquerda(), element.getArea().cima(), element.getArea().direita() - element.getArea().esquerda(), element.getArea().baixo() - element.getArea().cima());
+                gc.drawImage(ImageLoader.getImage("erva.png"), element.getArea().left(), element.getArea().up(), element.getArea().right() - element.getArea().left(), element.getArea().down() - element.getArea().up());
             }
             case INANIMADO -> {
-                 //gc.drawImage(ImageManager.getImage("pedra.png"), element.getArea().esquerda(), element.getArea().cima(), element.getArea().direita() - element.getArea().esquerda(), element.getArea().baixo() - element.getArea().cima());
-                 gc.setFill(Color.GRAY);
-                 gc.fillRect(element.getArea().esquerda(), element.getArea().cima(), element.getArea().direita() - element.getArea().esquerda(), element.getArea().baixo() - element.getArea().cima());
+                gc.setFill(Color.GRAY);
+                gc.fillRect(element.getArea().left(), element.getArea().up(), element.getArea().right() - element.getArea().left(), element.getArea().down() - element.getArea().up());
             }
         }
     }

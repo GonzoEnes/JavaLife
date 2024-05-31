@@ -1,5 +1,6 @@
 package pt.isec.pa.javalife.utils;
 
+import java.util.Random;
 import java.util.Scanner;
 
 public final class PAInput {
@@ -13,6 +14,11 @@ public final class PAInput {
 
     public static void resetScanner() {
         sc = new Scanner(System.in);
+    }
+
+    public int getRandomNumberInRange(int maxNumber) {
+        Random r = new Random();
+        return r.nextInt(maxNumber);
     }
 
     public static String readString(String title,boolean onlyOneWord) {

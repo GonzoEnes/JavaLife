@@ -1,38 +1,77 @@
 package pt.isec.pa.javalife.model.data.ecosystem;
 
 import pt.isec.pa.javalife.model.data.area.Area;
-import pt.isec.pa.javalife.model.data.elements.Elemento;
-import pt.isec.pa.javalife.model.data.elements.Fauna;
-import pt.isec.pa.javalife.model.data.elements.IElemento;
+import pt.isec.pa.javalife.model.data.elements.*;
 import pt.isec.pa.javalife.model.data.fsm.Context;
+import pt.isec.pa.javalife.model.data.memento.*;
+import pt.isec.pa.javalife.model.gameengine.GameEngine;
 import pt.isec.pa.javalife.model.gameengine.interfaces.IGameEngine;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 // esta classe vai servir como Facade do Ecossistema para que as outras classes não consigam manipular o Ecossistema diretamente
-public class EcossistemaManager {
+public class EcossistemaManager implements IOriginator, Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+    private GameEngine gameEngine;
+    private Ecossistema ecossistema;
+    private PropertyChangeSupport pcs;
+    private long timeBetweenTicks = 1000;
+    private CareTaker careTaker;
     public static final String ECOSSISTEMA_EVOLVE = "_evolve";
     public static final String ECOSSISTEMA_TOOLS = "_tools_";
     public static final String ECOSSISTEMA_ELEMENTS = "_elements_";
+<<<<<<< HEAD
     private Ecossistema ecossistema;
 
     public static final String EVOLVE = "_evolve";
 
     private long timeInMillis;
     PropertyChangeSupport pcs;
+=======
+>>>>>>> 54b18e6e491e9efe55e94d429337956588805a36
 
-    public EcossistemaManager(){
+    public EcossistemaManager() {
+        this.gameEngine = new GameEngine();
         pcs = new PropertyChangeSupport(this);
-        this.ecossistema = new Ecossistema(50, 50);
+        MyOriginator originator = new MyOriginator();
+        this.careTaker = new CareTaker(originator);
+        gameEngine.registerClient((g,t) -> evolve(gameEngine,t));
     }
 
-    // observer/observable managenment
+    public void saveState() {
+        careTaker.save();
+    }
+
+    public void undo() {
+        careTaker.undo();
+    }
+
+    public void redo() {
+        careTaker.redo();
+    }
+
+    public void reset() {
+        careTaker.reset();
+    }
+
+    public boolean hasUndo() {
+        return careTaker.hasUndo();
+    }
+
+    public boolean hasRedo() {
+        return careTaker.hasRedo();
+    }
+
+    // observer/observable management
     public void addClient(String property, PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(property, listener);
     }
+<<<<<<< HEAD
 
 
     public void removeClient(String property, PropertyChangeListener listener) {
@@ -46,33 +85,42 @@ public class EcossistemaManager {
         IElemento elemento = new Fauna(new Area(10,10,10,10), ecossistema);
         this.ecossistema.addElemento(elemento);
         this.timeInMillis = timeInMillis;
+=======
+    public void removeClient(String property, PropertyChangeListener listener) {
+        pcs.removePropertyChangeListener(property, listener);
+>>>>>>> 54b18e6e491e9efe55e94d429337956588805a36
     }
-
-    public boolean addElemento(IElemento elemento){
-        return this.ecossistema.addElemento(elemento);
+    public void setInitialEcossistemaConfigs(int altura, int largura,int time) {
+        ecossistema = new Ecossistema(altura, largura);
+        gameEngine.start(time);
+        addElemento(new Fauna(new Area(100,120,130,150),this.ecossistema,"animal.png"));
+        addElemento(new Flora(new Area(400,420,400,450),this.ecossistema,"erva.png"));
+        pcs.firePropertyChange(ECOSSISTEMA_EVOLVE,null,null);
     }
-
+    public void addElemento(IElemento element) {
+        ecossistema.addElemento(element);
+    }
+    public void addElemento(Area area, String image,Elemento type) {
+        ecossistema.addElemento(area,this.ecossistema,image,type);
+    }
     public boolean removeElemento(IElemento elemento) {
         return ecossistema.removeElemento(elemento);
     }
-
     public boolean editElemento(Elemento tipo, int id, ArrayList<String> parametros) {
         return ecossistema.editElemento(tipo, id, parametros);
     }
-
     public Set<IElemento> getElementos() {
         return ecossistema.getElementos();
     }
-
     public int getLargura() {
         return ecossistema.getLargura();
     }
-
     public int getAltura() {
         return ecossistema.getAltura();
     }
     public void evolve (IGameEngine gameEngine, long currentTime) {
         ecossistema.evolve(gameEngine,currentTime);
+<<<<<<< HEAD
         for (IElemento elemento : ecossistema.getElementos()) {
             if(elemento instanceof Fauna){
                 System.out.println(elemento.toString());
@@ -90,6 +138,9 @@ public class EcossistemaManager {
                 throw new RuntimeException(e);
             }
         }*/
+=======
+        pcs.firePropertyChange(ECOSSISTEMA_EVOLVE, null, null);
+>>>>>>> 54b18e6e491e9efe55e94d429337956588805a36
     }
 
     public boolean save(File file) {
@@ -118,7 +169,145 @@ public class EcossistemaManager {
 
         pcs.firePropertyChange(ECOSSISTEMA_ELEMENTS,null,null);
         pcs.firePropertyChange(ECOSSISTEMA_TOOLS,null,null);
+        return true;
+    }
+
+    public boolean importCSVElements(File file) {
+        try (
+                BufferedReader br = new BufferedReader(new FileReader(file))
+        ) {
+            if (ecossistema == null) {
+                return false;
+            }
+
+            String line;
+            Set<IElemento> importedElements = new HashSet<>();
+
+            while ((line = br.readLine()) != null) {
+                String[] fields = line.split(",");
+                String type = fields[0];
+                double cima = Double.parseDouble(fields[1]);
+                double baixo = Double.parseDouble(fields[2]);
+                double esquerda = Double.parseDouble(fields[3]);
+                double direita = Double.parseDouble(fields[4]);
+                Area area = new Area(cima,baixo,esquerda,direita);
+
+                switch (type.toUpperCase()) {
+                    case "FAUNA":
+                        double forcaFauna = Double.parseDouble(fields[5]);
+                        IElemento fauna = Elemento.createElemento(Elemento.FAUNA, area, ecossistema);
+                        assert fauna != null;
+                        ((Fauna)fauna).setStrength(forcaFauna);
+                        importedElements.add(fauna);
+                        break;
+                    case "FLORA":
+                        double forcaFlora = Double.parseDouble(fields[5]);
+                        IElemento flora = Elemento.createElemento(Elemento.FLORA, area, ecossistema);
+                        assert flora != null;
+                        ((Flora)flora).setStrength(forcaFlora);
+                        importedElements.add(flora);
+                        break;
+                    case "INANIMADO":
+                        IElemento inanimado = Elemento.createElemento(Elemento.INANIMADO, area, ecossistema);
+                        importedElements.add(inanimado);
+                        break;
+                    default:
+                        System.err.println("Tipo desconhecido: " + type);
+                        break;
+                }
+            }
+
+            for (IElemento elemento : importedElements) {
+                ecossistema.addElemento(elemento);
+            }
+
+        } catch (Exception e) {
+            System.err.println("Erro a importar elementos do CSV: " + e.getMessage());
+            return false;
+        }
+
+        pcs.firePropertyChange(ECOSSISTEMA_ELEMENTS,null,null);
+        pcs.firePropertyChange(ECOSSISTEMA_TOOLS,null,null);
 
         return true;
+    }
+
+    public boolean exportCSVElements(File file) {
+        try (
+                BufferedWriter bw = new BufferedWriter(new FileWriter(file))
+        ) {
+            for (IElemento elemento : ecossistema.getElementos()) {
+                StringBuilder line = new StringBuilder();
+
+                switch (elemento) {
+                    case Fauna fauna-> {
+                        line.append(fauna.getType());
+                        line.append(fauna.getArea().up()).append(",");
+                        line.append(fauna.getArea().down()).append(",");
+                        line.append(fauna.getArea().left()).append(",");
+                        line.append(fauna.getArea().right()).append(",");
+                        line.append(fauna.getStrength());
+                    }
+                    case Flora flora -> {
+                        line.append(flora.getType());
+                        line.append(flora.getArea().up()).append(",");
+                        line.append(flora.getArea().down()).append(",");
+                        line.append(flora.getArea().left()).append(",");
+                        line.append(flora.getArea().right()).append(",");
+                        line.append(flora.getStrength());
+                    }
+                    case Inanimado inanimado -> {
+                        line.append(inanimado.getType());
+                        line.append(inanimado.getArea().up()).append(",");
+                        line.append(inanimado.getArea().down()).append(",");
+                        line.append(inanimado.getArea().left()).append(",");
+                        line.append(inanimado.getArea().right());
+                    }
+                    default -> {
+                        System.err.println("Tipo desconhecido: " + elemento.getClass().getName());
+                        continue;
+                    }
+                }
+                bw.write(line.toString());
+                bw.newLine();
+
+                pcs.firePropertyChange(ECOSSISTEMA_ELEMENTS,null,null);
+            }
+        } catch (IOException e) {
+            System.err.println("Erro ao exportar elementos para o CSV: " + e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    public void stopEngine() {
+        gameEngine.stop();
+    }
+
+    public void pauseEngine() {
+        gameEngine.pause();
+    }
+
+    public void resumeEngine() {
+        gameEngine.resume();
+    }
+
+    public void startEngine() {
+        gameEngine.start(timeBetweenTicks);
+    }
+
+    @Override
+    public IMemento save() {
+        return new Memento(this);
+    }
+
+    @Override
+    public void restore(IMemento memento) {
+        Object obj = memento.getSnapshot();
+        if (obj instanceof EcossistemaManager manager) {
+            this.ecossistema = manager.ecossistema;
+            this.gameEngine = manager.gameEngine;
+            this.timeBetweenTicks = manager.timeBetweenTicks;
+        }
     }
 }

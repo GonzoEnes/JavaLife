@@ -3,96 +3,97 @@ package pt.isec.pa.javalife.model.data.elements;
 import pt.isec.pa.javalife.model.data.area.Area;
 import pt.isec.pa.javalife.model.data.ecosystem.Ecossistema;
 
-public final class Flora extends ElementoBase implements IElementoComForca, IElementoComImagem {
-    private double forca;
-    private String imagem;
-    private static int contadorId = 0;
-    private int contadorReproducao = 0;
-    public static final int MAX_FORCA = 100;
-    public static final int MIN_FORCA = 0;
-    public static final int INIT_FORCA = 50;
-    public static final int AUMENTO_FORCA = 1;
-    public static final int REPRODUCAO_FORCA = 90;
-    public static final int POS_REPRODUCAO_FORCA = 60;
-    public static final int MAX_REPRODUCAO = 2;
-    public static final int SER_CONSUMIDO = 1;
+public sealed class Flora extends ElementoBase implements IElementoComForca, IElementoComImagem permits Erva {
+    private double strength;
+    private String image;
+    private static int idCounter = 0;
+    private int reproductionCounter = 0;
+    private Ecossistema ecossistema;
+    private static final double initialStrength = 50;
+    private static final double minimumStrength = 0;
+    private static final double maximumStrength = 100;
+    private static final double decreaseStrength = 1;
+    private static final double increaseStrength = 0.5;
+    private static final double maximumReproduction = 2;
+    private static final int strengthToReproduce = 90;
+    private static final double newbornFloraStrength = 50;
+    private static final double afterReproduceStrength = 60;
 
-<<<<<<< HEAD
-    public Flora(Area area, String imagem, int x, int y) {
-        super(++contadorId, area, x, y);
-        this.forca = INIT_FORCA;
-=======
-    public Flora(Area area, String imagem) {
-        super(++idS, area);
-        this.forca = 50;
->>>>>>> devBranch
-        this.imagem = imagem;
+    public Flora(Area area,Ecossistema ecossistema,String image){
+        super(++idCounter, area);
+        this.ecossistema=ecossistema;
+        this.image=image;
+        this.strength = initialStrength;
+    }
+    public Flora(Area area,Ecossistema ecossistema,String image,double strength){
+        super(++idCounter, area);
+        this.ecossistema=ecossistema;
+        this.image=image;
+        this.strength = strength;
     }
 
+    public double getDecreaseStrength() {
+        return decreaseStrength;
+    }
     @Override
-    public double getForca() {
-        return forca;
+    public double getStrength() {
+        return strength;
     }
-
-<<<<<<< HEAD
-    public void aumentarForca(double aumento) {
-        if(forca==MAX_FORCA){
+    @Override
+    public void setStrength(double strength) {
+        if (strength > maximumStrength) {
+            this.strength = maximumStrength;
+            return;
+        } else if (strength < minimumStrength) {
+            this.strength = minimumStrength;
             return;
         }
-        forca += aumento;
-        if(forca>MAX_FORCA)
-            forca=MAX_FORCA;
+        this.strength = strength;
     }
-    public void diminuirForca(double diminuir) {
-        if(forca==MIN_FORCA){
+    @Override
+    public String getImage() {
+        return "";
+    }
+    @Override
+    public void setImage(String imagem) {
+
+    }
+    public void increaseStrength() {
+        if (this.strength + increaseStrength >= maximumStrength){
+            this.strength = maximumStrength;
             return;
         }
-        forca -= diminuir;
-        if(forca<MIN_FORCA)
-            forca=MIN_FORCA;
+        this.strength+=increaseStrength;
     }
-    public Boolean verificarReproducao(){
-        return forca >= REPRODUCAO_FORCA && contadorReproducao < MAX_REPRODUCAO;
-=======
-    @Override
-    public void setForca(double forca) { // ISTO ESTÁ MAL
-        if (forca > 100 || forca < 0) {
+    public void decreaseStrength() {
+        if(this.strength-decreaseStrength<=minimumStrength){
+            this.strength=minimumStrength;
             return;
         }
-
-        this.forca += forca;
->>>>>>> devBranch
+        this.strength-=decreaseStrength;
     }
-
-    public Boolean reproducao(Ecossistema ecossistema){
-        if(ecossistema.existeEspacoLivre(getX(),getY())!=-1){
-            Flora novaFlora = new Flora(getArea(), getImagem(), getX(), getY());
-            ecossistema.adicionarElemento(novaFlora);
-            forca=POS_REPRODUCAO_FORCA;
-            contadorReproducao++;
-            return true;
-        }
-        return false;
+    private void increaseReproductionCounter() {
+        reproductionCounter++;
     }
-
-    public void evolve(){
-        aumentarForca(AUMENTO_FORCA);
-        if(verificarReproducao()){
-            reproducao(getEcossistema());
-        }
-    }
-    @Override
-    public String getImagem() {
-        return imagem;
-    }
-
-    @Override
-    public void setImagem(String imagem) {
-        this.imagem = imagem;
-    }
-
     @Override
     public Elemento getType() {
         return Elemento.FLORA;
+    }
+    public void reproduce() {
+        if (strength >= strengthToReproduce && reproductionCounter < maximumReproduction) {
+            Area aux = ecossistema.hasSpaceForNewFauna(getArea());
+            if (aux != null) {
+                IElemento newFlora = Elemento.createElemento(Elemento.FLORA,aux,ecossistema);
+                assert newFlora != null;
+                ((Flora)newFlora).setStrength(newbornFloraStrength);
+                ecossistema.addElemento(newFlora);
+                increaseReproductionCounter();
+                setStrength(afterReproduceStrength);
+            }
+        }
+    }
+    public void evolve() {
+        increaseStrength();
+        reproduce();
     }
 }

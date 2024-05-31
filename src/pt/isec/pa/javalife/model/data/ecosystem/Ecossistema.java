@@ -2,18 +2,13 @@ package pt.isec.pa.javalife.model.data.ecosystem;
 
 import pt.isec.pa.javalife.model.data.area.Area;
 import pt.isec.pa.javalife.model.data.elements.*;
-import pt.isec.pa.javalife.model.data.fsm.State;
 import pt.isec.pa.javalife.model.gameengine.interfaces.IGameEngine;
 import pt.isec.pa.javalife.model.gameengine.interfaces.IGameEngineEvolve;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
-<<<<<<< HEAD
 import java.util.concurrent.ConcurrentHashMap;
-=======
-import java.util.concurrent.ConcurrentSkipListSet;
->>>>>>> devBranch
 
 public class Ecossistema implements Serializable, IGameEngineEvolve {
     @Serial
@@ -30,99 +25,95 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
     }
 
     public void createCerca() {
-        /*for (int i = 0; i < altura; i++) {
-            for (int j = 0; j < largura; j++) {
-                if (i == 0 || i == altura - 1 || j == 0 || j == largura - 1) {
-                    elementos.add(new Inanimado(new Area(i,j,i+1,j+1)));
-                }
-            }
-        }*/
-        // DUAS ALTERNATIVAS: CRIAR UM FOR LOOP COM VÁRIOS INANIMADOS OU CRIAR UM INANIMADO COM UMA ÁREA GRANDE, QUALQUER UMA DAS DUAS FUNCIONA IGUAL
-        Inanimado cima = new Inanimado(new Area(0,0,0,0));
-        Inanimado baixo = new Inanimado(new Area(0,0,0,0));
-        Inanimado esquerda = new Inanimado(new Area(0,0,0,0));
-        Inanimado direita = new Inanimado(new Area(0,0,0,0));
-
-        cima.setArea(new Area(0,0,getLargura(), 7));
-        baixo.setArea(new Area(0,getAltura()-7,getLargura(), getAltura()));
-        esquerda.setArea(new Area(0,0,7,getAltura()));
-        direita.setArea(new Area(getLargura()-7,0,getLargura(),getAltura()));
-
+        Pedra cima = new Pedra(new Area(0,7,0, getLargura()));
+        Pedra baixo = new Pedra(new Area(getAltura()-7,getAltura(),0,getLargura()));
+        Pedra esquerda = new Pedra(new Area(0,getAltura(),0,7));
+        Pedra direita = new Pedra(new Area(0,getAltura(),getLargura()-7,getLargura()));
         elementos.add(cima);
         elementos.add(baixo);
         elementos.add(esquerda);
         elementos.add(direita);
     }
-
     // GETTERS & SETTERS
     public int getLargura() {
         return largura;
     }
-
     public void setLargura(int largura) {
         this.largura = largura;
     }
-
     public int getAltura() { return altura; }
 
     public void setAltura(int altura) {
         this.altura = altura;
     }
-
     public Set<IElemento> getElementos() {
         Set<IElemento> toReturn = new HashSet<>();
         for (IElemento elemento : elementos) {
             try {
                 toReturn.add(elemento.clone());
+                //System.out.println(elemento.getArea().right() + " " + " " +elemento.getArea().down()+ " "  +   elemento.getArea().left()+ " "  + elemento.getArea().up());
             } catch (CloneNotSupportedException ignored) {
             }
         }
         return toReturn;
     }
-
     // LÓGICA
-    public boolean addElemento(IElemento elemento){ // tem de ser feito com factory
-        switch (elemento.getType()) {
-            case INANIMADO -> {
-                elementos.add(Elemento.INANIMADO.createElemento(this, null));
-                return true;
-            }
-            case FAUNA -> {
-                elementos.add(Elemento.FAUNA.createElemento(this, null));
-                return true;
-            }
-            case FLORA -> {
-                elementos.add(Elemento.FLORA.createElemento(this, null));
-                return true;
-            }
-        }
-        return false;
+
+    public boolean getIsAreaValid(Area area) {
+        return area.left() > 7 && area.right() < getLargura()-7 && area.up() > 7 && area.down() < getAltura()-7;
     }
 
+    public void addElemento(IElemento elemento){
+        if (!getIsAreaValid(elemento.getArea())) {
+            return;
+        }
+        elementos.add(elemento);
+    }
+
+    public void addElemento(Area area, Ecossistema ecossistema, String image, Elemento type) {
+        if (!getIsAreaValid(area)) {
+            return;
+        }
+
+        IElemento elemento = null;
+        switch (type) {
+            case INANIMADO -> {
+                elemento = new Pedra(area);
+            }
+            case FLORA -> {
+                elemento = new Erva(area, ecossistema, "flora.png");
+            }
+            case FAUNA -> {
+                elemento = new Animal(area, ecossistema, image);
+            }
+        }
+        if (elemento != null) {
+            elementos.add(elemento);
+        }
+    }
     public boolean removeElemento(IElemento elemento) {
-        if (elemento.getType() == Elemento.INANIMADO) { // não se podem remover inanimados
+        if (elemento.getType() == Elemento.INANIMADO) { // não se podem remover inanimados da cerca CORRIGIR
             return false;
         }
+
         elementos.remove(elemento);
         return true;
     }
-
     public boolean editElemento(Elemento tipo, int id, ArrayList<String> parametros) { // ir reforçando, claro
-        //ArrayList<String> parametrosOld = new ArrayList<>();
         for (IElemento elemento : elementos) {
             if (elemento.getId() == id && elemento.getType() == tipo) {
                 switch (tipo) {
                     case FAUNA -> {
                         //parametrosOld.add(Double.toString(((Animal)elemento).getForca()));
-                        ((Fauna)elemento).setForca(Double.parseDouble(parametros.get(0)));
+                        ((Fauna)elemento).setStrength(Double.parseDouble(parametros.get(0)));
                         return true;
                     }
                     case FLORA -> { // a flora pode editar a força ou a imagem dela acho eu
                         //parametrosOld.add(Double.toString(((Erva)elemento).getForca()));
-                        ((Flora)elemento).setForca(Double.parseDouble(parametros.get(0)));
+                        ((Flora)elemento).setStrength(Double.parseDouble(parametros.get(0)));
                         if (!parametros.get(1).isBlank()) { // se o campo da edição de imagem estiver vazio não vale a pena meter nada
                             //parametrosOld.add(((Erva)elemento).getImagem());
-                            ((Flora)elemento).setImagem("files/" + parametros.get(1));
+                            ((Flora)elemento).setImage("files/" + parametros.get(1));
                         }
                         return true; // devolver os parâmetros antigos para se dar undo() no editar
                     }
@@ -131,66 +122,136 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         }
         return false;
     }
-
     @Override
     public void evolve(IGameEngine gameEngine, long currentTime) {
-<<<<<<< HEAD
-        List<IElemento> newElementos = new ArrayList<>();
-        List<IElemento> deleteElementos = new ArrayList<>();
-        synchronized(elementos){
-            Iterator<IElemento> iterator = elementos.iterator();
-            while (iterator.hasNext()) {
-                IElemento elemento = iterator.next();
-                if (elemento instanceof Fauna) {
-                    Fauna fauna = (Fauna) elemento;
-                    Fauna newFauna = fauna.evolve();
-                    if(fauna.getState()== State.MOVIMENTAR){
-                        if (newFauna != null) {
-                            addElemento(newFauna);
-                            newElementos.add(newFauna);
-                        }
-                    }
-                    if(fauna.getState()== State.PROCURAR_COMIDA){
-                        if (newFauna != null) {
-                            deleteElementos.add(newFauna);
-                        }
-                    }
-
-                }
-            }
-        }
-        elementos.addAll(newElementos);
-        elementos.removeAll(deleteElementos);
-=======
-        /*for (IElemento current : elementos) {
-            if (current instanceof Fauna fauna) {
-                fauna.evolve();
-            }
-        }*/
-
-        Iterator<IElemento> iterator = elementos.iterator();
-
-        while (iterator.hasNext()) {
-            IElemento elemento = iterator.next();
+        for (IElemento elemento : elementos) {
             if (elemento instanceof Fauna fauna) {
-                //fauna.evolve();
-                if (fauna.getForca() == 0) {
-                    System.out.println(elementos.size());
-                    iterator.remove();
-                    System.out.println(elementos.size());
-                }
-            } else if (elemento instanceof Flora flora) {
-                if (flora.getForca() == 0) {
-                    iterator.remove();
-                }
-            }
+                fauna.evolve();
+            }else if(elemento instanceof Flora flora)
+                flora.evolve();
         }
-        // CODIGO DA FLORA
->>>>>>> devBranch
+        checkStrength();
     }
 
-    /*private boolean isAreaValida(Area area) {
-        return area.cima() >= 0 && area.esquerda() >= 0 &&
-                area.baixo() <= altura && area.direita() <= largura;
-    }*/
+    private void checkStrength() {
+        for (IElemento elemento : elementos) {
+            if (elemento instanceof Fauna fauna && fauna.getStrength() <= 0) {
+                elementos.remove(fauna);
+            }
+            if(elemento instanceof Flora flora && flora.getStrength() <= 0){
+                elementos.remove(flora);
+            }
+        }
+    }
+
+    public boolean hasAnInanimadoOrFauna(Area area,int id) {
+        for (IElemento elemento : elementos) {
+            if (elemento instanceof Inanimado inanimado && inanimado.getArea().equals(area)) {
+                return true;
+            }
+            if (elemento instanceof Fauna fauna && fauna.getId() != id && fauna.getArea().equals(area)) {
+                return true;
+            }
+        }
+        return false;
+    }
+public boolean hasAnElemento(Area area) {
+        for (IElemento elemento : elementos) {
+            if (elemento.getArea().equals(area)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Area getStrongestFauna(int id) {
+        double strength = 0;
+        Area aux=null;
+        for (IElemento elemento : elementos) {
+            if (elemento instanceof Fauna fauna && fauna.getId() != id && fauna.getStrength() > strength){
+                    strength = fauna.getStrength();
+                    aux = fauna.getArea();
+                }
+            }
+        return aux;
+    }
+    public Fauna getWeakestFauna(int id) {
+        Fauna aux=null;
+        for (IElemento elemento : elementos) {
+            if (elemento instanceof Fauna fauna && fauna.getId() != id){
+                if(aux==null)
+                    aux = fauna;
+                else if(aux.getStrength()>fauna.getStrength())
+                    aux = fauna;
+            }
+        }
+        return aux;
+    }
+    public boolean hasAFaunaWithinRange(Area area, int maximumReproductionRange) {
+        Area aux =null;
+        for(int i=0;i<4;i++){
+            switch (i){
+                case 0 -> aux = new Area(area.up() - maximumReproductionRange,area.down() - maximumReproductionRange,area.left(),area.right());
+                case 1 -> aux = new Area(area.up() + maximumReproductionRange,area.down() + maximumReproductionRange,area.left(),area.right());
+                case 2 -> aux = new Area(area.up(),area.down(),area.left() - maximumReproductionRange,area.right() - maximumReproductionRange);
+                case 3 -> aux = new Area(area.up(),area.down(),area.left()+ maximumReproductionRange,area.right()+maximumReproductionRange);
+            }
+            if(!hasAnInanimadoOrFauna(aux,-1))
+                return true;
+        }
+        return false;
+    }
+    public Area hasSpaceForNewFauna(Area area) {
+        double x = area.right() - area.left()+1;
+        double y = area.down() - area.up()+1;
+        Area aux =null;
+        for(int i=0;i<4;i++){
+            switch (i){
+                case 0 -> aux = new Area(area.up() - y,area.down() - y,area.left(),area.right());
+                case 1 -> aux = new Area(area.up() + y,area.down() + y,area.left(),area.right());
+                case 2 -> aux = new Area(area.up(),area.down(),area.left() - x,area.right() - x);
+                case 3 -> aux = new Area(area.up(),area.down(),area.left()+ x,area.right()+x);
+            }
+            if(!hasAnElemento(aux))
+                return aux;
+        }
+        return null;
+    }
+    public Flora hasFloraInThisArea(Area area) {
+        for (IElemento elemento : elementos) {
+            if (elemento instanceof Flora flora && flora.getArea().equals(area)) {
+                return flora;
+            }
+        }
+        return null;
+    }
+    public Area getClosestFlora(Fauna fauna) {
+        double x = fauna.getArea().left()+(fauna.getArea().right() - fauna.getArea().left()) / 2;
+        double y = fauna.getArea().up()+(fauna.getArea().down() - fauna.getArea().up()) / 2;
+        double xClosestFlora;
+        double yClosestFlora;
+        double distance=-1;
+        double distanceClosestFauna;
+        Area aux=null;
+        for(IElemento elemento :elementos){
+            if(elemento instanceof Flora flora){
+                xClosestFlora =flora.getArea().right()+ (flora.getArea().right() - flora.getArea().left()) / 2;
+                yClosestFlora = flora.getArea().up()+(flora.getArea().down() - flora.getArea().up()) / 2;
+                distanceClosestFauna = Math.abs(x-xClosestFlora)+Math.abs(y-yClosestFlora);
+                if(distance==-1) {
+                    aux = flora.getArea();
+                    distance=distanceClosestFauna;
+                } else
+                    if(distance>distanceClosestFauna){
+                        aux=flora.getArea();
+                        distance =distanceClosestFauna;
+                    }
+            }
+        }
+        return aux;
+    }
+    public boolean isFaunaBeingAttackedNearyby(Area hunter,double speed,Area prey) {
+        Area aux = new Area(hunter.up()+speed,hunter.left()+speed,hunter.down()+speed,hunter.right()+speed);
+        return aux.equals(prey);
+    }
 }
