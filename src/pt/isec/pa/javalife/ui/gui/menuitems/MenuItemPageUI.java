@@ -162,14 +162,12 @@ public class MenuItemPageUI {
             Stage popupStage = new Stage();
             popupStage.initModality(Modality.APPLICATION_MODAL);
             popupStage.initOwner(((MenuItem) actionEvent.getSource()).getParentPopup().getOwnerWindow());
-            popupStage.setTitle("Criar Elemento");
+            popupStage.setTitle("Criar Inanimado");
 
             TextField cimaField = new TextField();
             TextField baixoField = new TextField();
             TextField direitaField = new TextField();
             TextField esquerdaField = new TextField();
-
-
             GridPane gridPane = new GridPane();
             gridPane.setPadding(new Insets(10));
             gridPane.setHgap(10);
@@ -200,7 +198,7 @@ public class MenuItemPageUI {
                         double direitaValue = Double.parseDouble(direita);
                         double esquerdaValue = Double.parseDouble(esquerda);
 
-                        manager.addElemento(new Area(cimaValue, esquerdaValue, baixoValue, direitaValue), "pedra.png", Elemento.INANIMADO);
+                        manager.addElemento(new Area(cimaValue, esquerdaValue, baixoValue, direitaValue), null, Elemento.INANIMADO);
 
                         popupStage.close();
                     } catch (NumberFormatException e) {
@@ -345,6 +343,7 @@ public class MenuItemPageUI {
             popupStage.show();
         });
     }
+
     private List<String> loadImageNames(String directoryPath) {
         File directory = new File(directoryPath);
         if (directory.exists() && directory.isDirectory()) {

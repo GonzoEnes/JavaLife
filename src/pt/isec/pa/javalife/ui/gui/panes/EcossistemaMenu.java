@@ -228,11 +228,13 @@ public class EcossistemaMenu extends MenuBar {
         });
 
         mnSaveSnap.setOnAction(actionEvent -> {
-            manager.save();
+            System.out.println("Guardado Memento!");
+            manager.saveState();
         });
 
         mnRestoreSnap.setOnAction(actionEvent -> {
-            //manager.restore(); ACABAR AMANHÃ
+            System.out.println("Restaurado memento anterior!");
+            manager.undo();
         });
     }
 

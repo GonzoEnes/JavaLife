@@ -14,9 +14,8 @@ import java.util.Set;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 // esta classe vai servir como Facade do Ecossistema para que as outras classes não consigam manipular o Ecossistema diretamente
-public class EcossistemaManager implements IOriginator, Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
+
+public class EcossistemaManager {
     private GameEngine gameEngine;
     private Ecossistema ecossistema;
     private PropertyChangeSupport pcs;
@@ -25,20 +24,12 @@ public class EcossistemaManager implements IOriginator, Serializable {
     public static final String ECOSSISTEMA_EVOLVE = "_evolve";
     public static final String ECOSSISTEMA_TOOLS = "_tools_";
     public static final String ECOSSISTEMA_ELEMENTS = "_elements_";
-<<<<<<< HEAD
-    private Ecossistema ecossistema;
-
     public static final String EVOLVE = "_evolve";
-
-    private long timeInMillis;
-    PropertyChangeSupport pcs;
-=======
->>>>>>> 54b18e6e491e9efe55e94d429337956588805a36
 
     public EcossistemaManager() {
         this.gameEngine = new GameEngine();
         pcs = new PropertyChangeSupport(this);
-        MyOriginator originator = new MyOriginator();
+        EcossistemaOriginator originator = new EcossistemaOriginator();
         this.careTaker = new CareTaker(originator);
         gameEngine.registerClient((g,t) -> evolve(gameEngine,t));
     }
@@ -71,42 +62,34 @@ public class EcossistemaManager implements IOriginator, Serializable {
     public void addClient(String property, PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(property, listener);
     }
-<<<<<<< HEAD
-
-
-    public void removeClient(String property, PropertyChangeListener listener) {
-        pcs.removePropertyChangeListener(property, listener);
 
     // falta aqui depois o CmdManager e o PropertyChangeSupport (para a sinalização dos clientes) quando fizermos a GUI
 
-    public EcossistemaManager(long timeInMillis) throws InterruptedException {
-        pcs = new PropertyChangeSupport(this);
-        this.ecossistema = new Ecossistema(600, 600);
-        IElemento elemento = new Fauna(new Area(10,10,10,10), ecossistema);
-        this.ecossistema.addElemento(elemento);
-        this.timeInMillis = timeInMillis;
-=======
     public void removeClient(String property, PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(property, listener);
->>>>>>> 54b18e6e491e9efe55e94d429337956588805a36
     }
     public void setInitialEcossistemaConfigs(int altura, int largura,int time) {
         ecossistema = new Ecossistema(altura, largura);
         gameEngine.start(time);
         addElemento(new Fauna(new Area(100,120,130,150),this.ecossistema,"animal.png"));
         addElemento(new Flora(new Area(400,420,400,450),this.ecossistema,"erva.png"));
+        saveState();
         pcs.firePropertyChange(ECOSSISTEMA_EVOLVE,null,null);
     }
     public void addElemento(IElemento element) {
         ecossistema.addElemento(element);
+        saveState();
     }
     public void addElemento(Area area, String image,Elemento type) {
         ecossistema.addElemento(area,this.ecossistema,image,type);
+        saveState();
     }
     public boolean removeElemento(IElemento elemento) {
+        saveState();
         return ecossistema.removeElemento(elemento);
     }
     public boolean editElemento(Elemento tipo, int id, ArrayList<String> parametros) {
+        saveState();
         return ecossistema.editElemento(tipo, id, parametros);
     }
     public Set<IElemento> getElementos() {
@@ -119,16 +102,9 @@ public class EcossistemaManager implements IOriginator, Serializable {
         return ecossistema.getAltura();
     }
     public void evolve (IGameEngine gameEngine, long currentTime) {
+        saveState();
         ecossistema.evolve(gameEngine,currentTime);
-<<<<<<< HEAD
-        for (IElemento elemento : ecossistema.getElementos()) {
-            if(elemento instanceof Fauna){
-                System.out.println(elemento.toString());
-            }
-        }
-        System.out.println();
         pcs.firePropertyChange(EVOLVE, null, null);
-        pcs.firePropertyChange(ECOSSISTEMA_EVOLVE, null, null);
         /*i++;
         if(i%10 == 0){
             IElemento elemento = new Fauna(new Area(15,15,15,15), Elemento.FAUNA);
@@ -138,9 +114,7 @@ public class EcossistemaManager implements IOriginator, Serializable {
                 throw new RuntimeException(e);
             }
         }*/
-=======
         pcs.firePropertyChange(ECOSSISTEMA_EVOLVE, null, null);
->>>>>>> 54b18e6e491e9efe55e94d429337956588805a36
     }
 
     public boolean save(File file) {
@@ -294,20 +268,5 @@ public class EcossistemaManager implements IOriginator, Serializable {
 
     public void startEngine() {
         gameEngine.start(timeBetweenTicks);
-    }
-
-    @Override
-    public IMemento save() {
-        return new Memento(this);
-    }
-
-    @Override
-    public void restore(IMemento memento) {
-        Object obj = memento.getSnapshot();
-        if (obj instanceof EcossistemaManager manager) {
-            this.ecossistema = manager.ecossistema;
-            this.gameEngine = manager.gameEngine;
-            this.timeBetweenTicks = manager.timeBetweenTicks;
-        }
     }
 }
