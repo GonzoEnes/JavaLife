@@ -22,7 +22,6 @@ public class CareTaker {
     public void undo() {
         if (history.isEmpty())
             return;
-        System.out.println(history.size());
         redoHist.push(originator.save());
         originator.restore(history.pop());
     }
@@ -30,7 +29,6 @@ public class CareTaker {
     public void redo() {
         if (redoHist.isEmpty())
             return;
-        System.out.println(history.size());
         history.push(originator.save());
         originator.restore(redoHist.pop());
     }

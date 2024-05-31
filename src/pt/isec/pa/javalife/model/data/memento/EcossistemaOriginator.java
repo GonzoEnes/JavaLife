@@ -16,8 +16,9 @@ public class EcossistemaOriginator implements Serializable, IOriginator {
     public void restore(IMemento memento) {
         Object obj = memento.getSnapshot();
         if (obj instanceof EcossistemaOriginator orig) {
-            System.out.println(obj.getClass());
             ecossistema = orig.ecossistema;
+            //System.out.println(ecossistema.getAltura());
+            //System.out.println(ecossistema.getLargura() + " SEPARATOR ELEMENTOS: " + ecossistema.getElementos().size());
         }
     }
 }

@@ -77,10 +77,10 @@ public class EcossistemaMenu extends MenuBar {
         this.mnHerbicida = new MenuItem("_Herbicida");
         this.mnForca = new MenuItem("_Força");
         //this.mnOpen.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCodeCombination.ALT_DOWN));
-        this.mnFile.getItems().addAll(mnNew,mnOpen,mnSave,mnImport,mnExport,new SeparatorMenuItem(), mnExit);
-        mnEcossistema.getItems().addAll(mnAddInanimado, mnAddFlora, mnAddFauna, mnEditarElemento, mnEliminarElemento, mnUndo,mnRedo);
+        this.mnFile.getItems().addAll(mnNew, mnOpen, mnSave, mnImport, mnExport, new SeparatorMenuItem(), mnExit);
+        mnEcossistema.getItems().addAll(mnAddInanimado, mnAddFlora, mnAddFauna, mnEditarElemento, mnEliminarElemento, mnUndo, mnRedo);
         mnSimulacao.getItems().addAll(mnExecutar, mnParar, mnPausar, mnContinuar, mnSaveSnap, mnRestoreSnap);
-        mnEventos.getItems().addAll(mnSol, mnHerbicida,mnForca);
+        mnEventos.getItems().addAll(mnSol, mnHerbicida, mnForca);
         this.getMenus().addAll(mnFile, mnEcossistema, mnSimulacao, mnEventos);
     }
 
@@ -233,7 +233,6 @@ public class EcossistemaMenu extends MenuBar {
         });
 
         mnRestoreSnap.setOnAction(actionEvent -> {
-            System.out.println("Restaurado memento anterior!");
             manager.undo();
         });
     }
