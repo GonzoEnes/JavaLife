@@ -18,7 +18,7 @@ public class LookingForFoodState extends StateAdapter {
     @Override
     public void evolve() {
         if (!fauna.onTopOfTheFlora())
-            if (fauna.getStrength() < fauna.getStrengthToChangeStateForMovimentar() && !fauna.moveTowardsTheClosestFlora())
+            if (!fauna.moveTowardsTheClosestFlora())
                 changeState(State.ATTACK);
         if (fauna.getStrength() >= fauna.getStrengthToChangeStateForMovimentar())
             changeState(State.MOVE);

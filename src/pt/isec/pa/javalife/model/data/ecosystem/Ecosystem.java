@@ -168,6 +168,7 @@ public class Ecosystem implements Serializable, IGameEngineEvolve {
         for (IElement elemento : elements) {
             if (elemento instanceof Fauna fauna) {
                 fauna.evolve();
+                System.out.println(fauna.getArea());
             }else if(elemento instanceof Flora flora)
                 flora.evolve();
         }
@@ -270,6 +271,7 @@ public class Ecosystem implements Serializable, IGameEngineEvolve {
         }
         return null;
     }
+
     public Flora hasFloraInThisArea(Area area) {
         for (IElement elemento : elements) {
             if (elemento instanceof Flora flora && flora.getArea().equals(area)) {
@@ -279,8 +281,8 @@ public class Ecosystem implements Serializable, IGameEngineEvolve {
         return null;
     }
     public Area getClosestFlora(Fauna fauna) {
-        double x = fauna.getArea().left()+(fauna.getArea().right() - fauna.getArea().left()) / 2;
-        double y = fauna.getArea().up()+(fauna.getArea().down() - fauna.getArea().up()) / 2;
+        double x = fauna.getArea().left()+((fauna.getArea().right() - fauna.getArea().left()) / 2);
+        double y = fauna.getArea().up()+((fauna.getArea().down() - fauna.getArea().up()) / 2);
         double xClosestFlora;
         double yClosestFlora;
         double distance=-1;
@@ -304,7 +306,7 @@ public class Ecosystem implements Serializable, IGameEngineEvolve {
         return aux;
     }
     public boolean isFaunaBeingAttackedNearyby(Area hunter,double speed,Area prey) {
-        Area aux = new Area(hunter.up()+speed,hunter.left()+speed,hunter.down()+speed,hunter.right()+speed);
+        Area aux = new Area(hunter.up()-speed,hunter.left()-speed,hunter.down()+speed,hunter.right()+speed);
         return aux.equals(prey);
     }
     public boolean hasAnInanimadoOrFauna(Area area, int id) {
