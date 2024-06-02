@@ -75,9 +75,15 @@ public class EcossistemaUI extends BorderPane {
                 gc.fillText(String.valueOf(((Fauna)element).getStrength()), element.getArea().right(), element.getArea().down());
             }
             case FLORA -> {
-                gc.drawImage(ImageLoader.getImage("flora/"+((Flora)element).getImage()), element.getArea().left(), element.getArea().up(), element.getArea().right() - element.getArea().left(), element.getArea().down() - element.getArea().up());
+                double strength = ((Flora)element).getStrength();
+                Color baseColor = Color.GRAY;
+                double opacity = strength / 100.0;
+                Color adjustedColor = baseColor.deriveColor(0, 1, 1, opacity);
+                gc.setFill(adjustedColor);
+                gc.fillRect(element.getArea().left(), element.getArea().up(), element.getArea().right() - element.getArea().left(), element.getArea().down() - element.getArea().up());
+                gc.setFill(Color.BLACK);
                 gc.fillText(String.valueOf(((Flora)element).getStrength()), element.getArea().right(), element.getArea().down());
-                System.out.println(element.getArea().right()+" "+element.getArea().down()+" "+((Flora)element).getStrength());
+                gc.drawImage(ImageLoader.getImage("flora/"+((Flora)element).getImage()), element.getArea().left(), element.getArea().up(), element.getArea().right() - element.getArea().left(), element.getArea().down() - element.getArea().up());
             }
             case INANIMADO -> {
                 gc.setFill(Color.GRAY);

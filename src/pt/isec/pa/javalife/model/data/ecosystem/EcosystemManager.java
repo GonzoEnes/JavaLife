@@ -24,7 +24,6 @@ public class EcosystemManager {
     private PropertyChangeSupport pcs;
     private long timeBetweenTicks = 1000;
     private CommandManager commandManager;
-    private Set<IEvent> events;
     public static final String ECOSSISTEMA_EVOLVE = "_evolve";
 
     public EcosystemManager() {
@@ -32,7 +31,6 @@ public class EcosystemManager {
         pcs = new PropertyChangeSupport(this);
         gameEngine.registerClient((g,t) -> evolve(gameEngine,t));
         commandManager = new CommandManager();
-        events = new HashSet<>();
     }
     public void createEcosystem(int altura, int largura,int time) {
         ecosystem = new Ecosystem(altura, largura);
@@ -40,14 +38,11 @@ public class EcosystemManager {
     }
     public void startEcosystem() {
         gameEngine.start(timeBetweenTicks);
-        events.add(new Strength(this));
-        events.add(new Herbicide(this));
-        events.add(new Sun(this));
         pcs.firePropertyChange(ECOSSISTEMA_EVOLVE, null, null);
     }
 
     //gets
-    public Set<IElement> getElementos() throws CloneNotSupportedException {
+    public List<IElement> getElementos() throws CloneNotSupportedException {
         return ecosystem.getElements();
     }
     public List<IElement> getElementsOfType(Element newValue) throws CloneNotSupportedException {
@@ -77,6 +72,9 @@ public class EcosystemManager {
         ecosystem.removeElemento(elemento);
     }
 
+    public void resetCounterId(){
+        ecosystem.setContadorElementos();
+    }
 
     //o edit ainda nao esta feito
     public void editElementoUndo(IElement elemento) {
@@ -224,7 +222,6 @@ public class EcosystemManager {
         gameEngine.start(timeBetweenTicks);
     }
     public void evolve (IGameEngine gameEngine, long currentTime) {
-        sun();
         ecosystem.evolve(gameEngine,currentTime);
         pcs.firePropertyChange(ECOSSISTEMA_EVOLVE, null, null);
     }
@@ -246,12 +243,11 @@ public class EcosystemManager {
         commandManager.executeCommand(removeElementoCmd);
         pcs.firePropertyChange(ECOSSISTEMA_EVOLVE, null, null);
     }
-    public void editElementWithCommand(int id, double strength, Element type) throws InterruptedException, CloneNotSupportedException {
-        EditElementoCmd editElementoCmd = new EditElementoCmd(this,id,strength,type);
+    public void editElementWithCommand(int id,Element type, Area area, double speed,double strength) throws InterruptedException, CloneNotSupportedException {
+        EditElementoCmd editElementoCmd = new EditElementoCmd(this,id,type,area,speed,strength);
         commandManager.executeCommand(editElementoCmd);
         pcs.firePropertyChange(ECOSSISTEMA_EVOLVE, null, null);
     }
-
     //commandsCommands
     public IElement addElementocmd(Area area, Element type) {
         return ecosystem.addElementocmd(area,type);
@@ -260,58 +256,23 @@ public class EcosystemManager {
         //saveState();
         return ecosystem.removeElementocmd(id,type);
     }
-    public IElement editElementoCmd(int id, double strength, Element type) throws CloneNotSupportedException {
+    public IElement editElementoCmd(int id, Element type, Area area,double speed,double strength) throws CloneNotSupportedException {
         //saveState();
-        return ecosystem.editElementocmd( id, strength,type);
+        return ecosystem.editElementocmd( id,type,area,speed,strength);
     }
 
     //events
-    public void applyHerbicide(int id) {
-        for (IEvent event : events) {
-            if(event.getTipo()==Event.HERBICIDE){
-                ((Herbicide)event).setId(id);
-                event.apply();
-            }
-        }
+    public void applyEvent(Event event,int id) {
+        if(event == Event.STRENGTH)
+            ecosystem.applyStrength(id);
+        ecosystem.applyHerbicide(id);
+
     }
-    public void applyStrength(int id) {
-        for (IEvent event : events) {
-            if(event.getTipo()==Event.STRENGTH){
-                ((Strength)event).setId(id);
-                event.apply();
-            }
-        }
+    public void applyEvent(Event event) {
+        ecosystem.applySun();
     }
-    public void applySun() {
-        for (IEvent event : events) {
-            if(event.getTipo()==Event.SUN){
-                event.apply();
-            }
-        }
-    }
-    public void setGainStrengthFasterFlora() {
-        ecosystem.setGainStrengthFasterFlora();
-    }
-    public void setSpeedSlowerFauna() {
-        ecosystem.setSpeedSlowerFauna();
-    }
-    public void setGainStrengthNormalFlora() {
-        ecosystem.setGainStrengthNormalFlora();
-    }
-    public void setSpeedNormalFauna() {
-        ecosystem.setSpeedNormalFauna();
-    }
-    public void removeElementoEvent(int id, Element elemento) {
-        ecosystem.removeElementoEvent(id,elemento);
-    }
-    public void addStrengthEvent(int id, Element elemento) {
-        ecosystem.addStrengthEvent(id,elemento);
-    }
-    public void sun(){
-        for (IEvent event : events) {
-            if(event.getTipo()==Event.SUN && ((Sun)event).isActive()){
-                event.apply();
-            }
-        }
+
+    public IElement getElementById(int id, Element type) throws CloneNotSupportedException {
+        return ecosystem.getElementById(id,type);
     }
 }

@@ -8,5 +8,6 @@ public sealed interface IElement extends Serializable, Cloneable permits Element
     int getId();
     Element getType();
     Area getArea();
+    void resetCounterId();
     IElement clone() throws CloneNotSupportedException;
 }

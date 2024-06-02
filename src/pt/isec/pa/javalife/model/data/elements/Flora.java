@@ -57,6 +57,10 @@ public sealed class Flora extends ElementBase implements IElementWithStrength, I
     public void setImage(String imagem) {
 
     }
+    @Override
+    public void resetCounterId() {
+        idCounter = 0;
+    }
     public void increaseStrength() {
         if (this.strength + increaseStrength >= maximumStrength){
             this.strength = maximumStrength;

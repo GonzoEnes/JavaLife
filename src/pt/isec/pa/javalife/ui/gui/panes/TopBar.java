@@ -12,7 +12,10 @@ import javafx.stage.Stage;
 import pt.isec.pa.javalife.model.data.area.Area;
 import pt.isec.pa.javalife.model.data.ecosystem.EcosystemManager;
 import pt.isec.pa.javalife.model.data.elements.Element;
+import pt.isec.pa.javalife.model.data.elements.Fauna;
+import pt.isec.pa.javalife.model.data.elements.Flora;
 import pt.isec.pa.javalife.model.data.elements.IElement;
+import pt.isec.pa.javalife.model.data.events.Event;
 
 import java.io.File;
 import java.util.List;
@@ -30,7 +33,6 @@ public class TopBar extends MenuBar {
         this.mainPane=mainPane;
         createViews();
         registerHandlers();
-        update();
     }
 
     private void createViews() {
@@ -74,6 +76,7 @@ public class TopBar extends MenuBar {
     private void registerHandlers() {
         btnNew.setOnAction(e -> {
             manager.stopEngine();
+            manager.resetCounterId();
             InitialSettingsPage initialConfigScreen = new InitialSettingsPage(manager);
             BorderPane configPane = new BorderPane(initialConfigScreen);
             mainPane.setCenter(configPane);
@@ -162,7 +165,7 @@ public class TopBar extends MenuBar {
                                 double leftValue = Double.parseDouble(left);
                                 double rightValue = Double.parseDouble(right);
 
-                                manager.addElementWithCommand(new Area(upValue, downValue, rightValue, leftValue), Element.INANIMADO);
+                                manager.addElementWithCommand(new Area(upValue, downValue, leftValue, rightValue), Element.INANIMADO);
                                 popupStage.close();
                             } catch (NumberFormatException | InterruptedException | CloneNotSupportedException j) {
                                 showErrorDialog("Invalid values!");
@@ -186,7 +189,7 @@ public class TopBar extends MenuBar {
             Stage popupStage = new Stage();
             popupStage.initModality(Modality.APPLICATION_MODAL);
             popupStage.initOwner(this.getScene().getWindow());
-            popupStage.setTitle("Add Inanimado");
+            popupStage.setTitle("Add Flora");
 
             TextField upField = new TextField();
             TextField downField = new TextField();
@@ -222,7 +225,7 @@ public class TopBar extends MenuBar {
                         double leftValue = Double.parseDouble(left);
                         double rightValue = Double.parseDouble(right);
 
-                        manager.addElementWithCommand(new Area(upValue, downValue, rightValue, leftValue), Element.FLORA);
+                        manager.addElementWithCommand(new Area(upValue, downValue, leftValue, rightValue), Element.FLORA);
                         popupStage.close();
                     } catch (NumberFormatException | InterruptedException | CloneNotSupportedException j) {
                         showErrorDialog("Invalid values!");
@@ -246,7 +249,7 @@ public class TopBar extends MenuBar {
             Stage popupStage = new Stage();
             popupStage.initModality(Modality.APPLICATION_MODAL);
             popupStage.initOwner(this.getScene().getWindow());
-            popupStage.setTitle("Add Inanimado");
+            popupStage.setTitle("Add Fauna");
 
             TextField upField = new TextField();
             TextField downField = new TextField();
@@ -282,7 +285,7 @@ public class TopBar extends MenuBar {
                         double leftValue = Double.parseDouble(left);
                         double rightValue = Double.parseDouble(right);
 
-                        manager.addElementWithCommand(new Area(upValue, downValue, rightValue, leftValue), Element.FAUNA);
+                        manager.addElementWithCommand(new Area(upValue, downValue, leftValue, rightValue), Element.FAUNA);
                         popupStage.close();
                     } catch (NumberFormatException | InterruptedException | CloneNotSupportedException j) {
                         showErrorDialog("Invalid values!");
@@ -302,7 +305,130 @@ public class TopBar extends MenuBar {
             manager.resumeEngine();
         });
         btnEditElement.setOnAction(e -> {
+            manager.pauseEngine();
+            Stage popupStage = new Stage();
+            popupStage.initModality(Modality.APPLICATION_MODAL);
+            popupStage.initOwner(this.getScene().getWindow());
+            popupStage.setTitle("Edit Element");
 
+            ComboBox<Element> typeComboBox = new ComboBox<>();
+            typeComboBox.getItems().addAll(Element.values());
+            typeComboBox.setValue(typeComboBox.getItems().isEmpty() ? null : typeComboBox.getItems().getFirst());
+
+            ComboBox<Integer> idComboBox = new ComboBox<>();
+
+            TextField upField = new TextField();
+            TextField downField = new TextField();
+            TextField leftField = new TextField();
+            TextField rightField = new TextField();
+            TextField speedField = new TextField();
+            TextField strengthField = new TextField();
+
+            GridPane gridPane = new GridPane();
+            gridPane.setPadding(new Insets(10));
+            gridPane.setHgap(10);
+            gridPane.setVgap(10);
+
+            gridPane.add(new Label("Type:"), 0, 0);
+            gridPane.add(typeComboBox, 1, 0);
+            gridPane.add(new Label("ID:"), 0, 1);
+            gridPane.add(idComboBox, 1, 1);
+            gridPane.add(new Label("Up:"), 0, 2);
+            gridPane.add(upField, 1, 2);
+            gridPane.add(new Label("Down:"), 0, 3);
+            gridPane.add(downField, 1, 3);
+            gridPane.add(new Label("Left:"), 0, 4);
+            gridPane.add(leftField, 1, 4);
+            gridPane.add(new Label("Right:"), 0, 5);
+            gridPane.add(rightField, 1, 5);
+            gridPane.add(new Label("Strength:"), 0, 6);
+            gridPane.add(strengthField, 1, 6);
+            gridPane.add(new Label("Speed:"), 0, 7);
+            gridPane.add(speedField, 1, 7);
+
+            typeComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                idComboBox.getItems().clear();
+                if (newValue != null) {
+                    List<IElement> elementsOfType = null;
+                    try {
+                        elementsOfType = manager.getElementsOfType(newValue);
+                    } catch (CloneNotSupportedException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    for (IElement element : elementsOfType) {
+                        idComboBox.getItems().add(element.getId());
+                    }
+                    if (!idComboBox.getItems().isEmpty()) {
+                        idComboBox.setValue(idComboBox.getItems().getFirst());
+                    }
+                }
+            });
+
+            idComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue != null) {
+                    IElement element = null;
+                    try {
+                        element = manager.getElementById(newValue, typeComboBox.getValue());
+                    } catch (CloneNotSupportedException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    upField.setText(String.valueOf(element.getArea().up()));
+                    downField.setText(String.valueOf(element.getArea().down()));
+                    leftField.setText(String.valueOf(element.getArea().left()));
+                    rightField.setText(String.valueOf(element.getArea().right()));
+                    if(typeComboBox.getValue()  == Element.FAUNA) {
+                        speedField.setText(String.valueOf(((Fauna)element).getSpeed()));
+                        strengthField.setText(String.valueOf(((Fauna)element).getStrength()));
+                    }
+                    if(typeComboBox.getValue() == Element.FLORA) {
+                        strengthField.setText(String.valueOf(((Flora)element).getStrength()));
+                    }
+                    if(element.getType()==Element.INANIMADO){
+                        speedField.setText("");
+                        strengthField.setText("");
+                    }
+                }
+            });
+
+            Button btnEdit = new Button("Edit");
+
+            btnEdit.setOnAction(event -> {
+                Element type = typeComboBox.getValue();
+                Integer id = idComboBox.getValue();
+                String up = upField.getText();
+                String down = downField.getText();
+                String left = leftField.getText();
+                String right = rightField.getText();
+                String speed = speedField.getText();
+                String strength = strengthField.getText();
+
+                if (id!=null && !up.isEmpty() && !down.isEmpty() && !left.isEmpty() && !right.isEmpty() && (type==Element.FAUNA && !speed.isEmpty() && !strength.isEmpty()) || (type==Element.FLORA && !strength.isEmpty())|| (type==Element.INANIMADO && speed.isEmpty() && strength.isEmpty())) {
+                    try {
+                        double upValue = Double.parseDouble(up);
+                        double downValue = Double.parseDouble(down);
+                        double leftValue = Double.parseDouble(left);
+                        double rightValue = Double.parseDouble(right);
+                        double speedValue = Double.parseDouble(speed);
+                        double strengthValue = Double.parseDouble(strength);
+
+                        manager.editElementWithCommand(id, type, new Area(upValue, downValue, leftValue, rightValue), speedValue, strengthValue);
+                        popupStage.close();
+                    } catch (NumberFormatException | InterruptedException | CloneNotSupportedException j) {
+                        showErrorDialog("Invalid values!");
+                    }
+                } else {
+                    showErrorDialog("All fields must be filled in!");
+                }
+            });
+
+            VBox vbox = new VBox(gridPane, btnEdit);
+            vbox.setPadding(new Insets(10));
+            vbox.setSpacing(10);
+
+            Scene scene = new Scene(vbox);
+            popupStage.setScene(scene);
+            popupStage.showAndWait();
+            manager.resumeEngine();
         });
         btnDeleteElement.setOnAction(e -> {
                     manager.pauseEngine();
@@ -403,7 +529,7 @@ public class TopBar extends MenuBar {
 
         });
         btnSun.setOnAction(e -> {
-            manager.applySun();
+            manager.applyEvent(Event.SUN);
         });
         btnHerbicide.setOnAction(e -> {
             manager.pauseEngine();
@@ -435,7 +561,7 @@ public class TopBar extends MenuBar {
                     showErrorDialog("All fields must be filled in!");
                     return;
                 }
-                manager.applyHerbicide(id);
+                manager.applyEvent(Event.HERBICIDE,id);
                 popupStage.close();
             });
             VBox vbox = new VBox(idComboBox, btnCreate);
@@ -476,7 +602,7 @@ public class TopBar extends MenuBar {
                     showErrorDialog("All fields must be filled in!");
                     return;
                 }
-                manager.applyStrength(id);
+                manager.applyEvent(Event.STRENGTH,id);
                 popupStage.close();
             });
             VBox vbox = new VBox(idComboBox, btnCreate);
@@ -487,9 +613,6 @@ public class TopBar extends MenuBar {
             popupStage.showAndWait();
             manager.resumeEngine();
         });
-
-    }
-    private void update() {
     }
     private void showErrorDialog(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);

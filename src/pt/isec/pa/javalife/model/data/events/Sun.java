@@ -1,12 +1,12 @@
 package pt.isec.pa.javalife.model.data.events;
 
-import pt.isec.pa.javalife.model.data.ecosystem.EcosystemManager;
+import pt.isec.pa.javalife.model.data.ecosystem.Ecosystem;
 
 public final class Sun extends BaseEvent implements IEvent {
     private int count;
     private boolean active = false;
-    public Sun(EcosystemManager ecossistema) {
-        super(ecossistema);
+    public Sun(Ecosystem ecosystem) {
+        super(ecosystem);
     }
     public boolean isActive() {
         return active;
@@ -17,13 +17,13 @@ public final class Sun extends BaseEvent implements IEvent {
             active = true;
             count = 10;
         }
-        ecossistema.setGainStrengthFasterFlora();
-        ecossistema.setSpeedSlowerFauna();
+        ecosystem.setGainStrengthFasterFlora();
+        ecosystem.setSpeedSlowerFauna();
         count--;
         if (count == 0) {
             active=false;
-            ecossistema.setGainStrengthNormalFlora();
-            ecossistema.setSpeedNormalFauna();
+            ecosystem.setGainStrengthNormalFlora();
+            ecosystem.setSpeedNormalFauna();
         }
     }
     @Override

@@ -2,6 +2,7 @@ package pt.isec.pa.javalife.model.data.ecosystem;
 
 import pt.isec.pa.javalife.model.data.area.Area;
 import pt.isec.pa.javalife.model.data.elements.*;
+import pt.isec.pa.javalife.model.data.events.*;
 import pt.isec.pa.javalife.model.gameengine.interfaces.IGameEngine;
 import pt.isec.pa.javalife.model.gameengine.interfaces.IGameEngineEvolve;
 
@@ -14,6 +15,7 @@ public class Ecosystem implements Serializable, IGameEngineEvolve {
     @Serial
     private static final long serialVersionUID = 1L;
     private Set<IElement> elements;
+    private Set<IEvent> events;
     private int height;
     private int width;
 
@@ -21,13 +23,17 @@ public class Ecosystem implements Serializable, IGameEngineEvolve {
         this.height = altura;
         this.width = largura;
         this.elements = ConcurrentHashMap.newKeySet();
+        events = new HashSet<>();
+        events.add(new Strength(this));
+        events.add(new Herbicide(this));
+        events.add(new Sun(this));
         createEcosystemBoundaries();
     }
     public void createEcosystemBoundaries() {
         addElemento(new Area(0,7,0,getLargura()), Element.INANIMADO);
         addElemento(new Area(getHeight()-7, getHeight(),0,getLargura()), Element.INANIMADO);
-        addElemento(new Area(0, getHeight(),0,7), Element.INANIMADO);
-        addElemento(new Area(0, getHeight(),getLargura()-7,getLargura()), Element.INANIMADO);
+        addElemento(new Area(7, getHeight()-7,0,7), Element.INANIMADO);
+        addElemento(new Area(7, getHeight()-7,getLargura()-7,getLargura()), Element.INANIMADO);
     }
 
     //gets e sets
@@ -41,8 +47,8 @@ public class Ecosystem implements Serializable, IGameEngineEvolve {
     public void setHei(int hei) {
         this.height = hei;
     }
-    public Set<IElement> getElements() throws CloneNotSupportedException {
-        Set<IElement> toReturn = new HashSet<>();
+    public List<IElement> getElements() throws CloneNotSupportedException {
+        List<IElement> toReturn = new ArrayList<>();
         for (IElement elemento : elements) {
                 toReturn.add(elemento.clone());
         }
@@ -56,7 +62,6 @@ public class Ecosystem implements Serializable, IGameEngineEvolve {
         }
         return aux;
     }
-
     public void addElemento(IElement elemento){
         if (!hasAnElemento(elemento.getArea()))
             elements.add(elemento);
@@ -69,18 +74,32 @@ public class Ecosystem implements Serializable, IGameEngineEvolve {
         }
         return null;
     }
-    public IElement editElementocmd(int id, double strength, Element type) throws CloneNotSupportedException {
+    public IElement editElementocmd(int id,Element type,Area area, double speed, double strength) throws CloneNotSupportedException {
         for (IElement elemento : elements) {
-            if (elemento.getId() == id && type == Element.FAUNA) {
+            if (elemento.getId() == id && elemento.getType() == type && elemento.getType() == Element.FAUNA) {
                 IElement aux = elemento.clone();
                 ((Fauna)elemento).setStrength(strength);
+                ((Fauna)elemento).setSpeed(speed);
+                ((Fauna)elemento).setArea(area);
                 return aux;
-            }else if(elemento.getId() == id && type == Element.FLORA){
+            }else if(elemento.getId() == id && elemento.getType() == type && elemento.getType() == Element.FLORA) {
                 IElement aux = elemento.clone();
                 ((Flora)elemento).setStrength(strength);
+                ((Flora)elemento).setArea(area);
+                return aux;
+            }else if(elemento.getId()==id && elemento.getType() == type && elemento.getType() == Element.INANIMADO) {
+                IElement aux = elemento.clone();
+                ((Inanimado)elemento).setArea(area);
                 return aux;
             }
         }
+        return null;
+    }
+    public IElement getElementById(int id, Element type) throws CloneNotSupportedException {
+        for (IElement elemento : elements)
+            if (elemento.getId() == id && elemento.getType() == type)
+                return elemento.clone();
+
         return null;
     }
     public void editElementoUndo(IElement elemento) {
@@ -145,6 +164,7 @@ public class Ecosystem implements Serializable, IGameEngineEvolve {
     }
     @Override
     public void evolve(IGameEngine gameEngine, long currentTime) {
+        sun();
         for (IElement elemento : elements) {
             if (elemento instanceof Fauna fauna) {
                 fauna.evolve();
@@ -153,6 +173,7 @@ public class Ecosystem implements Serializable, IGameEngineEvolve {
         }
         checkStrength();
     }
+
     private void checkStrength() {
         for (IElement elemento : elements) {
             if (elemento instanceof Fauna fauna && fauna.getStrength() <= 0) {
@@ -275,7 +296,6 @@ public class Ecosystem implements Serializable, IGameEngineEvolve {
         return aux.equals(prey);
     }
 
-
     //events
     public void setGainStrengthFasterFlora() {
         for(IElement elemento : elements){
@@ -321,6 +341,49 @@ public class Ecosystem implements Serializable, IGameEngineEvolve {
                     return;
                 }
                 return;
+            }
+        }
+    }
+    public void setContadorElementos() {
+        for(IElement elemento : elements){
+            if(elemento instanceof Fauna fauna)
+                fauna.resetCounterId();
+            if(elemento instanceof Flora flora)
+                flora.resetCounterId();
+            if(elemento instanceof Inanimado inanimado)
+                inanimado.resetCounterId();
+        }
+    }
+
+
+    //events
+    public void applyHerbicide(int id) {
+        for (IEvent event : events) {
+            if(event.getTipo()==Event.HERBICIDE){
+                ((Herbicide)event).setId(id);
+                event.apply();
+            }
+        }
+    }
+    public void applyStrength(int id) {
+        for (IEvent event : events) {
+            if(event.getTipo()==Event.STRENGTH){
+                ((Strength)event).setId(id);
+                event.apply();
+            }
+        }
+    }
+    public void applySun() {
+        for (IEvent event : events) {
+            if(event.getTipo()==Event.SUN){
+                event.apply();
+            }
+        }
+    }
+    public void sun(){
+        for (IEvent event : events) {
+            if(event.getTipo()==Event.SUN && ((Sun)event).isActive()){
+                event.apply();
             }
         }
     }
