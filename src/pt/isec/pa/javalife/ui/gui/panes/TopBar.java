@@ -113,10 +113,38 @@ public class TopBar extends MenuBar {
             manager.resumeEngine();
         });
         btnExport.setOnAction(e -> {
-
+            manager.pauseEngine();
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("File save...");
+            fileChooser.setInitialDirectory(new File("."));
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("Ecossistema (*.csv)", "*.csv"),
+                    new FileChooser.ExtensionFilter("All", "*.*")
+            );
+            File hFile = fileChooser.showSaveDialog(this.getScene().getWindow());
+            if (hFile != null) {
+                try {
+                    manager.exportCSVElements(hFile);
+                } catch (CloneNotSupportedException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+            manager.resumeEngine();
         });
         btnImport.setOnAction(e -> {
-
+            manager.pauseEngine();
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("File open...");
+            fileChooser.setInitialDirectory(new File("."));
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("Ecossistema (*.csv)", "*.csv"),
+                    new FileChooser.ExtensionFilter("All", "*.*")
+            );
+            File hFile = fileChooser.showOpenDialog(this.getScene().getWindow());
+            if (hFile != null) {
+                manager.importCSVElements(hFile);
+            }
+            manager.resumeEngine();
         });
         btnExit.setOnAction(e -> {
 
