@@ -230,18 +230,18 @@ public sealed class Fauna extends ElementBase implements IElementWithStrength, I
         decreaseStrengthByMovement();
         return false;
     }
-    public  void moveTowardsTheStrongestFauna() {
+    public  boolean moveTowardsTheStrongestFauna() {
         Area position = ecossistema.getStrongestFauna(getId());
         if (position == null) {
             decreaseStrengthByMovement();
-            return;
+            return false;
         }
         double x = getArea().left()+(getArea().right() - getArea().left()) / 2;
         double y =getArea().up()+ (getArea().down() - getArea().up()) / 2;
         double xStrongestFauna =position.left()+ (position.right() - position.left()) / 2;
         double yStrongestFauna =position.up()+ (position.down() - position.up()) / 2;
         if (x < xStrongestFauna && (xStrongestFauna-x)>=getSpeed()){
-            if(!ecossistema.hasAnInanimadoOrFauna(new Area(getArea().up(), getArea().down(), getArea().right() + getSpeed(), getArea().left() + getSpeed()),getId())){
+            if(!ecossistema.hasAnElemento(new Area(getArea().up(), getArea().down(), getArea().right() + getSpeed(), getArea().left() + getSpeed()),getId())){
                 setArea(new Area(getArea().up(), getArea().down(), getArea().right() + getSpeed(), getArea().left() + getSpeed()));
             }else{
                 Area aux=null;
@@ -252,11 +252,11 @@ public sealed class Fauna extends ElementBase implements IElementWithStrength, I
                         aux = new Area(getArea().up() - getSpeed(), getArea().down() - getSpeed(), getArea().right(), getArea().left());
                     }else
                         aux = new Area(getArea().up() + getSpeed(), getArea().down() + getSpeed(), getArea().right(), getArea().left());
-                }while(!ecossistema.hasAnInanimadoOrFauna(aux,getId()));
+                }while(!ecossistema.hasAnElemento(aux,getId()));
                 setArea(aux);
             }
         } else if (x > xStrongestFauna && (x-xStrongestFauna)>=getSpeed()){
-            if(!ecossistema.hasAnInanimadoOrFauna(new Area(getArea().up(), getArea().down(), getArea().right() - getSpeed(), getArea().left() - getSpeed()),getId())){
+            if(!ecossistema.hasAnElemento(new Area(getArea().up(), getArea().down(), getArea().right() - getSpeed(), getArea().left() - getSpeed()),getId())){
                 setArea(new Area(getArea().up(), getArea().down(), getArea().right() - getSpeed(), getArea().left() - getSpeed()));
             }else{
                 Area aux=null;
@@ -267,11 +267,11 @@ public sealed class Fauna extends ElementBase implements IElementWithStrength, I
                         aux = new Area(getArea().up() - getSpeed(), getArea().down() - getSpeed(), getArea().right(), getArea().left());
                     }else
                         aux = new Area(getArea().up() + getSpeed(), getArea().down() + getSpeed(), getArea().right(), getArea().left());
-                }while(!ecossistema.hasAnInanimadoOrFauna(aux,getId()));
+                }while(!ecossistema.hasAnElemento(aux,getId()));
                 setArea(aux);
             }
         }else if(y<yStrongestFauna && (yStrongestFauna-y)>=getSpeed()) {
-            if(!ecossistema.hasAnInanimadoOrFauna(new Area(getArea().up() + getSpeed(), getArea().down() + getSpeed(), getArea().right(), getArea().left()),getId())){
+            if(!ecossistema.hasAnElemento(new Area(getArea().up() + getSpeed(), getArea().down() + getSpeed(), getArea().right(), getArea().left()),getId())){
                 setArea(new Area(getArea().up() + getSpeed(), getArea().down() + getSpeed(), getArea().right(), getArea().left()));
             }else{
                 Area aux=null;
@@ -282,11 +282,11 @@ public sealed class Fauna extends ElementBase implements IElementWithStrength, I
                         aux = new Area(getArea().up() , getArea().down() , getArea().right() - getSpeed(), getArea().left()-getSpeed());
                     }else
                         aux = new Area(getArea().up(), getArea().down(), getArea().right() + getSpeed(), getArea().left()+ getSpeed());
-                }while(!ecossistema.hasAnInanimadoOrFauna(aux,getId()));
+                }while(!ecossistema.hasAnElemento(aux,getId()));
                 setArea(aux);
             }
         }else if(y>yStrongestFauna && (y-yStrongestFauna)>=getSpeed() ) {
-            if(!ecossistema.hasAnInanimadoOrFauna(new Area(getArea().up() - getSpeed(), getArea().down() - getSpeed(), getArea().right(), getArea().left()),getId())){
+            if(!ecossistema.hasAnElemento(new Area(getArea().up() - getSpeed(), getArea().down() - getSpeed(), getArea().right(), getArea().left()),getId())){
                 setArea(new Area(getArea().up() - getSpeed(), getArea().down() - getSpeed(), getArea().right(), getArea().left()));
             }else{
                 Area aux=null;
@@ -297,17 +297,17 @@ public sealed class Fauna extends ElementBase implements IElementWithStrength, I
                         aux = new Area(getArea().up() , getArea().down() , getArea().right()-getSpeed(), getArea().left()-getSpeed());
                     }else
                         aux = new Area(getArea().up(), getArea().down(), getArea().right()+ getSpeed(), getArea().left()+ getSpeed());
-                }while(!ecossistema.hasAnInanimadoOrFauna(aux,getId()));
+                }while(!ecossistema.hasAnElemento(aux,getId()));
                 setArea(aux);
             }
         }
         decreaseStrengthByMovement();
+        return true;
     }
     public void checkIfAnyFaunaClose() {
         if(ecossistema.hasAFaunaWithinRange(getArea(),maximumReproductionRange))
             increaseReproductionWaitCounter();
     }
-
     public int getRandomNumberInRange(int maxNumber) {
         Random r = new Random();
         return r.nextInt(maxNumber);
@@ -340,7 +340,7 @@ public sealed class Fauna extends ElementBase implements IElementWithStrength, I
         double xStrongestFauna =position.left()+ (position.right() - position.left()) / 2;
         double yStrongestFauna =position.up()+ (position.down() - position.up()) / 2;
         if (x < xStrongestFauna && (xStrongestFauna-x)>=getSpeed()){
-            if(!ecossistema.hasAnInanimadoOrFauna(new Area(getArea().up(), getArea().down(), getArea().right() + getSpeed(), getArea().left() + getSpeed()),getId())){
+            if(!ecossistema.hasAnElemento(new Area(getArea().up(), getArea().down(), getArea().right() + getSpeed(), getArea().left() + getSpeed()),getId())){
                 setArea(new Area(getArea().up(), getArea().down(), getArea().right() + getSpeed(), getArea().left() + getSpeed()));
             }else{
                 Area aux=null;
@@ -351,11 +351,11 @@ public sealed class Fauna extends ElementBase implements IElementWithStrength, I
                         aux = new Area(getArea().up() - getSpeed(), getArea().down() - getSpeed(), getArea().right(), getArea().left());
                     }else
                         aux = new Area(getArea().up() + getSpeed(), getArea().down() + getSpeed(), getArea().right(), getArea().left());
-                }while(!ecossistema.hasAnInanimadoOrFauna(aux,getId()));
+                }while(!ecossistema.hasAnElemento(aux,getId()));
                 setArea(aux);
             }
         } else if (x > xStrongestFauna && (x-xStrongestFauna)>=getSpeed()){
-            if(!ecossistema.hasAnInanimadoOrFauna(new Area(getArea().up(), getArea().down(), getArea().right() - getSpeed(), getArea().left() - getSpeed()),getId())){
+            if(!ecossistema.hasAnElemento(new Area(getArea().up(), getArea().down(), getArea().right() - getSpeed(), getArea().left() - getSpeed()),getId())){
                 setArea(new Area(getArea().up(), getArea().down(), getArea().right() - getSpeed(), getArea().left() - getSpeed()));
             }else{
                 Area aux=null;
@@ -366,11 +366,11 @@ public sealed class Fauna extends ElementBase implements IElementWithStrength, I
                         aux = new Area(getArea().up() - getSpeed(), getArea().down() - getSpeed(), getArea().right(), getArea().left());
                     }else
                         aux = new Area(getArea().up() + getSpeed(), getArea().down() + getSpeed(), getArea().right(), getArea().left());
-                }while(!ecossistema.hasAnInanimadoOrFauna(aux,getId()));
+                }while(!ecossistema.hasAnElemento(aux,getId()));
                 setArea(aux);
             }
         }else if(y<yStrongestFauna && (yStrongestFauna-y)>=getSpeed()) {
-            if(!ecossistema.hasAnInanimadoOrFauna(new Area(getArea().up() + getSpeed(), getArea().down() + getSpeed(), getArea().right(), getArea().left()),getId())){
+            if(!ecossistema.hasAnElemento(new Area(getArea().up() + getSpeed(), getArea().down() + getSpeed(), getArea().right(), getArea().left()),getId())){
                 setArea(new Area(getArea().up() + getSpeed(), getArea().down() + getSpeed(), getArea().right(), getArea().left()));
             }else{
                 Area aux=null;
@@ -381,11 +381,11 @@ public sealed class Fauna extends ElementBase implements IElementWithStrength, I
                         aux = new Area(getArea().up() , getArea().down() , getArea().right() - getSpeed(), getArea().left()-getSpeed());
                     }else
                         aux = new Area(getArea().up(), getArea().down(), getArea().right() + getSpeed(), getArea().left()+ getSpeed());
-                }while(!ecossistema.hasAnInanimadoOrFauna(aux,getId()));
+                }while(!ecossistema.hasAnElemento(aux,getId()));
                 setArea(aux);
             }
         }else if(y>yStrongestFauna && (y-yStrongestFauna)>=getSpeed() ) {
-            if(!ecossistema.hasAnInanimadoOrFauna(new Area(getArea().up() - getSpeed(), getArea().down() - getSpeed(), getArea().right(), getArea().left()),getId())){
+            if(!ecossistema.hasAnElemento(new Area(getArea().up() - getSpeed(), getArea().down() - getSpeed(), getArea().right(), getArea().left()),getId())){
                 setArea(new Area(getArea().up() - getSpeed(), getArea().down() - getSpeed(), getArea().right(), getArea().left()));
             }else{
                 Area aux=null;
@@ -396,7 +396,7 @@ public sealed class Fauna extends ElementBase implements IElementWithStrength, I
                         aux = new Area(getArea().up() , getArea().down() , getArea().right()-getSpeed(), getArea().left()-getSpeed());
                     }else
                         aux = new Area(getArea().up(), getArea().down(), getArea().right()+ getSpeed(), getArea().left()+ getSpeed());
-                }while(!ecossistema.hasAnInanimadoOrFauna(aux,getId()));
+                }while(!ecossistema.hasAnElemento(aux,getId()));
                 setArea(aux);
             }
         }
@@ -415,7 +415,8 @@ public sealed class Fauna extends ElementBase implements IElementWithStrength, I
             }
             return true;
         }
-        moveTowardsTheStrongestFauna();
+        if(!moveTowardsTheStrongestFauna())
+            return true;
         return false;
     }
 

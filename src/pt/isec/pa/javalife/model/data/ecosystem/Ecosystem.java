@@ -186,12 +186,15 @@ public class Ecosystem implements Serializable, IGameEngineEvolve {
     }
 
     //logica para a fauna e flora interagirem
-    public boolean hasAnInanimadoOrFauna(Area area,int id) {
+    public boolean hasAnElemento(Area area,int id) {
         for (IElement elemento : elements) {
             if (elemento instanceof Inanimado inanimado && inanimado.getArea().equals(area)) {
                 return true;
             }
             if (elemento instanceof Fauna fauna && fauna.getId() != id && fauna.getArea().equals(area)) {
+                return true;
+            }
+            if (elemento instanceof Flora flora && flora.getArea().equals(area)) {
                 return true;
             }
         }
@@ -237,11 +240,20 @@ public class Ecosystem implements Serializable, IGameEngineEvolve {
                 case 2 -> aux = new Area(area.up(),area.down(),area.left() - maximumReproductionRange,area.right() - maximumReproductionRange);
                 case 3 -> aux = new Area(area.up(),area.down(),area.left()+ maximumReproductionRange,area.right()+maximumReproductionRange);
             }
-            if(!hasAnInanimadoOrFauna(aux,-1))
+            if(haveAFauna(aux))
                 return true;
         }
         return false;
     }
+
+    private boolean haveAFauna(Area aux) {
+        for(IElement elemento : elements){
+            if(elemento instanceof Fauna fauna && fauna.getArea().equals(aux))
+                return true;
+        }
+        return false;
+    }
+
     public Area hasSpaceForNewFauna(Area area) {
         double x = area.right() - area.left()+1;
         double y = area.down() - area.up()+1;
@@ -295,7 +307,17 @@ public class Ecosystem implements Serializable, IGameEngineEvolve {
         Area aux = new Area(hunter.up()+speed,hunter.left()+speed,hunter.down()+speed,hunter.right()+speed);
         return aux.equals(prey);
     }
-
+    public boolean hasAnInanimadoOrFauna(Area area, int id) {
+        for (IElement elemento : elements) {
+            if (elemento instanceof Inanimado inanimado && inanimado.getArea().equals(area)) {
+                return true;
+            }
+            if (elemento instanceof Fauna fauna && fauna.getId() != id && fauna.getArea().equals(area)) {
+                return true;
+            }
+        }
+        return false;
+    }
     //events
     public void setGainStrengthFasterFlora() {
         for(IElement elemento : elements){
@@ -387,4 +409,5 @@ public class Ecosystem implements Serializable, IGameEngineEvolve {
             }
         }
     }
+
 }
