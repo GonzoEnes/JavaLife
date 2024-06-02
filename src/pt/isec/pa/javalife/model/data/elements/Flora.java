@@ -9,15 +9,15 @@ public sealed class Flora extends ElementBase implements IElementWithStrength, I
     private static int idCounter = 0;
     private int reproductionCounter = 0;
     private Ecosystem ecossistema;
-    private static final double initialStrength = 50;
-    private static final double minimumStrength = 0;
-    private static final double maximumStrength = 100;
-    private static final double decreaseStrength = 1;
+    private static  double initialStrength = 50;
+    private static  double minimumStrength = 0;
+    private static  double maximumStrength = 100;
+    private static  double decreaseStrength = 1;
     private static  double increaseStrength = 0.5;
-    private static final double maximumReproduction = 2;
-    private static final int strengthToReproduce = 90;
-    private static final double newbornFloraStrength = 50;
-    private static final double afterReproduceStrength = 60;
+    private static  double maximumReproduction = 2;
+    private static  int strengthToReproduce = 90;
+    private static  double newbornFloraStrength = 50;
+    private static  double afterReproduceStrength = 60;
 
     public Flora(Area area, Ecosystem ecossistema, String image){
         super(++idCounter, area);
@@ -25,6 +25,7 @@ public sealed class Flora extends ElementBase implements IElementWithStrength, I
         this.image=image;
         this.strength = initialStrength;
     }
+
     public double getIncreaseStrength() {
         return increaseStrength;
     }

@@ -10,11 +10,13 @@ public class AddElementoCmd extends CommandAdapter {
     private IElement elemento;
     private Element type;
     private Area area;
+    private String image;
 
-    public AddElementoCmd(EcosystemManager manager, Area area, Element type) {
+    public AddElementoCmd(EcosystemManager manager, Area area, Element type,String image) {
         super(manager);
         this.area = area;
         this.type = type;
+        this.image = image;
     }
     @Override
     public void undo() {
@@ -22,6 +24,6 @@ public class AddElementoCmd extends CommandAdapter {
     }
     @Override
     public void execute() {
-        elemento = manager.addElementocmd(area,type);
+        elemento = manager.addElementocmd(area,type,image);
     }
 }

@@ -2,7 +2,7 @@ package pt.isec.pa.javalife.model.data.memento;
 
 import java.io.*;
 
-public class Memento implements Serializable {
+public class Memento implements IMemento {
     private byte[] snapshot = null;
 
     public Memento(Object obj) {

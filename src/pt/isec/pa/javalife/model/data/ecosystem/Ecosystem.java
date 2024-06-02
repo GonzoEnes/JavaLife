@@ -70,8 +70,8 @@ public class Ecosystem implements Serializable, IGameEngineEvolve, IOriginator {
         if (!hasAnElemento(elemento.getArea()))
             elements.add(elemento);
     }
-    public IElement addElementocmd(Area area, Element type){//problemas ao adicionar um elemento tipo rock
-        if (!hasAnElemento(area)) {
+    public IElement addElementocmd(Area area, Element type){
+        if (!hasAnElemento(area) && (area.up() >= 7 && area.down() <= getHeight()-7 && area.left() >= 7 && area.right() <= getLargura()-7)){
             IElement elemento = Element.createElement(type,area,this);
             elements.add(elemento);
             return elemento;
@@ -436,4 +436,5 @@ public class Ecosystem implements Serializable, IGameEngineEvolve, IOriginator {
             this.elements = ecosystem.elements;
         }
     }
+
 }

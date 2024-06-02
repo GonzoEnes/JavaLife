@@ -1,8 +1,11 @@
 package pt.isec.pa.javalife.ui.gui.panes;
 
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -16,6 +19,7 @@ import pt.isec.pa.javalife.model.data.elements.Fauna;
 import pt.isec.pa.javalife.model.data.elements.Flora;
 import pt.isec.pa.javalife.model.data.elements.IElement;
 import pt.isec.pa.javalife.model.data.events.Event;
+import pt.isec.pa.javalife.ui.gui.resources.ImageLoader;
 
 import java.io.File;
 import java.util.List;
@@ -147,7 +151,37 @@ public class TopBar extends MenuBar {
             manager.resumeEngine();
         });
         btnExit.setOnAction(e -> {
+            manager.pauseEngine();
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirm");
+            alert.setHeaderText(null);
+            alert.setContentText("Do you wish to save before exiting?");
 
+            ButtonType buttonTypeSim = new ButtonType("Yes");
+            ButtonType buttonTypeNao = new ButtonType("No");
+
+            alert.getButtonTypes().setAll(buttonTypeSim, buttonTypeNao);
+
+            alert.showAndWait().ifPresent(response -> {
+                if (response == buttonTypeSim) {
+                    FileChooser fileChooser = new FileChooser();
+                    fileChooser.setTitle("File save...");
+                    fileChooser.setInitialDirectory(new File("."));
+                    fileChooser.getExtensionFilters().addAll(
+                            new FileChooser.ExtensionFilter("Ecossistema (*.dat)", "*.dat"),
+                            new FileChooser.ExtensionFilter("All", "*.*")
+                    );
+                    File hFile = fileChooser.showSaveDialog(this.getScene().getWindow());
+                    if (hFile != null) {
+                        manager.save(hFile);
+                    }
+                    Platform.exit();
+                } else if (response == buttonTypeNao) {
+                    Platform.exit();
+                } else {
+                    alert.close();
+                }
+            });
         });
         btnConfigurations.setOnAction(e -> {
 
@@ -193,7 +227,7 @@ public class TopBar extends MenuBar {
                                 double leftValue = Double.parseDouble(left);
                                 double rightValue = Double.parseDouble(right);
 
-                                manager.addElementWithCommand(new Area(upValue, downValue, leftValue, rightValue), Element.INANIMADO);
+                                manager.addElementWithCommand(new Area(upValue, downValue, leftValue, rightValue), Element.INANIMADO,null);
                                 popupStage.close();
                             } catch (NumberFormatException | InterruptedException | CloneNotSupportedException j) {
                                 showErrorDialog("Invalid values!");
@@ -253,7 +287,7 @@ public class TopBar extends MenuBar {
                         double leftValue = Double.parseDouble(left);
                         double rightValue = Double.parseDouble(right);
 
-                        manager.addElementWithCommand(new Area(upValue, downValue, leftValue, rightValue), Element.FLORA);
+                        manager.addElementWithCommand(new Area(upValue, downValue, leftValue, rightValue), Element.FLORA,null);
                         popupStage.close();
                     } catch (NumberFormatException | InterruptedException | CloneNotSupportedException j) {
                         showErrorDialog("Invalid values!");
@@ -283,20 +317,36 @@ public class TopBar extends MenuBar {
             TextField downField = new TextField();
             TextField leftField = new TextField();
             TextField rightField = new TextField();
+
+            List<String> imageNames = ImageLoader.loadAllImagesFromDirectory("fauna/"); // replace with your directory path
+
+            ComboBox<String> imageComboBox = new ComboBox<>();
+            imageComboBox.getItems().addAll(imageNames);
+
+            ImageView imageView = new ImageView();
+
+            imageComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                Image image = ImageLoader.getImage(newValue);
+                imageView.setImage(image);
+            });
+
             GridPane gridPane = new GridPane();
             gridPane.setPadding(new Insets(10));
             gridPane.setHgap(10);
             gridPane.setVgap(10);
 
-            gridPane.add(new Label("Position"), 0, 1);
-            gridPane.add(new Label("Up:"), 0, 2);
-            gridPane.add(upField, 1, 2);
-            gridPane.add(new Label("Down:"), 0, 3);
-            gridPane.add(downField, 1, 3);
-            gridPane.add(new Label("Left:"), 0, 4);
-            gridPane.add(leftField, 1, 4);
-            gridPane.add(new Label("Right:"), 0, 5);
-            gridPane.add(rightField, 1, 5);
+            gridPane.add(imageComboBox, 0, 0);
+            gridPane.add(imageView, 0, 1);
+
+            gridPane.add(new Label("Position"), 0, 2);
+            gridPane.add(new Label("Up:"), 0, 3);
+            gridPane.add(upField, 1, 3);
+            gridPane.add(new Label("Down:"), 0, 4);
+            gridPane.add(downField, 1, 4);
+            gridPane.add(new Label("Left:"), 0, 5);
+            gridPane.add(leftField, 1, 5);
+            gridPane.add(new Label("Right:"), 0, 6);
+            gridPane.add(rightField, 1, 6);
 
             Button btnCreate = new Button("Add");
 
@@ -313,7 +363,7 @@ public class TopBar extends MenuBar {
                         double leftValue = Double.parseDouble(left);
                         double rightValue = Double.parseDouble(right);
 
-                        manager.addElementWithCommand(new Area(upValue, downValue, leftValue, rightValue), Element.FAUNA);
+                        manager.addElementWithCommand(new Area(upValue, downValue, leftValue, rightValue), Element.FAUNA,imageComboBox.getValue());
                         popupStage.close();
                     } catch (NumberFormatException | InterruptedException | CloneNotSupportedException j) {
                         showErrorDialog("Invalid values!");
@@ -322,7 +372,6 @@ public class TopBar extends MenuBar {
                     showErrorDialog("All fields must be filled in!");
                 }
             });
-
             VBox vbox = new VBox(gridPane, btnCreate);
             vbox.setPadding(new Insets(10));
             vbox.setSpacing(10);
@@ -536,7 +585,6 @@ public class TopBar extends MenuBar {
             }
         });
         btnSettings.setOnAction(e -> {
-
         });
         btnStart.setOnAction(e -> {
             manager.startEngine();
@@ -644,7 +692,7 @@ public class TopBar extends MenuBar {
     }
     private void showErrorDialog(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Erro!");
+        alert.setTitle("[ERROR]");
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();

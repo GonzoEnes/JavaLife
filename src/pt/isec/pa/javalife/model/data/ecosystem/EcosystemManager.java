@@ -128,42 +128,8 @@ public class EcosystemManager {
                 double baixo = Double.parseDouble(fields[2]);
                 double esquerda = Double.parseDouble(fields[3]);
                 double direita = Double.parseDouble(fields[4]);
-<<<<<<< Updated upstream
                 Area area = new Area(cima, baixo, esquerda, direita);
                 addElemento(area, Element.valueOf(type));
-=======
-                Area area = new Area(cima,baixo,esquerda,direita);
-
-                addElemento(area, Element.valueOf(type));
-
-                switch (type.toUpperCase()) {
-                    case "FAUNA":
-                        double forcaFauna = Double.parseDouble(fields[5]);
-                        IElement fauna = Element.createElement(Element.FAUNA, area, ecosystem);
-                        assert fauna != null;
-                        ((Fauna)fauna).setStrength(forcaFauna);
-                        importedElements.add(fauna);
-                        break;
-                    case "FLORA":
-                        double forcaFlora = Double.parseDouble(fields[5]);
-                        IElement flora = Element.createElement(Element.FLORA, area, ecosystem);
-                        assert flora != null;
-                        ((Flora)flora).setStrength(forcaFlora);
-                        importedElements.add(flora);
-                        break;
-                    case "INANIMADO":
-                        IElement inanimado = Element.createElement(Element.INANIMADO, area, ecosystem);
-                        importedElements.add(inanimado);
-                        break;
-                    default:
-                        System.err.println("Tipo desconhecido: " + type);
-                        break;
-                }
-            }
-
-            for (IElement elemento : importedElements) {
-                ecosystem.addElemento(elemento);
->>>>>>> Stashed changes
             }
 
         } catch (Exception e) {
@@ -172,6 +138,7 @@ public class EcosystemManager {
         }
         return true;
     }
+
     public boolean exportCSVElements(File file) throws CloneNotSupportedException {
         try (
                 BufferedWriter bw = new BufferedWriter(new FileWriter(file))
@@ -244,8 +211,8 @@ public class EcosystemManager {
     public void redo() throws InterruptedException, CloneNotSupportedException {
         commandManager.redo();
     }
-    public void addElementWithCommand(Area area, Element type) throws InterruptedException, CloneNotSupportedException {
-        AddElementoCmd addCommand = new AddElementoCmd(this, area, type);
+    public void addElementWithCommand(Area area, Element type,String image) throws InterruptedException, CloneNotSupportedException {
+        AddElementoCmd addCommand = new AddElementoCmd(this, area, type,image);
         commandManager.executeCommand(addCommand);
         pcs.firePropertyChange(ECOSSISTEMA_EVOLVE, null, null);
     }
@@ -260,7 +227,7 @@ public class EcosystemManager {
         pcs.firePropertyChange(ECOSSISTEMA_EVOLVE, null, null);
     }
     //commandsCommands
-    public IElement addElementocmd(Area area, Element type) {
+    public IElement addElementocmd(Area area, Element type,String image) {
         return ecosystem.addElementocmd(area,type);
     }
     public IElement removeElementoCmd(int id, Element type) throws CloneNotSupportedException {
