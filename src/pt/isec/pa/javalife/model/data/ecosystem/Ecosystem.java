@@ -107,9 +107,12 @@ public class Ecosystem implements Serializable, IGameEngineEvolve {
             if(element.getId() == elemento.getId()){
                 if(element.getType() == Element.FAUNA){
                     ((Fauna)element).setStrength(((Fauna)elemento).getStrength());
+                    ((Fauna)element).setSpeed(((Fauna)elemento).getSpeed());
+                    ((Fauna)element).setArea(elemento.getArea());
                 }else if(element.getType() == Element.FLORA){
                     ((Flora)element).setStrength(((Flora)elemento).getStrength());
                     ((Flora)element).setImage(((Flora)elemento).getImage());
+                    ((Flora)element).setArea(elemento.getArea());
                 }
             }
         }
