@@ -28,12 +28,22 @@ public class EcosystemManager {
     public static final String ECOSSISTEMA_EVOLVE = "_evolve";
     private CareTaker careTaker;
 
+    /**
+     *  Constructor of the class
+     */
     public EcosystemManager() {
         this.gameEngine = new GameEngine();
         pcs = new PropertyChangeSupport(this);
         gameEngine.registerClient((g,t) -> evolve(gameEngine,t));
         commandManager = new CommandManager();
     }
+
+    /**
+     * Method used to create the ecosystem
+     * @param altura
+     * @param largura
+     * @param time
+     */
     public void createEcosystem(int altura, int largura,int time) {
         ecosystem = new Ecosystem(altura, largura);
         timeBetweenTicks=time;
@@ -44,47 +54,92 @@ public class EcosystemManager {
         pcs.firePropertyChange(ECOSSISTEMA_EVOLVE, null, null);
     }
 
-    //gets
+    /**
+     * Method that gets a clone of the Elements
+     * @return
+     * @throws CloneNotSupportedException
+     */
     public List<IElement> getElementos() throws CloneNotSupportedException {
         return ecosystem.getElements();
     }
+    /**
+     * Method that gets the Elements of a certain type
+     * @param newValue
+     * @return
+     * @throws CloneNotSupportedException
+     */
     public List<IElement> getElementsOfType(Element newValue) throws CloneNotSupportedException {
         return ecosystem.getElementsOfType(newValue);
     }
+    /**
+     * Method that gets the ecosystem's width
+     * @return
+     */
     public int getLargura() {
         return ecosystem.getLargura();
     }
+
+    /**
+     * Method that gets the ecosystem's Height
+     * @return
+     */
     public int getAltura() {
         return ecosystem.getHeight();
     }
-
+    /**
+     * Method that adds the manager to the list of observers
+     * @param property
+     * @param listener
+     */
     public void addClient(String property, PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(property, listener);
     }
+    /**
+     * Method that removes the manager to the list of observers
+     * @param property
+     * @param listener
+     */
     public void removeClient(String property, PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(property, listener);
     }
-
+    /**
+     * Method that adds an element to the ecosystem
+     * @param element
+     */
     public void addElemento(IElement element) {
         ecosystem.addElemento(element);
     }
+    /**
+     *
+     * @param area
+     * @param type
+     */
     public void addElemento(Area area, Element type) {
         ecosystem.addElemento(area,type);
     }
+/**
+     * Method that removes an element from the ecosystem
+     * @param elemento
+     */
     public void removeElementoEvent(IElement elemento) {
         ecosystem.removeElemento(elemento);
     }
-
+    /**
+     * Method that resets the counterID
+     */
     public void resetCounterId(){
         ecosystem.setContadorElementos();
     }
 
-    //o edit ainda nao esta feito
     public void editElementoUndo(IElement elemento) {
         ecosystem.editElementoUndo(elemento);
     }
 
-    //memento e save em csv
+    /**
+     * Method that saves the current ecosystem into a csv file
+     * @param file
+     * @return
+     */
     public boolean save(File file) {
         try (
                 ObjectOutputStream oos = new ObjectOutputStream(
@@ -97,6 +152,11 @@ public class EcosystemManager {
         }
         return true;
     }
+    /**
+     * Method that loads a csv file and changes the current ecosystem
+     * @param file
+     * @return
+     */
     public boolean load(File file) {
         try (
                 ObjectInputStream ois = new ObjectInputStream(
@@ -138,7 +198,11 @@ public class EcosystemManager {
         }
         return true;
     }
-
+    /**
+     * @param file
+     * @return
+     * @throws CloneNotSupportedException
+     */
     public boolean exportCSVElements(File file) throws CloneNotSupportedException {
         try (
                 BufferedWriter bw = new BufferedWriter(new FileWriter(file))
@@ -186,54 +250,121 @@ public class EcosystemManager {
         return true;
     }
 
+    /**
+     * Method that stops the game Engine
+     */
     //controlGameEngine
     public void stopEngine() {
         gameEngine.stop();
     }
+    /**
+     *Method that pauses the game Engine
+     */
     public void pauseEngine() {
         gameEngine.pause();
     }
+    /**
+     *Method that resumes the game Engine
+     */
     public void resumeEngine() {
         gameEngine.resume();
     }
+    /**
+     *Method that starts the game Engine
+     */
     public void startEngine() {
         gameEngine.start(timeBetweenTicks);
     }
+    /**
+     * Method that calls evolve from ecosystem and refreshes the ui
+     * @param gameEngine
+     * @param currentTime
+     */
     public void evolve (IGameEngine gameEngine, long currentTime) {
         ecosystem.evolve(gameEngine,currentTime);
         pcs.firePropertyChange(ECOSSISTEMA_EVOLVE, null, null);
     }
 
-    //commandsUI
+    /**
+     * Method that undos the last command
+     * @throws InterruptedException
+     */
     public void undo() throws InterruptedException {
         commandManager.undo();
     }
+    /**
+     * Methos that reapplies the past command
+     * @throws InterruptedException
+     * @throws CloneNotSupportedException
+     */
     public void redo() throws InterruptedException, CloneNotSupportedException {
         commandManager.redo();
     }
+    /**
+     * Method that executes the Add Element command
+     * @param area
+     * @param type
+     * @throws InterruptedException
+     * @throws CloneNotSupportedException
+     */
     public void addElementWithCommand(Area area, Element type,String image) throws InterruptedException, CloneNotSupportedException {
         AddElementoCmd addCommand = new AddElementoCmd(this, area, type,image);
         commandManager.executeCommand(addCommand);
         pcs.firePropertyChange(ECOSSISTEMA_EVOLVE, null, null);
     }
+    /**
+     * Method that executes the remove Element command
+     * @param id
+     * @param type
+     * @throws InterruptedException
+     * @throws CloneNotSupportedException
+     */
     public void removeElementWithCommand(int id, Element type) throws InterruptedException, CloneNotSupportedException {
         RemoveElementoCmd removeElementoCmd = new RemoveElementoCmd(this,id,type);
         commandManager.executeCommand(removeElementoCmd);
         pcs.firePropertyChange(ECOSSISTEMA_EVOLVE, null, null);
     }
+    /**
+     * Method that executes the Edit Element command
+     * @param id
+     * @param strength
+     * @param type
+     * @throws InterruptedException
+     * @throws CloneNotSupportedException
+     */
     public void editElementWithCommand(int id,Element type, Area area, double speed,double strength) throws InterruptedException, CloneNotSupportedException {
         EditElementoCmd editElementoCmd = new EditElementoCmd(this,id,type,area,speed,strength);
         commandManager.executeCommand(editElementoCmd);
         pcs.firePropertyChange(ECOSSISTEMA_EVOLVE, null, null);
     }
-    //commandsCommands
+    /**
+     * Method that adds the element to the ecosystem from the command
+     * @param area
+     * @param type
+     * @return
+     */
     public IElement addElementocmd(Area area, Element type,String image) {
         return ecosystem.addElementocmd(area,type);
     }
+    /**
+     * Method that removes the element to the ecosystem from the command
+     * @param id
+     * @param type
+     * @return
+     * @throws CloneNotSupportedException
+     */
     public IElement removeElementoCmd(int id, Element type) throws CloneNotSupportedException {
         //saveState();
         return ecosystem.removeElementocmd(id,type);
     }
+    /**
+     * Method that edits the element to the ecosystem from the command
+     * @param id
+     * @param strength
+     * @param type
+     * @return
+     * @throws CloneNotSupportedException
+     */
     public IElement editElementoCmd(int id, Element type, Area area,double speed,double strength) throws CloneNotSupportedException {
         //saveState();
         return ecosystem.editElementocmd( id,type,area,speed,strength);
