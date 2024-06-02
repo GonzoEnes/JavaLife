@@ -7,6 +7,7 @@ import pt.isec.pa.javalife.model.command.commands.RemoveElementoCmd;
 import pt.isec.pa.javalife.model.data.area.Area;
 import pt.isec.pa.javalife.model.data.elements.*;
 import pt.isec.pa.javalife.model.data.events.*;
+import pt.isec.pa.javalife.model.data.memento.CareTaker;
 import pt.isec.pa.javalife.model.gameengine.GameEngine;
 import pt.isec.pa.javalife.model.gameengine.interfaces.IGameEngine;
 
@@ -25,6 +26,7 @@ public class EcosystemManager {
     private long timeBetweenTicks = 1000;
     private CommandManager commandManager;
     public static final String ECOSSISTEMA_EVOLVE = "_evolve";
+    private CareTaker careTaker;
 
     public EcosystemManager() {
         this.gameEngine = new GameEngine();
@@ -35,6 +37,7 @@ public class EcosystemManager {
     public void createEcosystem(int altura, int largura,int time) {
         ecosystem = new Ecosystem(altura, largura);
         timeBetweenTicks=time;
+        this.careTaker = new CareTaker(ecosystem);
     }
     public void startEcosystem() {
         gameEngine.start(timeBetweenTicks);
@@ -125,8 +128,42 @@ public class EcosystemManager {
                 double baixo = Double.parseDouble(fields[2]);
                 double esquerda = Double.parseDouble(fields[3]);
                 double direita = Double.parseDouble(fields[4]);
+<<<<<<< Updated upstream
                 Area area = new Area(cima, baixo, esquerda, direita);
                 addElemento(area, Element.valueOf(type));
+=======
+                Area area = new Area(cima,baixo,esquerda,direita);
+
+                addElemento(area, Element.valueOf(type));
+
+                switch (type.toUpperCase()) {
+                    case "FAUNA":
+                        double forcaFauna = Double.parseDouble(fields[5]);
+                        IElement fauna = Element.createElement(Element.FAUNA, area, ecosystem);
+                        assert fauna != null;
+                        ((Fauna)fauna).setStrength(forcaFauna);
+                        importedElements.add(fauna);
+                        break;
+                    case "FLORA":
+                        double forcaFlora = Double.parseDouble(fields[5]);
+                        IElement flora = Element.createElement(Element.FLORA, area, ecosystem);
+                        assert flora != null;
+                        ((Flora)flora).setStrength(forcaFlora);
+                        importedElements.add(flora);
+                        break;
+                    case "INANIMADO":
+                        IElement inanimado = Element.createElement(Element.INANIMADO, area, ecosystem);
+                        importedElements.add(inanimado);
+                        break;
+                    default:
+                        System.err.println("Tipo desconhecido: " + type);
+                        break;
+                }
+            }
+
+            for (IElement elemento : importedElements) {
+                ecosystem.addElemento(elemento);
+>>>>>>> Stashed changes
             }
 
         } catch (Exception e) {
@@ -248,5 +285,14 @@ public class EcosystemManager {
 
     public IElement getElementById(int id, Element type) throws CloneNotSupportedException {
         return ecosystem.getElementById(id,type);
+    }
+
+    public void saveSnapshot() {
+        careTaker.save();
+    }
+
+    public void restoreSnapshot() {
+       careTaker.undo();
+        pcs.firePropertyChange(ECOSSISTEMA_EVOLVE, null, null);
     }
 }

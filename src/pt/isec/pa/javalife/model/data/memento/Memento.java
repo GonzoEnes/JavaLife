@@ -1,31 +1,28 @@
 package pt.isec.pa.javalife.model.data.memento;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 
-public class Memento implements IMemento {
-    byte[] snapshot;
+public class Memento implements Serializable {
+    private byte[] snapshot = null;
 
     public Memento(Object obj) {
-        try (ByteArrayOutputStream baos =
-                     new ByteArrayOutputStream();
-             ObjectOutputStream oos =
-                     new ObjectOutputStream(baos)) {
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
+             ObjectOutputStream oos = new ObjectOutputStream(baos)) {
             oos.writeObject(obj);
             snapshot = baos.toByteArray();
-        } catch (Exception e) { snapshot = null; }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-
-    @Override
     public Object getSnapshot() {
-        if (snapshot == null) return null;
-        try (ByteArrayInputStream bais =
-                     new ByteArrayInputStream(snapshot);
-             ObjectInputStream ois =
-                     new ObjectInputStream(bais)) {
+        if(snapshot == null)
+            return null;
+        try (ByteArrayInputStream bais = new  ByteArrayInputStream(snapshot);
+             ObjectInputStream ois = new ObjectInputStream(bais)) {
             return ois.readObject();
-        } catch (Exception e) { return null; }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

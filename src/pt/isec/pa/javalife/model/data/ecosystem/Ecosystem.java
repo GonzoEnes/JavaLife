@@ -3,6 +3,10 @@ package pt.isec.pa.javalife.model.data.ecosystem;
 import pt.isec.pa.javalife.model.data.area.Area;
 import pt.isec.pa.javalife.model.data.elements.*;
 import pt.isec.pa.javalife.model.data.events.*;
+import pt.isec.pa.javalife.model.data.memento.CareTaker;
+import pt.isec.pa.javalife.model.data.memento.IMemento;
+import pt.isec.pa.javalife.model.data.memento.IOriginator;
+import pt.isec.pa.javalife.model.data.memento.Memento;
 import pt.isec.pa.javalife.model.gameengine.interfaces.IGameEngine;
 import pt.isec.pa.javalife.model.gameengine.interfaces.IGameEngineEvolve;
 
@@ -11,7 +15,7 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class Ecosystem implements Serializable, IGameEngineEvolve {
+public class Ecosystem implements Serializable, IGameEngineEvolve, IOriginator {
     @Serial
     private static final long serialVersionUID = 1L;
     private Set<IElement> elements;
@@ -416,4 +420,20 @@ public class Ecosystem implements Serializable, IGameEngineEvolve {
         }
     }
 
+    @Override
+    public IMemento save() {
+        return new Memento(this);
+    }
+
+    @Override
+    public void restore(IMemento memento) {
+        Object obj = memento.getSnapshot();
+        System.out.println(obj.getClass());
+        if (obj instanceof Ecosystem ecosystem) {
+            this.events = ecosystem.events;
+            this.height = ecosystem.height;
+            this.width = ecosystem.width;
+            this.elements = ecosystem.elements;
+        }
+    }
 }

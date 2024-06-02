@@ -551,10 +551,10 @@ public class TopBar extends MenuBar {
             manager.pauseEngine();
         });
         btnSaveSnapshot.setOnAction(e -> {
-
+            manager.saveSnapshot();
         });
         btnRestoreSnapshot.setOnAction(e -> {
-
+            manager.restoreSnapshot();
         });
         btnSun.setOnAction(e -> {
             manager.applyEvent(Event.SUN);
