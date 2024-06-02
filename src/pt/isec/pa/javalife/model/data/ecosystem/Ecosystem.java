@@ -306,7 +306,8 @@ public class Ecosystem implements Serializable, IGameEngineEvolve {
         return aux;
     }
     public boolean isFaunaBeingAttackedNearyby(Area hunter,double speed,Area prey) {
-        Area aux = new Area(hunter.up()-speed,hunter.left()-speed,hunter.down()+speed,hunter.right()+speed);
+        speed= speed+1;
+        Area aux = new Area(hunter.up()-speed,hunter.down()+speed,hunter.left()-speed,hunter.right()+speed);
         return aux.equals(prey);
     }
     public boolean hasAnInanimadoOrFauna(Area area, int id) {

@@ -21,7 +21,7 @@ public sealed class Fauna extends ElementBase implements IElementWithStrength, I
     private static final double maximumStrength = 100;
     private static final double reduceStrength = 0.5;
     private static final double maximumReproduction = 2;
-    private static final int minimumSpeed = 3;
+    private static final int minimumSpeed = 1;
     private static final int strengthToChangeStateForProcurarComida = 35;
     private static final int strengthToChangeStateForReproduzir = 50;
     private static final int strengthToChangeStateForMovimentar = 80;
@@ -340,10 +340,154 @@ public sealed class Fauna extends ElementBase implements IElementWithStrength, I
         return false;
     }
     public  void moveTowardsFauna(Area position) {
-        double x = getArea().left()+(getArea().right() - getArea().left()) / 2;
-        double y =getArea().up()+ (getArea().down() - getArea().up()) / 2;
-        double xStrongestFauna =position.left()+ (position.right() - position.left()) / 2;
-        double yStrongestFauna =position.up()+ (position.down() - position.up()) / 2;
+        double x = getArea().left() + (getArea().right() - getArea().left()) / 2;
+        double y = getArea().up() + (getArea().down() - getArea().up()) / 2;
+        double xStrongestFauna = position.left() + (position.right() - position.left()) / 2;
+        double yStrongestFauna = position.up() + (position.down() - position.up()) / 2;
+        System.out.println("Moving towards fauna");
+
+        if ((x < xStrongestFauna && (xStrongestFauna - x) > ((getArea().right() - getArea().left()) / 2) + getSpeed()) && (y < yStrongestFauna && (yStrongestFauna - y) > ((getArea().down() - getArea().up()) / 2) + getSpeed())){
+            if(getRandomNumberInRange(2)==0){
+                if(!ecossistema.hasAnElemento(new Area(getArea().up(), getArea().down(), getArea().left() + getSpeed(), getArea().right() + getSpeed()),getId())){
+                    setArea(new Area(getArea().up(), getArea().down(), getArea().left() + getSpeed(), getArea().right() + getSpeed()));
+                }else{
+                    Area aux=null;
+                    int direction;
+                    do{
+                        direction = getRandomNumberInRange(2);
+                        if(direction==0){
+                            aux = new Area(getArea().up() - getSpeed(), getArea().down() - getSpeed(), getArea().left(), getArea().right());
+                        }else
+                            aux = new Area(getArea().up() + getSpeed(), getArea().down() + getSpeed(), getArea().left(), getArea().right());
+                    }while(!ecossistema.hasAnElemento(aux,getId()));
+                    setArea(aux);
+                    decreaseStrengthByMovement();
+                    return;
+                }
+            }
+            if(!ecossistema.hasAnElemento(new Area(getArea().up() + getSpeed(), getArea().down() + getSpeed(), getArea().left(), getArea().right()),getId())){
+                setArea(new Area(getArea().up() + getSpeed(), getArea().down() + getSpeed(), getArea().left(), getArea().right()));
+            }else{
+                Area aux=null;
+                int direction;
+                do{
+                    direction = getRandomNumberInRange(2);
+                    if(direction==0){
+                        aux = new Area(getArea().up() , getArea().down() , getArea().left() - getSpeed(), getArea().right()-getSpeed());
+                    }else
+                        aux = new Area(getArea().up(), getArea().down(), getArea().left() + getSpeed(), getArea().right()+ getSpeed());
+                }while(!ecossistema.hasAnElemento(aux,getId()));
+                setArea(aux);
+                decreaseStrengthByMovement();
+                return;
+            }
+        }else if((x < xStrongestFauna && (xStrongestFauna-x)> ((getArea().right() - getArea().left()) / 2)+getSpeed())&&(y>yStrongestFauna && (y-yStrongestFauna) > ((getArea().down() - getArea().up()) / 2)+getSpeed())){
+            if(getRandomNumberInRange(2)==0){
+                if(!ecossistema.hasAnElemento(new Area(getArea().up(), getArea().down(), getArea().left() + getSpeed(), getArea().right() + getSpeed()),getId())){
+                    setArea(new Area(getArea().up(), getArea().down(), getArea().left() + getSpeed(), getArea().right() + getSpeed()));
+                }else{
+                    Area aux=null;
+                    int direction;
+                    do{
+                        direction = getRandomNumberInRange(2);
+                        if(direction==0){
+                            aux = new Area(getArea().up() - getSpeed(), getArea().down() - getSpeed(), getArea().left(), getArea().right());
+                        }else
+                            aux = new Area(getArea().up() + getSpeed(), getArea().down() + getSpeed(), getArea().left(), getArea().right());
+                    }while(!ecossistema.hasAnElemento(aux,getId()));
+                    setArea(aux);
+                    decreaseStrengthByMovement();
+                    return;
+                }
+            }
+            if(!ecossistema.hasAnElemento(new Area(getArea().up() - getSpeed(), getArea().down() - getSpeed(), getArea().left(), getArea().right()),getId())){
+                setArea(new Area(getArea().up() - getSpeed(), getArea().down() - getSpeed(), getArea().left(), getArea().right()));
+            }else{
+                Area aux=null;
+                int direction;
+                do{
+                    direction = getRandomNumberInRange(2);
+                    if(direction==0){
+                        aux = new Area(getArea().up() , getArea().down() , getArea().left()-getSpeed(), getArea().right()-getSpeed());
+                    }else
+                        aux = new Area(getArea().up(), getArea().down(), getArea().left()+ getSpeed(), getArea().right()+ getSpeed());
+                }while(!ecossistema.hasAnElemento(aux,getId()));
+                setArea(aux);
+                decreaseStrengthByMovement();
+                return;
+            }
+        }else if((x > xStrongestFauna && (x-xStrongestFauna) > ((getArea().right() - getArea().left()) / 2)+getSpeed())&&(y<yStrongestFauna && (yStrongestFauna-y)>((getArea().down() - getArea().up()) / 2)+getSpeed())){
+            if(getRandomNumberInRange(2)==0) {
+                if (!ecossistema.hasAnElemento(new Area(getArea().up(), getArea().down(), getArea().left() - getSpeed(), getArea().right() - getSpeed()), getId())) {
+                    setArea(new Area(getArea().up(), getArea().down(), getArea().left() - getSpeed(), getArea().right() - getSpeed()));
+                } else {
+                    Area aux = null;
+                    int direction;
+                    do {
+                        direction = getRandomNumberInRange(2);
+                        if (direction == 0) {
+                            aux = new Area(getArea().up() - getSpeed(), getArea().down() - getSpeed(), getArea().left(), getArea().right());
+                        } else
+                            aux = new Area(getArea().up() + getSpeed(), getArea().down() + getSpeed(), getArea().left(), getArea().right());
+                    } while (!ecossistema.hasAnElemento(aux, getId()));
+                    setArea(aux);
+                    decreaseStrengthByMovement();
+                    return;
+                }
+            }
+            if(!ecossistema.hasAnElemento(new Area(getArea().up() + getSpeed(), getArea().down() + getSpeed(), getArea().left(), getArea().right()),getId())){
+                setArea(new Area(getArea().up() + getSpeed(), getArea().down() + getSpeed(), getArea().left(), getArea().right()));
+            }else{
+                Area aux=null;
+                int direction;
+                do{
+                    direction = getRandomNumberInRange(2);
+                    if(direction==0){
+                        aux = new Area(getArea().up() , getArea().down() , getArea().left() - getSpeed(), getArea().right()-getSpeed());
+                    }else
+                        aux = new Area(getArea().up(), getArea().down(), getArea().left() + getSpeed(), getArea().right()+ getSpeed());
+                }while(!ecossistema.hasAnElemento(aux,getId()));
+                setArea(aux);
+                decreaseStrengthByMovement();
+                return;
+            }
+        }else if((x > xStrongestFauna && (x-xStrongestFauna) > ((getArea().right() - getArea().left()) / 2)+getSpeed())&&(y>yStrongestFauna && (y-yStrongestFauna) > ((getArea().down() - getArea().up()) / 2)+getSpeed())){
+            if(getRandomNumberInRange(2)==0) {
+                if (!ecossistema.hasAnElemento(new Area(getArea().up(), getArea().down(), getArea().left() - getSpeed(), getArea().right() - getSpeed()), getId())) {
+                    setArea(new Area(getArea().up(), getArea().down(), getArea().left() - getSpeed(), getArea().right() - getSpeed()));
+                } else {
+                    Area aux = null;
+                    int direction;
+                    do {
+                        direction = getRandomNumberInRange(2);
+                        if (direction == 0) {
+                            aux = new Area(getArea().up() - getSpeed(), getArea().down() - getSpeed(), getArea().left(), getArea().right());
+                        } else
+                            aux = new Area(getArea().up() + getSpeed(), getArea().down() + getSpeed(), getArea().left(), getArea().right());
+                    } while (!ecossistema.hasAnElemento(aux, getId()));
+                    setArea(aux);
+                    decreaseStrengthByMovement();
+                    return;
+                }
+            }
+            if(!ecossistema.hasAnElemento(new Area(getArea().up() - getSpeed(), getArea().down() - getSpeed(), getArea().left(), getArea().right()),getId())){
+                setArea(new Area(getArea().up() - getSpeed(), getArea().down() - getSpeed(), getArea().left(), getArea().right()));
+            }else{
+                Area aux=null;
+                int direction;
+                do{
+                    direction = getRandomNumberInRange(2);
+                    if(direction==0){
+                        aux = new Area(getArea().up() , getArea().down() , getArea().left()-getSpeed(), getArea().right()-getSpeed());
+                    }else
+                        aux = new Area(getArea().up(), getArea().down(), getArea().left()+ getSpeed(), getArea().right()+ getSpeed());
+                }while(!ecossistema.hasAnElemento(aux,getId()));
+                setArea(aux);
+                decreaseStrengthByMovement();
+                return;
+            }
+        }
+
         if (x < xStrongestFauna && (xStrongestFauna-x)> ((getArea().right() - getArea().left()) / 2)+getSpeed()){
             if(!ecossistema.hasAnElemento(new Area(getArea().up(), getArea().down(), getArea().left() + getSpeed(), getArea().right() + getSpeed()),getId())){
                 setArea(new Area(getArea().up(), getArea().down(), getArea().left() + getSpeed(), getArea().right() + getSpeed()));
@@ -360,47 +504,47 @@ public sealed class Fauna extends ElementBase implements IElementWithStrength, I
                 setArea(aux);
             }
         } else if (x > xStrongestFauna && (x-xStrongestFauna) > ((getArea().right() - getArea().left()) / 2)+getSpeed()){
-            if(!ecossistema.hasAnElemento(new Area(getArea().up(), getArea().down(), getArea().right() - getSpeed(), getArea().left() - getSpeed()),getId())){
-                setArea(new Area(getArea().up(), getArea().down(), getArea().right() - getSpeed(), getArea().left() - getSpeed()));
+            if(!ecossistema.hasAnElemento(new Area(getArea().up(), getArea().down(), getArea().left() - getSpeed(), getArea().right() - getSpeed()),getId())){
+                setArea(new Area(getArea().up(), getArea().down(), getArea().left() - getSpeed(), getArea().right() - getSpeed()));
             }else{
                 Area aux=null;
                 int direction;
                 do{
                     direction = getRandomNumberInRange(2);
                     if(direction==0){
-                        aux = new Area(getArea().up() - getSpeed(), getArea().down() - getSpeed(), getArea().right(), getArea().left());
+                        aux = new Area(getArea().up() - getSpeed(), getArea().down() - getSpeed(), getArea().left(), getArea().right());
                     }else
-                        aux = new Area(getArea().up() + getSpeed(), getArea().down() + getSpeed(), getArea().right(), getArea().left());
+                        aux = new Area(getArea().up() + getSpeed(), getArea().down() + getSpeed(), getArea().left(), getArea().right());
                 }while(!ecossistema.hasAnElemento(aux,getId()));
                 setArea(aux);
             }
         }else if(y<yStrongestFauna && (yStrongestFauna-y)>((getArea().down() - getArea().up()) / 2)+getSpeed()) {
-            if(!ecossistema.hasAnElemento(new Area(getArea().up() + getSpeed(), getArea().down() + getSpeed(), getArea().right(), getArea().left()),getId())){
-                setArea(new Area(getArea().up() + getSpeed(), getArea().down() + getSpeed(), getArea().right(), getArea().left()));
+            if(!ecossistema.hasAnElemento(new Area(getArea().up() + getSpeed(), getArea().down() + getSpeed(), getArea().left(), getArea().right()),getId())){
+                setArea(new Area(getArea().up() + getSpeed(), getArea().down() + getSpeed(), getArea().left(), getArea().right()));
             }else{
                 Area aux=null;
                 int direction;
                 do{
                     direction = getRandomNumberInRange(2);
                     if(direction==0){
-                        aux = new Area(getArea().up() , getArea().down() , getArea().right() - getSpeed(), getArea().left()-getSpeed());
+                        aux = new Area(getArea().up() , getArea().down() , getArea().left() - getSpeed(), getArea().right()-getSpeed());
                     }else
-                        aux = new Area(getArea().up(), getArea().down(), getArea().right() + getSpeed(), getArea().left()+ getSpeed());
+                        aux = new Area(getArea().up(), getArea().down(), getArea().left() + getSpeed(), getArea().right()+ getSpeed());
                 }while(!ecossistema.hasAnElemento(aux,getId()));
                 setArea(aux);
             }
         }else if(y>yStrongestFauna && (y-yStrongestFauna) > ((getArea().down() - getArea().up()) / 2)+getSpeed()) {
-            if(!ecossistema.hasAnElemento(new Area(getArea().up() - getSpeed(), getArea().down() - getSpeed(), getArea().right(), getArea().left()),getId())){
-                setArea(new Area(getArea().up() - getSpeed(), getArea().down() - getSpeed(), getArea().right(), getArea().left()));
+            if(!ecossistema.hasAnElemento(new Area(getArea().up() - getSpeed(), getArea().down() - getSpeed(), getArea().left(), getArea().right()),getId())){
+                setArea(new Area(getArea().up() - getSpeed(), getArea().down() - getSpeed(), getArea().left(), getArea().right()));
             }else{
                 Area aux=null;
                 int direction;
                 do{
                     direction = getRandomNumberInRange(2);
                     if(direction==0){
-                        aux = new Area(getArea().up() , getArea().down() , getArea().right()-getSpeed(), getArea().left()-getSpeed());
+                        aux = new Area(getArea().up() , getArea().down() , getArea().left()-getSpeed(), getArea().right()-getSpeed());
                     }else
-                        aux = new Area(getArea().up(), getArea().down(), getArea().right()+ getSpeed(), getArea().left()+ getSpeed());
+                        aux = new Area(getArea().up(), getArea().down(), getArea().left()+ getSpeed(), getArea().right()+ getSpeed());
                 }while(!ecossistema.hasAnElemento(aux,getId()));
                 setArea(aux);
             }
