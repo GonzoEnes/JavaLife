@@ -10,146 +10,123 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class Ecossistema implements Serializable, IGameEngineEvolve {
+public class Ecosystem implements Serializable, IGameEngineEvolve {
     @Serial
     private static final long serialVersionUID = 1L;
-    private Set<IElemento> elementos;
-    private int altura;
-    private int largura;
+    private Set<IElement> elements;
+    private int height;
+    private int width;
 
-    public Ecossistema(int altura, int largura) {
-        this.altura = altura;
-        this.largura = largura;
-        this.elementos = ConcurrentHashMap.newKeySet();
-        createCerca();
+    public Ecosystem(int altura, int largura) {
+        this.height = altura;
+        this.width = largura;
+        this.elements = ConcurrentHashMap.newKeySet();
+        createEcosystemBoundaries();
+    }
+    public void createEcosystemBoundaries() {
+        addElemento(new Area(0,7,0,getLargura()), Element.INANIMADO);
+        addElemento(new Area(getHeight()-7, getHeight(),0,getLargura()), Element.INANIMADO);
+        addElemento(new Area(0, getHeight(),0,7), Element.INANIMADO);
+        addElemento(new Area(0, getHeight(),getLargura()-7,getLargura()), Element.INANIMADO);
     }
 
-    public void createCerca() {
-        Pedra cima = new Pedra(new Area(0,7,0, getLargura()));
-        Pedra baixo = new Pedra(new Area(getAltura()-7,getAltura(),0,getLargura()));
-        Pedra esquerda = new Pedra(new Area(0,getAltura(),0,7));
-        Pedra direita = new Pedra(new Area(0,getAltura(),getLargura()-7,getLargura()));
-        elementos.add(cima);
-        elementos.add(baixo);
-        elementos.add(esquerda);
-        elementos.add(direita);
-    }
-    // GETTERS & SETTERS
+    //gets e sets
     public int getLargura() {
-        return largura;
+        return width;
     }
+    public int getHeight() { return height; }
     public void setLargura(int largura) {
-        this.largura = largura;
+        this.width = largura;
     }
-    public int getAltura() { return altura; }
-
-    public void setAltura(int altura) {
-        this.altura = altura;
+    public void setHei(int hei) {
+        this.height = hei;
     }
-    public Set<IElemento> getElementos() {
-        Set<IElemento> toReturn = new HashSet<>();
-        for (IElemento elemento : elementos) {
-            try {
+    public Set<IElement> getElements() throws CloneNotSupportedException {
+        Set<IElement> toReturn = new HashSet<>();
+        for (IElement elemento : elements) {
                 toReturn.add(elemento.clone());
-                //System.out.println(elemento.getArea().right() + " " + " " +elemento.getArea().down()+ " "  +   elemento.getArea().left()+ " "  + elemento.getArea().up());
-            } catch (CloneNotSupportedException ignored) {
-            }
         }
         return toReturn;
     }
-    // LÓGICA
-
-    public boolean getIsAreaValid(Area area) {
-        return area.left() > 7 && area.right() < getLargura()-7 && area.up() > 7 && area.down() < getAltura()-7;
-    }
-    public void addElemento(IElemento elemento){
-        if (!getIsAreaValid(elemento.getArea()) || hasAnElemento(elemento.getArea())) {
-            return;
+    public List<IElement> getElementsOfType(Element newValue) throws CloneNotSupportedException {
+        List<IElement> aux= new ArrayList<>();
+        for(IElement elemento : elements){
+            if(elemento.getType()==newValue)
+                aux.add(elemento.clone());
         }
-        elementos.add(elemento);
+        return aux;
     }
-    public IElemento addElementocmd(Area area, Elemento type){
-        IElemento elemento = Elemento.createElemento(type, area, this);
-        if(elemento==null)
-            System.out.println("Elemento nulo");
-        if (elemento != null) {
-            elementos.add(elemento);
+
+    public void addElemento(IElement elemento){
+        if (!hasAnElemento(elemento.getArea()))
+            elements.add(elemento);
+    }
+    public IElement addElementocmd(Area area, Element type){//problemas ao adicionar um elemento tipo rock
+        if (!hasAnElemento(area)) {
+            IElement elemento = Element.createElement(type,area,this);
+            elements.add(elemento);
             return elemento;
         }
         return null;
     }
-    public IElemento editElementocmd(int id, double strength,Elemento type) throws CloneNotSupportedException {
-        for (IElemento elemento : elementos) {
-            if (elemento.getId() == id && type == Elemento.FAUNA) {
-                IElemento aux = elemento.clone();
+    public IElement editElementocmd(int id, double strength, Element type) throws CloneNotSupportedException {
+        for (IElement elemento : elements) {
+            if (elemento.getId() == id && type == Element.FAUNA) {
+                IElement aux = elemento.clone();
                 ((Fauna)elemento).setStrength(strength);
                 return aux;
-            }else if(elemento.getId() == id && type == Elemento.FLORA){
-                IElemento aux = elemento.clone();
+            }else if(elemento.getId() == id && type == Element.FLORA){
+                IElement aux = elemento.clone();
                 ((Flora)elemento).setStrength(strength);
                 return aux;
             }
         }
         return null;
     }
-    public void editElementoUndo(IElemento elemento) {
-        for(IElemento element : elementos){
+    public void editElementoUndo(IElement elemento) {
+        for(IElement element : elements){
             if(element.getId() == elemento.getId()){
-                if(element.getType() == Elemento.FAUNA){
+                if(element.getType() == Element.FAUNA){
                     ((Fauna)element).setStrength(((Fauna)elemento).getStrength());
-                }else if(element.getType() == Elemento.FLORA){
+                }else if(element.getType() == Element.FLORA){
                     ((Flora)element).setStrength(((Flora)elemento).getStrength());
                     ((Flora)element).setImage(((Flora)elemento).getImage());
                 }
             }
         }
     }
-    public void addElemento(Area area , String image, Elemento type) {
-        if (!getIsAreaValid(area)) {
+    public void addElemento(Area area, Element type) {
+        if (!hasAnElemento(area)) {
+            IElement elemento = Element.createElement(type,area,this);
+            elements.add(elemento);
+        }
+    }
+    public void removeElemento(IElement elemento) {
+        if (elemento.getType() == Element.INANIMADO && elemento.getId()<5) {
             return;
         }
-
-        IElemento elemento = null;
-        switch (type) {
-            case INANIMADO -> {
-                elemento = new Pedra(area);
-            }
-            case FLORA -> {
-                elemento = new Erva(area, this, "flora.png");
-            }
-            case FAUNA -> {
-                elemento = new Animal(area, this, image);
-            }
-        }
-        if (elemento != null) {
-            elementos.add(elemento);
-        }
+        elements.remove(elemento);
     }
-    public boolean removeElemento(IElemento elemento) {
-        if (elemento.getType() == Elemento.INANIMADO) { // não se podem remover inanimados da cerca CORRIGIR
-            return false;
-        }
-
-        elementos.remove(elemento);
-        return true;
-    }
-    public IElemento removeElementocmd(int id,Elemento type) throws CloneNotSupportedException {
-        for (IElemento elemento : elementos) {
+    public IElement removeElementocmd(int id, Element type) throws CloneNotSupportedException {
+        if(type== Element.INANIMADO && id<5)
+            return null;
+        for (IElement elemento : elements) {
             if (elemento.getId() == id && elemento.getType() == type){
-                IElemento aux= elemento.clone();
-                elementos.remove(elemento);
+                IElement aux= elemento.clone();
+                elements.remove(elemento);
                 return aux;
             }
         }
         return null;
     }
-    public boolean editElemento(Elemento tipo, int id, ArrayList<String> parametros) { // ir reforçando, claro
-        for (IElemento elemento : elementos) {
+
+    public boolean editElemento(Element tipo, int id, ArrayList<String> parametros) { // ir reforçando, claro
+        for (IElement elemento : elements) {
             if (elemento.getId() == id && elemento.getType() == tipo) {
                 switch (tipo) {
                     case FAUNA -> {
                         //parametrosOld.add(Double.toString(((Animal)elemento).getForca()));
-                        ((Fauna)elemento).setStrength(Double.parseDouble(parametros.get(0)));
+                        ((Fauna)elemento).setStrength(Double.parseDouble(parametros.getFirst()));
                         return true;
                     }
                     case FLORA -> { // a flora pode editar a força ou a imagem dela acho eu
@@ -168,7 +145,7 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
     }
     @Override
     public void evolve(IGameEngine gameEngine, long currentTime) {
-        for (IElemento elemento : elementos) {
+        for (IElement elemento : elements) {
             if (elemento instanceof Fauna fauna) {
                 fauna.evolve();
             }else if(elemento instanceof Flora flora)
@@ -177,17 +154,19 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         checkStrength();
     }
     private void checkStrength() {
-        for (IElemento elemento : elementos) {
+        for (IElement elemento : elements) {
             if (elemento instanceof Fauna fauna && fauna.getStrength() <= 0) {
-                elementos.remove(fauna);
+                elements.remove(fauna);
             }
             if(elemento instanceof Flora flora && flora.getStrength() <= 0){
-                elementos.remove(flora);
+                elements.remove(flora);
             }
         }
     }
+
+    //logica para a fauna e flora interagirem
     public boolean hasAnInanimadoOrFauna(Area area,int id) {
-        for (IElemento elemento : elementos) {
+        for (IElement elemento : elements) {
             if (elemento instanceof Inanimado inanimado && inanimado.getArea().equals(area)) {
                 return true;
             }
@@ -198,7 +177,7 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         return false;
     }
     public boolean hasAnElemento(Area area) {
-        for (IElemento elemento : elementos) {
+        for (IElement elemento : elements) {
             if (elemento.getArea().equals(area)) {
                 return true;
             }
@@ -208,7 +187,7 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
     public Area getStrongestFauna(int id) {
         double strength = 0;
         Area aux=null;
-        for (IElemento elemento : elementos) {
+        for (IElement elemento : elements) {
             if (elemento instanceof Fauna fauna && fauna.getId() != id && fauna.getStrength() > strength){
                     strength = fauna.getStrength();
                     aux = fauna.getArea();
@@ -218,7 +197,7 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
     }
     public Fauna getWeakestFauna(int id) {
         Fauna aux=null;
-        for (IElemento elemento : elementos) {
+        for (IElement elemento : elements) {
             if (elemento instanceof Fauna fauna && fauna.getId() != id){
                 if(aux==null)
                     aux = fauna;
@@ -259,7 +238,7 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         return null;
     }
     public Flora hasFloraInThisArea(Area area) {
-        for (IElemento elemento : elementos) {
+        for (IElement elemento : elements) {
             if (elemento instanceof Flora flora && flora.getArea().equals(area)) {
                 return flora;
             }
@@ -274,7 +253,7 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         double distance=-1;
         double distanceClosestFauna;
         Area aux=null;
-        for(IElemento elemento :elementos){
+        for(IElement elemento : elements){
             if(elemento instanceof Flora flora){
                 xClosestFlora =flora.getArea().right()+ (flora.getArea().right() - flora.getArea().left()) / 2;
                 yClosestFlora = flora.getArea().up()+(flora.getArea().down() - flora.getArea().up()) / 2;
@@ -296,55 +275,48 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         return aux.equals(prey);
     }
 
-    public List<IElemento> getElementsOfType(Elemento newValue) {
-        List<IElemento> aux= new ArrayList<>();
-        for(IElemento elemento : elementos){
-            if(elemento.getType()==newValue)
-                aux.add(elemento);
-        }
-        return aux;
-    }
 
+    //events
     public void setGainStrengthFasterFlora() {
-        for(IElemento elemento : elementos){
+        for(IElement elemento : elements){
             if(elemento instanceof Flora flora){
                 ((Flora) elemento).setIncreaseStrength(((Flora) elemento).getIncreaseStrength()*2);
             }
         }
     }
     public void setGainStrengthNormalFlora() {
-        for(IElemento elemento : elementos){
+        for(IElement elemento : elements){
             if(elemento instanceof Flora flora){
                 ((Flora) elemento).setIncreaseStrength(((Flora) elemento).getIncreaseStrength()/2);
             }
         }
     }
     public void setSpeedSlowerFauna() {
-        for(IElemento elemento : elementos){
+        for(IElement elemento : elements){
             if(elemento instanceof Fauna fauna){
                 fauna.setSpeed(fauna.getSpeed()/2);
             }
         }
     }
     public void setSpeedNormalFauna() {
-        for(IElemento elemento : elementos){
+        for(IElement elemento : elements){
             if(elemento instanceof Fauna fauna){
                 fauna.setSpeed(fauna.getSpeed()*2);
             }
         }
     }
-    public void removeElementoEvent(int id, Elemento elemento) {
-        for(IElemento element : elementos){
+    public void removeElementoEvent(int id, Element elemento) {
+        for(IElement element : elements){
             if(element.getId() == id && element.getType() == elemento){
-                elementos.remove(element);
+                elements.remove(element);
                 return;
             }
         }
     }
-    public void addStrengthEvent(int id, Elemento elemento) {
-        for(IElemento element : elementos){
+    public void addStrengthEvent(int id, Element elemento) {
+        for(IElement element : elements){
             if(element.getId() == id && element.getType() == elemento){
-                if(element.getType() == Elemento.FAUNA){
+                if(element.getType() == Element.FAUNA){
                     ((Fauna)element).increaseStrength(50);
                     return;
                 }

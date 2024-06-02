@@ -1,29 +1,23 @@
 package pt.isec.pa.javalife.ui.gui.panes;
 
 import javafx.application.Platform;
-import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
 import javafx.scene.effect.GaussianBlur;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
-import pt.isec.pa.javalife.model.data.ecosystem.EcossistemaManager;
+import pt.isec.pa.javalife.model.data.ecosystem.EcosystemManager;
 import pt.isec.pa.javalife.model.data.elements.*;
-import pt.isec.pa.javalife.ui.gui.resources.CSSLoader;
 import pt.isec.pa.javalife.ui.gui.resources.ImageLoader;
 
 import java.util.Objects;
 
 
 public class EcossistemaUI extends BorderPane {
-    private EcossistemaManager manager;
+    private EcosystemManager manager;
     private Canvas canvas;
 
-    public EcossistemaUI(EcossistemaManager manager){
+    public EcossistemaUI(EcosystemManager manager) throws CloneNotSupportedException {
         super();
         this.manager = manager;
         createView();
@@ -48,11 +42,16 @@ public class EcossistemaUI extends BorderPane {
     }
 
     public void registerHandlers() {
-        manager.addClient(EcossistemaManager.ECOSSISTEMA_EVOLVE, evt -> Platform.runLater(this::update));
+        manager.addClient(EcosystemManager.ECOSSISTEMA_EVOLVE, evt -> Platform.runLater(() -> {
+            try {
+                update();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
+        }));
     }
 
-    public void update() {
-        System.out.println("update");
+    public void update() throws CloneNotSupportedException {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         clearScreen(gc);
         manager.getElementos().forEach(elemento -> drawElement(gc, elemento));
@@ -63,13 +62,13 @@ public class EcossistemaUI extends BorderPane {
         gc.fillRect(0,0, manager.getLargura(), manager.getAltura());
     }
 
-    public void updateSize(double newWidth, double newHeight) {
+    public void updateSize(double newWidth, double newHeight) throws CloneNotSupportedException {
         setWidth(newWidth);
         setHeight(newHeight);
         update();
     }
 
-    private void drawElement(GraphicsContext gc, IElemento element) {
+    private void drawElement(GraphicsContext gc, IElement element) {
         switch (element.getType()) {
             case FAUNA -> {
                 gc.drawImage(ImageLoader.getImage("fauna/"+((Fauna)element).getImage()), element.getArea().left(), element.getArea().up(), element.getArea().right() - element.getArea().left(), element.getArea().down() - element.getArea().up());

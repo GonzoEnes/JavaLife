@@ -4,16 +4,15 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import pt.isec.pa.javalife.model.data.ecosystem.EcossistemaManager;
+import pt.isec.pa.javalife.model.data.ecosystem.EcosystemManager;
 import pt.isec.pa.javalife.ui.gui.panes.HomePage;
-import pt.isec.pa.javalife.ui.gui.panes.RootPane;
 import pt.isec.pa.javalife.ui.gui.resources.ImageLoader;
 
 public class MainJFX extends Application {
-    private EcossistemaManager manager;
+    private EcosystemManager manager;
 
     public MainJFX() {
-        this.manager = new EcossistemaManager();
+        this.manager = new EcosystemManager();
     }
 
     @Override

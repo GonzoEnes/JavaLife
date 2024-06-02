@@ -10,22 +10,22 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import pt.isec.pa.javalife.model.data.area.Area;
-import pt.isec.pa.javalife.model.data.ecosystem.EcossistemaManager;
-import pt.isec.pa.javalife.model.data.elements.Elemento;
-import pt.isec.pa.javalife.model.data.elements.IElemento;
+import pt.isec.pa.javalife.model.data.ecosystem.EcosystemManager;
+import pt.isec.pa.javalife.model.data.elements.Element;
+import pt.isec.pa.javalife.model.data.elements.IElement;
 
 import java.io.File;
 import java.util.List;
 
 public class TopBar extends MenuBar {
     BorderPane mainPane;
-    EcossistemaManager manager;
+    EcosystemManager manager;
     Menu menuFile, menuEcosystem, menuSimulation, menuEvents;
     MenuItem btnNew, btnOpen, btnSave, btnExport, btnImport, btnExit;
     MenuItem btnConfigurations, btnAddInanimado, btnAddFlora, btnAddFauna, btnEditElement, btnDeleteElement, btnUndo, btnRedo;
     MenuItem btnSettings, btnStart, btnStop, btnContinue, btnPause, btnSaveSnapshot, btnRestoreSnapshot;
     MenuItem btnSun, btnHerbicide, btnStrength;
-    public TopBar(EcossistemaManager manager,BorderPane mainPane) {
+    public TopBar(EcosystemManager manager, BorderPane mainPane) {
         this.manager = manager;
         this.mainPane=mainPane;
         createViews();
@@ -162,7 +162,7 @@ public class TopBar extends MenuBar {
                                 double leftValue = Double.parseDouble(left);
                                 double rightValue = Double.parseDouble(right);
 
-                                manager.addElementWithCommand(new Area(upValue, downValue, rightValue, leftValue), Elemento.INANIMADO);
+                                manager.addElementWithCommand(new Area(upValue, downValue, rightValue, leftValue), Element.INANIMADO);
                                 popupStage.close();
                             } catch (NumberFormatException | InterruptedException | CloneNotSupportedException j) {
                                 showErrorDialog("Invalid values!");
@@ -222,7 +222,7 @@ public class TopBar extends MenuBar {
                         double leftValue = Double.parseDouble(left);
                         double rightValue = Double.parseDouble(right);
 
-                        manager.addElementWithCommand(new Area(upValue, downValue, rightValue, leftValue), Elemento.FLORA);
+                        manager.addElementWithCommand(new Area(upValue, downValue, rightValue, leftValue), Element.FLORA);
                         popupStage.close();
                     } catch (NumberFormatException | InterruptedException | CloneNotSupportedException j) {
                         showErrorDialog("Invalid values!");
@@ -282,7 +282,7 @@ public class TopBar extends MenuBar {
                         double leftValue = Double.parseDouble(left);
                         double rightValue = Double.parseDouble(right);
 
-                        manager.addElementWithCommand(new Area(upValue, downValue, rightValue, leftValue), Elemento.FAUNA);
+                        manager.addElementWithCommand(new Area(upValue, downValue, rightValue, leftValue), Element.FAUNA);
                         popupStage.close();
                     } catch (NumberFormatException | InterruptedException | CloneNotSupportedException j) {
                         showErrorDialog("Invalid values!");
@@ -312,16 +312,21 @@ public class TopBar extends MenuBar {
                     popupStage.setTitle("Delete element");
 
                     TextField idField = new TextField();
-                    ComboBox<Elemento> tipoComboBox = new ComboBox<>();
-                    tipoComboBox.getItems().addAll(Elemento.values()); // ver elemento.getTipo
+                    ComboBox<Element> tipoComboBox = new ComboBox<>();
+                    tipoComboBox.getItems().addAll(Element.values()); // ver elemento.getTipo
                     tipoComboBox.setValue(tipoComboBox.getItems().isEmpty() ? null : tipoComboBox.getItems().getFirst());
 
                     ComboBox<Integer> idComboBox = new ComboBox<>();
                     tipoComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
                         idComboBox.getItems().clear();
                         if (newValue != null) {
-                            List<IElemento> elementsOfType = manager.getElementsOfType(newValue);
-                            for (IElemento elemento : elementsOfType) {
+                            List<IElement> elementsOfType = null;
+                            try {
+                                elementsOfType = manager.getElementsOfType(newValue);
+                            } catch (CloneNotSupportedException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                            for (IElement elemento : elementsOfType) {
                                 idComboBox.getItems().add(elemento.getId());
                             }
                             if (!idComboBox.getItems().isEmpty()) {
@@ -342,7 +347,7 @@ public class TopBar extends MenuBar {
 
                     btnCreate.setOnAction(event -> {
                         Integer id = idComboBox.getValue();
-                        Elemento tipo = tipoComboBox.getValue();
+                        Element tipo = tipoComboBox.getValue();
                         if (id == null || tipo == null) {
                             showErrorDialog("All fields must be filled in!");
                             return;
@@ -408,10 +413,15 @@ public class TopBar extends MenuBar {
             popupStage.setTitle("Apply Herbicide");
 
             ComboBox<Integer> idComboBox = new ComboBox<>();
-            Elemento selectedElemento = Elemento.FLORA; // Directly use Elemento.FLORA
+            Element selectedElemento = Element.FLORA; // Directly use Elemento.FLORA
 
-            List<IElemento> elementsOfType = manager.getElementsOfType(selectedElemento);
-            for (IElemento elemento : elementsOfType) {
+            List<IElement> elementsOfType = null;
+            try {
+                elementsOfType = manager.getElementsOfType(selectedElemento);
+            } catch (CloneNotSupportedException ex) {
+                throw new RuntimeException(ex);
+            }
+            for (IElement elemento : elementsOfType) {
                 idComboBox.getItems().add(elemento.getId());
             }
             if (!idComboBox.getItems().isEmpty()) {
@@ -444,10 +454,15 @@ public class TopBar extends MenuBar {
             popupStage.setTitle("Apply Strength");
 
             ComboBox<Integer> idComboBox = new ComboBox<>();
-            Elemento selectedElemento = Elemento.FAUNA;
+            Element selectedElemento = Element.FAUNA;
 
-            List<IElemento> elementsOfType = manager.getElementsOfType(selectedElemento);
-            for (IElemento elemento : elementsOfType) {
+            List<IElement> elementsOfType = null;
+            try {
+                elementsOfType = manager.getElementsOfType(selectedElemento);
+            } catch (CloneNotSupportedException ex) {
+                throw new RuntimeException(ex);
+            }
+            for (IElement elemento : elementsOfType) {
                 idComboBox.getItems().add(elemento.getId());
             }
             if (!idComboBox.getItems().isEmpty()) {

@@ -7,7 +7,6 @@ import pt.isec.pa.javalife.model.command.commands.RemoveElementoCmd;
 import pt.isec.pa.javalife.model.data.area.Area;
 import pt.isec.pa.javalife.model.data.elements.*;
 import pt.isec.pa.javalife.model.data.events.*;
-import pt.isec.pa.javalife.model.data.memento.*;
 import pt.isec.pa.javalife.model.gameengine.GameEngine;
 import pt.isec.pa.javalife.model.gameengine.interfaces.IGameEngine;
 
@@ -19,46 +18,46 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 // esta classe vai servir como Facade do Ecossistema para que as outras classes não consigam manipular o Ecossistema diretamente
 
-public class EcossistemaManager {
+public class EcosystemManager {
     private GameEngine gameEngine;
-    private Ecossistema ecossistema;
+    private Ecosystem ecosystem;
     private PropertyChangeSupport pcs;
     private long timeBetweenTicks = 1000;
     private CommandManager commandManager;
     private Set<IEvent> events;
-    private CareTaker careTaker;
     public static final String ECOSSISTEMA_EVOLVE = "_evolve";
 
-    public EcossistemaManager() {
+    public EcosystemManager() {
         this.gameEngine = new GameEngine();
         pcs = new PropertyChangeSupport(this);
-        EcossistemaOriginator originator = new EcossistemaOriginator();
-        this.careTaker = new CareTaker(originator);
         gameEngine.registerClient((g,t) -> evolve(gameEngine,t));
         commandManager = new CommandManager();
         events = new HashSet<>();
+    }
+    public void createEcosystem(int altura, int largura,int time) {
+        ecosystem = new Ecosystem(altura, largura);
+        timeBetweenTicks=time;
+    }
+    public void startEcosystem() {
+        gameEngine.start(timeBetweenTicks);
         events.add(new Strength(this));
         events.add(new Herbicide(this));
         events.add(new Sun(this));
+        pcs.firePropertyChange(ECOSSISTEMA_EVOLVE, null, null);
     }
 
-    public void saveState() {
-        careTaker.save();
+    //gets
+    public Set<IElement> getElementos() throws CloneNotSupportedException {
+        return ecosystem.getElements();
     }
-    public void undo() throws InterruptedException {
-        commandManager.undo();
+    public List<IElement> getElementsOfType(Element newValue) throws CloneNotSupportedException {
+        return ecosystem.getElementsOfType(newValue);
     }
-    public void redo() throws InterruptedException, CloneNotSupportedException {
-        commandManager.redo();
+    public int getLargura() {
+        return ecosystem.getLargura();
     }
-    public void reset() {
-        careTaker.reset();
-    }
-    public boolean hasUndo() {
-        return careTaker.hasUndo();
-    }
-    public boolean hasRedo() {
-        return careTaker.hasRedo();
+    public int getAltura() {
+        return ecosystem.getHeight();
     }
 
     public void addClient(String property, PropertyChangeListener listener) {
@@ -67,62 +66,30 @@ public class EcossistemaManager {
     public void removeClient(String property, PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(property, listener);
     }
-    public void createEcosystem(int altura, int largura,int time) {
-        ecossistema = new Ecossistema(altura, largura);
-        timeBetweenTicks=time;
-        saveState();
+
+    public void addElemento(IElement element) {
+        ecosystem.addElemento(element);
     }
-    public void startEcosystem() {
-        gameEngine.start(timeBetweenTicks);
-        addElemento(new Area(30,50,60,80),"animal.png",Elemento.FAUNA);
-        pcs.firePropertyChange(ECOSSISTEMA_EVOLVE, null, null);
+    public void addElemento(Area area, Element type) {
+        ecosystem.addElemento(area,type);
     }
-    public void addElemento(IElemento element) {
-        ecossistema.addElemento(element);
-        saveState();
+    public void removeElementoEvent(IElement elemento) {
+        ecosystem.removeElemento(elemento);
     }
-    public void addElemento(Area area, String image,Elemento type) {
-        ecossistema.addElemento(area,image,type);
-        //saveState();
+
+
+    //o edit ainda nao esta feito
+    public void editElementoUndo(IElement elemento) {
+        ecosystem.editElementoUndo(elemento);
     }
-    public boolean removeElementoEvent(IElemento elemento) {
-        saveState();
-        return ecossistema.removeElemento(elemento);
-    }
-    public IElemento addElementocmd(Area area,Elemento type) {
-        return ecossistema.addElementocmd(area,type);
-    }
-    public IElemento removeElementoCmd(int id,Elemento type) throws CloneNotSupportedException {
-        //saveState();
-        return ecossistema.removeElementocmd(id,type);
-    }
-    public IElemento editElementoCmd(int id, double strength, Elemento type) throws CloneNotSupportedException {
-        //saveState();
-        return ecossistema.editElementocmd( id, strength,type);
-    }
-    public void editElementoUndo(IElemento elemento) {
-        ecossistema.editElementoUndo(elemento);
-    }
-    public Set<IElemento> getElementos() {
-        return ecossistema.getElementos();
-    }
-    public int getLargura() {
-        return ecossistema.getLargura();
-    }
-    public int getAltura() {
-        return ecossistema.getAltura();
-    }
-    public void evolve (IGameEngine gameEngine, long currentTime) {
-        sun();
-        ecossistema.evolve(gameEngine,currentTime);
-        pcs.firePropertyChange(ECOSSISTEMA_EVOLVE, null, null);
-    }
+
+    //memento e save em csv
     public boolean save(File file) {
         try (
                 ObjectOutputStream oos = new ObjectOutputStream(
                         new FileOutputStream(file) )
         ) {
-            oos.writeObject(ecossistema);
+            oos.writeObject(ecosystem);
         } catch (Exception e) {
             System.err.println("Erro na escrita do Ecossistema!");
             return false;
@@ -134,7 +101,7 @@ public class EcossistemaManager {
                 ObjectInputStream ois = new ObjectInputStream(
                         new FileInputStream(file) )
         ) {
-            ecossistema = (Ecossistema) ois.readObject();
+            ecosystem = (Ecosystem) ois.readObject();
         } catch (Exception e) {
             System.err.println("Erro a carregar Ecossistema!");
             return false;
@@ -146,12 +113,12 @@ public class EcossistemaManager {
         try (
                 BufferedReader br = new BufferedReader(new FileReader(file))
         ) {
-            if (ecossistema == null) {
+            if (ecosystem == null) {
                 return false;
             }
 
             String line;
-            Set<IElemento> importedElements = new HashSet<>();
+            Set<IElement> importedElements = new HashSet<>();
 
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(",");
@@ -165,20 +132,20 @@ public class EcossistemaManager {
                 switch (type.toUpperCase()) {
                     case "FAUNA":
                         double forcaFauna = Double.parseDouble(fields[5]);
-                        IElemento fauna = Elemento.createElemento(Elemento.FAUNA, area, ecossistema);
+                        IElement fauna = Element.createElement(Element.FAUNA, area, ecosystem);
                         assert fauna != null;
                         ((Fauna)fauna).setStrength(forcaFauna);
                         importedElements.add(fauna);
                         break;
                     case "FLORA":
                         double forcaFlora = Double.parseDouble(fields[5]);
-                        IElemento flora = Elemento.createElemento(Elemento.FLORA, area, ecossistema);
+                        IElement flora = Element.createElement(Element.FLORA, area, ecosystem);
                         assert flora != null;
                         ((Flora)flora).setStrength(forcaFlora);
                         importedElements.add(flora);
                         break;
                     case "INANIMADO":
-                        IElemento inanimado = Elemento.createElemento(Elemento.INANIMADO, area, ecossistema);
+                        IElement inanimado = Element.createElement(Element.INANIMADO, area, ecosystem);
                         importedElements.add(inanimado);
                         break;
                     default:
@@ -187,8 +154,8 @@ public class EcossistemaManager {
                 }
             }
 
-            for (IElemento elemento : importedElements) {
-                ecossistema.addElemento(elemento);
+            for (IElement elemento : importedElements) {
+                ecosystem.addElemento(elemento);
             }
 
         } catch (Exception e) {
@@ -197,11 +164,11 @@ public class EcossistemaManager {
         }
         return true;
     }
-    public boolean exportCSVElements(File file) {
+    public boolean exportCSVElements(File file) throws CloneNotSupportedException {
         try (
                 BufferedWriter bw = new BufferedWriter(new FileWriter(file))
         ) {
-            for (IElemento elemento : ecossistema.getElementos()) {
+            for (IElement elemento : ecosystem.getElements()) {
                 StringBuilder line = new StringBuilder();
 
                 switch (elemento) {
@@ -242,6 +209,8 @@ public class EcossistemaManager {
         }
         return true;
     }
+
+    //controlGameEngine
     public void stopEngine() {
         gameEngine.stop();
     }
@@ -254,23 +223,49 @@ public class EcossistemaManager {
     public void startEngine() {
         gameEngine.start(timeBetweenTicks);
     }
+    public void evolve (IGameEngine gameEngine, long currentTime) {
+        sun();
+        ecosystem.evolve(gameEngine,currentTime);
+        pcs.firePropertyChange(ECOSSISTEMA_EVOLVE, null, null);
+    }
 
-    public void addElementWithCommand(Area area,Elemento type) throws InterruptedException, CloneNotSupportedException {
+    //commandsUI
+    public void undo() throws InterruptedException {
+        commandManager.undo();
+    }
+    public void redo() throws InterruptedException, CloneNotSupportedException {
+        commandManager.redo();
+    }
+    public void addElementWithCommand(Area area, Element type) throws InterruptedException, CloneNotSupportedException {
         AddElementoCmd addCommand = new AddElementoCmd(this, area, type);
         commandManager.executeCommand(addCommand);
         pcs.firePropertyChange(ECOSSISTEMA_EVOLVE, null, null);
     }
-    public void removeElementWithCommand(int id,Elemento type) throws InterruptedException, CloneNotSupportedException {
+    public void removeElementWithCommand(int id, Element type) throws InterruptedException, CloneNotSupportedException {
         RemoveElementoCmd removeElementoCmd = new RemoveElementoCmd(this,id,type);
         commandManager.executeCommand(removeElementoCmd);
         pcs.firePropertyChange(ECOSSISTEMA_EVOLVE, null, null);
     }
-    public void editElementWithCommand(int id,double strength,Elemento type) throws InterruptedException, CloneNotSupportedException {
+    public void editElementWithCommand(int id, double strength, Element type) throws InterruptedException, CloneNotSupportedException {
         EditElementoCmd editElementoCmd = new EditElementoCmd(this,id,strength,type);
         commandManager.executeCommand(editElementoCmd);
         pcs.firePropertyChange(ECOSSISTEMA_EVOLVE, null, null);
     }
 
+    //commandsCommands
+    public IElement addElementocmd(Area area, Element type) {
+        return ecosystem.addElementocmd(area,type);
+    }
+    public IElement removeElementoCmd(int id, Element type) throws CloneNotSupportedException {
+        //saveState();
+        return ecosystem.removeElementocmd(id,type);
+    }
+    public IElement editElementoCmd(int id, double strength, Element type) throws CloneNotSupportedException {
+        //saveState();
+        return ecosystem.editElementocmd( id, strength,type);
+    }
+
+    //events
     public void applyHerbicide(int id) {
         for (IEvent event : events) {
             if(event.getTipo()==Event.HERBICIDE){
@@ -294,33 +289,23 @@ public class EcossistemaManager {
             }
         }
     }
-
-    public List<IElemento> getElementsOfType(Elemento newValue) {
-        return ecossistema.getElementsOfType(newValue);
-    }
-
     public void setGainStrengthFasterFlora() {
-        ecossistema.setGainStrengthFasterFlora();
+        ecosystem.setGainStrengthFasterFlora();
     }
-
     public void setSpeedSlowerFauna() {
-        ecossistema.setSpeedSlowerFauna();
+        ecosystem.setSpeedSlowerFauna();
     }
-
     public void setGainStrengthNormalFlora() {
-        ecossistema.setGainStrengthNormalFlora();
+        ecosystem.setGainStrengthNormalFlora();
     }
-
     public void setSpeedNormalFauna() {
-        ecossistema.setSpeedNormalFauna();
+        ecosystem.setSpeedNormalFauna();
     }
-
-    public void removeElementoEvent(int id, Elemento elemento) {
-        ecossistema.removeElementoEvent(id,elemento);
+    public void removeElementoEvent(int id, Element elemento) {
+        ecosystem.removeElementoEvent(id,elemento);
     }
-
-    public void addStrengthEvent(int id, Elemento elemento) {
-        ecossistema.addStrengthEvent(id,elemento);
+    public void addStrengthEvent(int id, Element elemento) {
+        ecosystem.addStrengthEvent(id,elemento);
     }
     public void sun(){
         for (IEvent event : events) {

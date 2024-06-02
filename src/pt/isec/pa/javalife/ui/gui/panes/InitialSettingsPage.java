@@ -8,20 +8,19 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
-import pt.isec.pa.javalife.model.data.ecosystem.EcossistemaManager;
+import pt.isec.pa.javalife.model.data.ecosystem.EcosystemManager;
 import pt.isec.pa.javalife.ui.gui.resources.CSSLoader;
 
 import java.util.Objects;
 
 public class InitialSettingsPage extends BorderPane {
-    private EcossistemaManager manager;
+    private EcosystemManager manager;
     private Pane ecossistemaPane;
     private EcossistemaUI ecossistemaUI;
     Button btnStart,btnBack;
     TextField heightField, widthField, timeField;
 
-    public InitialSettingsPage(EcossistemaManager manager) {
+    public InitialSettingsPage(EcosystemManager manager) {
         this.manager = manager;
         createView();
         registerListeners();
@@ -124,7 +123,7 @@ public class InitialSettingsPage extends BorderPane {
                     ecossistemaPane = new BorderPane(ecossistemaUI);
                     setCenter(ecossistemaPane);
                     registerHandlers();
-                } catch (NumberFormatException e) {
+                } catch (NumberFormatException | CloneNotSupportedException e) {
                     showErrorDialog("Valores inválidos! Por favor insira números inteiros.");
                 }
             } else {
@@ -142,8 +141,20 @@ public class InitialSettingsPage extends BorderPane {
 
     private void registerHandlers() {
         if (ecossistemaPane != null && ecossistemaUI != null) {
-            ecossistemaPane.widthProperty().addListener(observable -> ecossistemaUI.updateSize(ecossistemaPane.getWidth(), ecossistemaPane.getHeight()));
-            ecossistemaPane.heightProperty().addListener(observable -> ecossistemaUI.updateSize(ecossistemaPane.getWidth(), ecossistemaPane.getHeight()));
+            ecossistemaPane.widthProperty().addListener(observable -> {
+                try {
+                    ecossistemaUI.updateSize(ecossistemaPane.getWidth(), ecossistemaPane.getHeight());
+                } catch (CloneNotSupportedException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            ecossistemaPane.heightProperty().addListener(observable -> {
+                try {
+                    ecossistemaUI.updateSize(ecossistemaPane.getWidth(), ecossistemaPane.getHeight());
+                } catch (CloneNotSupportedException e) {
+                    throw new RuntimeException(e);
+                }
+            });
         }
     }
 

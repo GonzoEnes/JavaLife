@@ -1,16 +1,12 @@
 package pt.isec.pa.javalife.ui.gui.panes;
 
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-import pt.isec.pa.javalife.model.data.ecosystem.EcossistemaManager;
+import pt.isec.pa.javalife.model.data.ecosystem.EcosystemManager;
 
 public class RootPane extends BorderPane {
 
-    EcossistemaManager manager;
-    public RootPane(EcossistemaManager manager) {
+    EcosystemManager manager;
+    public RootPane(EcosystemManager manager) {
         this.manager = manager;
         createViews();
         registerHandlers();

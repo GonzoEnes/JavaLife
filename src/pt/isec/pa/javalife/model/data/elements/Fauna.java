@@ -1,12 +1,12 @@
 package pt.isec.pa.javalife.model.data.elements;
 
 import pt.isec.pa.javalife.model.data.area.Area;
-import pt.isec.pa.javalife.model.data.ecosystem.Ecossistema;
+import pt.isec.pa.javalife.model.data.ecosystem.Ecosystem;
 import pt.isec.pa.javalife.model.data.fsm.Context;
 
 import java.util.Random;
 
-public sealed class Fauna extends ElementoBase implements IElementoComForca, IElementoComImagem permits Animal {
+public sealed class Fauna extends ElementBase implements IElementWithStrength, IElementWithImage permits Animal {
     private Context stateMachine;
     private double strength;
     private String image;
@@ -14,7 +14,7 @@ public sealed class Fauna extends ElementoBase implements IElementoComForca, IEl
     private int reproductionCounter = 0;
     private int speed;
     private int reproductionWaitCounter = 0;
-    private Ecossistema ecossistema;
+    private Ecosystem ecossistema;
     private Fauna faunaBeingAttacked;
     private static final double initialStrength = 50;
     private static final double minimumStrength = 0;
@@ -29,7 +29,7 @@ public sealed class Fauna extends ElementoBase implements IElementoComForca, IEl
     private static final int reproductionWaitCounterFlag =10;
     private static final int attackCost =10;
 
-    public Fauna(Area area, Ecossistema ecossistema,String image) {
+    public Fauna(Area area, Ecosystem ecossistema, String image) {
         super(++idCounter, area);
         this.strength = initialStrength;
         this.speed=minimumSpeed;
@@ -78,9 +78,18 @@ public sealed class Fauna extends ElementoBase implements IElementoComForca, IEl
         this.strength = strength;
     }
     @Override
-    public Elemento getType() {
-        return Elemento.FAUNA;
+    public Element getType() {
+        return Element.FAUNA;
     }
+    @Override
+    public String getImage() {
+        return image;
+    }
+    @Override
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     public void increaseStrength(double increase) {
         if(this.strength+increase>=maximumStrength){
             this.strength=maximumStrength;
@@ -106,14 +115,6 @@ public sealed class Fauna extends ElementoBase implements IElementoComForca, IEl
     }
     public void evolve() {
         stateMachine.evolve();
-    }
-    @Override
-    public String getImage() {
-        return image;
-    }
-    @Override
-    public void setImage(String image) {
-        this.image = image;
     }
 
     public void moveRandomly(){
@@ -397,7 +398,7 @@ public sealed class Fauna extends ElementoBase implements IElementoComForca, IEl
         if(reproductionWaitCounter==reproductionWaitCounterFlag && checkReproduction()){
             Area aux =ecossistema.hasSpaceForNewFauna(getArea());
             if(aux != null){
-                IElemento newFauna = Elemento.createElemento(Elemento.FAUNA,aux,ecossistema);
+                IElement newFauna = Element.createElement(Element.FAUNA,aux,ecossistema);
                 assert newFauna != null;
                 ecossistema.addElemento(newFauna);
                 setReproductionWaitCounter(0);

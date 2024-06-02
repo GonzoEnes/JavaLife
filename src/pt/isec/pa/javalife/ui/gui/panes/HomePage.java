@@ -1,7 +1,6 @@
 package pt.isec.pa.javalife.ui.gui.panes;
 
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.GaussianBlur;
@@ -13,8 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import pt.isec.pa.javalife.model.data.ecosystem.EcossistemaManager;
+import pt.isec.pa.javalife.model.data.ecosystem.EcosystemManager;
 import pt.isec.pa.javalife.ui.gui.resources.CSSLoader;
 
 import java.io.File;
@@ -22,11 +20,11 @@ import java.util.Objects;
 
 public class HomePage extends BorderPane {
 
-    private EcossistemaManager manager;
+    private EcosystemManager manager;
 
     private Button btnNew,btnLoad, btnCredits, btnExit;
 
-    public HomePage(EcossistemaManager manager) {
+    public HomePage(EcosystemManager manager) {
         this.manager = manager;
         createView();
         registerListeners();
@@ -87,7 +85,12 @@ public class HomePage extends BorderPane {
                 if (manager.load(hFile)) {
                     manager.startEngine();
                     //setTop(new VBox(new TopBar(manager,this)));
-                    EcossistemaUI ecossistemaUI = new EcossistemaUI(manager);
+                    EcossistemaUI ecossistemaUI = null;
+                    try {
+                        ecossistemaUI = new EcossistemaUI(manager);
+                    } catch (CloneNotSupportedException e) {
+                        throw new RuntimeException(e);
+                    }
                     BorderPane ecossistemaPane = new BorderPane(ecossistemaUI);
                     setCenter(ecossistemaPane);
                 }

@@ -1,6 +1,5 @@
 package pt.isec.pa.javalife.model.data.fsm;
 
-import pt.isec.pa.javalife.model.data.ecosystem.Ecossistema;
 import pt.isec.pa.javalife.model.data.elements.Fauna;
 
 import java.io.Serializable;
