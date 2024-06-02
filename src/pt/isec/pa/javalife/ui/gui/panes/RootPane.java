@@ -5,32 +5,22 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import pt.isec.pa.javalife.Main;
 import pt.isec.pa.javalife.model.data.ecosystem.EcossistemaManager;
-
-import java.util.Stack;
 
 public class RootPane extends BorderPane {
 
     EcossistemaManager manager;
-
-    Pane configPane;
-
-    Stage stage;
-
-    public RootPane(EcossistemaManager manager, Stage stage) {
+    public RootPane(EcossistemaManager manager) {
         this.manager = manager;
-        this.stage = stage;
         createViews();
         registerHandlers();
         update();
     }
 
     private void createViews() {
-        setTop(new VBox(new EcossistemaMenu(manager, stage)));
-        MainMenuUI mainMenuUI = new MainMenuUI(manager, stage);
-        configPane = new BorderPane(mainMenuUI);
-        setCenter(configPane);
+        HomePage homePage = new HomePage(manager);
+        BorderPane home = new BorderPane(homePage);
+        setCenter(home);
     }
 
     private void registerHandlers() {

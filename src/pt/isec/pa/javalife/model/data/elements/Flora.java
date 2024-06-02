@@ -13,7 +13,7 @@ public sealed class Flora extends ElementoBase implements IElementoComForca, IEl
     private static final double minimumStrength = 0;
     private static final double maximumStrength = 100;
     private static final double decreaseStrength = 1;
-    private static final double increaseStrength = 0.5;
+    private static  double increaseStrength = 0.5;
     private static final double maximumReproduction = 2;
     private static final int strengthToReproduce = 90;
     private static final double newbornFloraStrength = 50;
@@ -30,6 +30,13 @@ public sealed class Flora extends ElementoBase implements IElementoComForca, IEl
         this.ecossistema=ecossistema;
         this.image=image;
         this.strength = strength;
+    }
+
+    public double getIncreaseStrength() {
+        return increaseStrength;
+    }
+    public void setIncreaseStrength(double increaseStrength) {
+        Flora.increaseStrength = increaseStrength;
     }
 
     public double getDecreaseStrength() {
@@ -52,7 +59,7 @@ public sealed class Flora extends ElementoBase implements IElementoComForca, IEl
     }
     @Override
     public String getImage() {
-        return "";
+        return image;
     }
     @Override
     public void setImage(String imagem) {
@@ -67,7 +74,7 @@ public sealed class Flora extends ElementoBase implements IElementoComForca, IEl
     }
     public void decreaseStrength() {
         if(this.strength-decreaseStrength<=minimumStrength){
-            this.strength=minimumStrength;
+            ecossistema.removeElemento(this);
             return;
         }
         this.strength-=decreaseStrength;

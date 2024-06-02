@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 public class ImageLoader {
@@ -21,16 +22,22 @@ public class ImageLoader {
         }
         return image;
     }
-
-    public static Image getImageFauna(String filename) {
-        Image image = images.get(filename);
-        if (image == null)
-            try (InputStream is = ImageLoader.class.getResourceAsStream("images/fauna/"+filename)) {
-                assert is != null;
-                image = new Image(is);
-                images.put(filename,image);
-            } catch (Exception e) { return null; }
-        return image;
+    public static List<String> loadAllImagesFromDirectory(String directoryPath) {
+        List<String> imageNames = new ArrayList<>();
+        File directory = new File("./src/pt/isec/pa/javalife/ui/gui/resources/images/" + directoryPath);
+        System.out.println(directory.getAbsolutePath());
+        File[] fList = directory.listFiles();
+        if (fList != null) {
+            for (File file : fList) {
+                if (file.isFile()) {
+                    String fileName = file.getName().toLowerCase();
+                    if (fileName.endsWith(".png") || fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) {
+                        imageNames.add(fileName);
+                    }
+                }
+            }
+        }
+        return imageNames;
     }
 
     public static Image getExternalImage(String filename) {
@@ -45,25 +52,4 @@ public class ImageLoader {
         return image;
     }
     public static void purgeImage(String filename) { images.remove(filename); }
-
-    public static String[] loadAllImagesFromDirectory() {
-        File dir = Paths.get("images/fauna").toFile();
-        // Filtrar apenas arquivos com extensões de imagem
-        FilenameFilter imageFilter = new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                String lowercaseName = name.toLowerCase();
-                return lowercaseName.endsWith(".jpg") || lowercaseName.endsWith(".png");
-            }
-        };
-        File[] files = dir.listFiles(imageFilter);
-        ArrayList<String> fileNames = new ArrayList<>();
-        if (files != null) {
-            for (File file : files) {
-                Image image = new Image(file.toURI().toString());
-                images.put(file.getName(), image);
-                fileNames.add(file.getName());
-            }
-        }
-        return fileNames.toArray(new String[0]);
-    }
 }

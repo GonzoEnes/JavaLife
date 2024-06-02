@@ -1,0 +1,7 @@
+.button {
+    -fx-font-family: 'Shadows Into Light';
+    -fx-font-size: 40;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(three-pass-box, black, 10, 0, 0, 3);
+    -fx-background-color: transparent;
+}

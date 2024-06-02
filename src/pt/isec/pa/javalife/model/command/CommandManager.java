@@ -14,6 +14,12 @@ public class CommandManager {
         this.undo = new ArrayDeque<>();
     }
 
+    public void executeCommand(ICommand command) throws InterruptedException, CloneNotSupportedException {
+        command.execute();
+        undo.push(command);
+        redo.clear();
+    }
+
     public boolean undo() throws InterruptedException {
         if (undo.isEmpty())
             return false;
@@ -23,7 +29,7 @@ public class CommandManager {
         return true;
     }
 
-    public boolean redo() throws InterruptedException {
+    public boolean redo() throws InterruptedException, CloneNotSupportedException {
         if (redo.isEmpty())
             return false;
         ICommand command = redo.pop();

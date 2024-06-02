@@ -1,4 +1,4 @@
 package pt.isec.pa.javalife.ui.gui.panes;
 
-public class PauseUI {
+public class PausePage {
 }

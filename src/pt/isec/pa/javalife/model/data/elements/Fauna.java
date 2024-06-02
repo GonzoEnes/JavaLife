@@ -38,6 +38,7 @@ public sealed class Fauna extends ElementoBase implements IElementoComForca, IEl
         this.faunaBeingAttacked = null;
         this.stateMachine = new Context(this);
     }
+
     public int getStrengthToChangeStateForMovimentar() {
         return strengthToChangeStateForMovimentar;
     }
@@ -89,7 +90,7 @@ public sealed class Fauna extends ElementoBase implements IElementoComForca, IEl
     }
     public void decreaseStrength(double decrease) {
         if(this.strength-decrease<=minimumStrength){
-            this.strength=minimumStrength;
+            ecossistema.removeElemento(this);
             return;
         }
         this.strength-=decrease;
@@ -114,23 +115,24 @@ public sealed class Fauna extends ElementoBase implements IElementoComForca, IEl
     public void setImage(String image) {
         this.image = image;
     }
+
     public void moveRandomly(){
         int direction;
         do{
             direction  = getRandomNumberInRange(360);
-        }while((direction<90 &&  ecossistema.hasAnInanimadoOrFauna(new Area(getArea().up(),getArea().down(),getArea().right()+getSpeed(),getArea().left() + getSpeed()),getId()))
-                || (direction<180 && ecossistema.hasAnInanimadoOrFauna(new Area(getArea().up() - getSpeed(),getArea().down() - getSpeed(),getArea().right(),getArea().left()),getId()))
-                || (direction<270 && ecossistema.hasAnInanimadoOrFauna(new Area(getArea().up(),getArea().down(),getArea().right() - getSpeed(),getArea().left() - getSpeed()),getId()))
-                || (direction<360 && ecossistema.hasAnInanimadoOrFauna(new Area(getArea().up() + getSpeed(),getArea().down() + getSpeed(),getArea().right(),getArea().left()),getId())));
+        }while((direction<90 &&  ecossistema.hasAnInanimadoOrFauna(new Area(getArea().up(),getArea().down(),getArea().left()+getSpeed(),getArea().right() + getSpeed()),getId()))
+                || (direction<180 && ecossistema.hasAnInanimadoOrFauna(new Area(getArea().up() - getSpeed(),getArea().down() - getSpeed(),getArea().left(),getArea().right()),getId()))
+                || (direction<270 && ecossistema.hasAnInanimadoOrFauna(new Area(getArea().up(),getArea().down(),getArea().left() - getSpeed(),getArea().right() - getSpeed()),getId()))
+                || (direction<360 && ecossistema.hasAnInanimadoOrFauna(new Area(getArea().up() + getSpeed(),getArea().down() + getSpeed(),getArea().left(),getArea().right()),getId())));
 
         if(direction < 90) {//right
-            setArea(new Area(getArea().up(),getArea().down(),getArea().right()+getSpeed(),getArea().left() + getSpeed()));
+            setArea(new Area(getArea().up(),getArea().down(),getArea().left()+getSpeed(),getArea().right() + getSpeed()));
         }else if(direction < 180) {
-            setArea(new Area(getArea().up() - getSpeed(),getArea().down() - getSpeed(),getArea().right(),getArea().left()));
+            setArea(new Area(getArea().up() - getSpeed(),getArea().down() - getSpeed(),getArea().left(),getArea().right()));
         }else if(direction<270) {
-            setArea(new Area(getArea().up(),getArea().down(),getArea().right() - getSpeed(),getArea().left() - getSpeed()));
+            setArea(new Area(getArea().up(),getArea().down(),getArea().left() - getSpeed(),getArea().right() - getSpeed()));
         }else if(direction<360) {
-            setArea(new Area(getArea().up() + getSpeed(),getArea().down() + getSpeed(),getArea().right(),getArea().left()));
+            setArea(new Area(getArea().up() + getSpeed(),getArea().down() + getSpeed(),getArea().left(),getArea().right()));
         }
         decreaseStrengthByMovement();
     }
@@ -396,6 +398,7 @@ public sealed class Fauna extends ElementoBase implements IElementoComForca, IEl
             Area aux =ecossistema.hasSpaceForNewFauna(getArea());
             if(aux != null){
                 IElemento newFauna = Elemento.createElemento(Elemento.FAUNA,aux,ecossistema);
+                assert newFauna != null;
                 ecossistema.addElemento(newFauna);
                 setReproductionWaitCounter(0);
                 increaseReproductionCounter();

@@ -8,19 +8,23 @@ import pt.isec.pa.javalife.model.data.elements.IElemento;
 
 public class AddElementoCmd extends CommandAdapter {
     private IElemento elemento;
-    public AddElementoCmd(EcossistemaManager manager, IElemento elemento) {
+    private Area area;
+    private Elemento type;
+    public AddElementoCmd(EcossistemaManager manager, Area area,Elemento type) {
         super(manager);
-        this.elemento = elemento;
+        this.area = area;
+        this.type = type;
     }
 
     @Override
-    public boolean undo() {
-        return manager.removeElemento(elemento);
+    public void undo() {
+        manager.removeElementoEvent(elemento);
     }
 
     @Override
-    public boolean execute() throws InterruptedException {
-        manager.addElemento(elemento);
-        return true;
+    public void execute() {
+        System.out.println(area.right()+" "+area.down()+" "+type);
+        elemento = manager.addElementocmd(area,type);
+        System.out.println("Elemento adicionado");
     }
 }

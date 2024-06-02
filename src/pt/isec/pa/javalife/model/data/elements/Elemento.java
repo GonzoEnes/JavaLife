@@ -4,6 +4,8 @@ import pt.isec.pa.javalife.model.data.area.Area;
 import pt.isec.pa.javalife.model.data.ecosystem.Ecossistema;
 import pt.isec.pa.javalife.ui.gui.resources.ImageLoader;
 
+import java.util.List;
+
 public enum Elemento {
     INANIMADO, FLORA, FAUNA;
 
@@ -13,13 +15,18 @@ public enum Elemento {
                 return new Pedra(area);
             }
             case FLORA -> {
-                return new Erva(area, ecossistema, "flora.png");
+                List<String> images = ImageLoader.loadAllImagesFromDirectory("flora/");
+                int randomIndex = (int) (Math.random() * images.size());
+                String randomImage = images.get(randomIndex);
+                System.out.println(randomImage+"dasdsa");
+                return new Erva(area, ecossistema, randomImage);
             }
             case FAUNA -> {
-                String[] images = ImageLoader.loadAllImagesFromDirectory();
-                int randomIndex = (int) (Math.random() * images.length);
-                String randomImage = images[randomIndex];
-                new Animal(area, ecossistema, randomImage);
+                List<String> images = ImageLoader.loadAllImagesFromDirectory("fauna/");
+                int randomIndex = (int) (Math.random() * images.size());
+                String randomImage = images.get(randomIndex);
+                System.out.println(randomImage+" "+area+" "+ecossistema);
+                return new Animal(area, ecossistema, randomImage);
             }
         }
         return null;

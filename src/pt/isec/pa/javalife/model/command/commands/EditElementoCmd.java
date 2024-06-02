@@ -3,29 +3,27 @@ package pt.isec.pa.javalife.model.command.commands;
 import pt.isec.pa.javalife.model.command.CommandAdapter;
 import pt.isec.pa.javalife.model.data.ecosystem.EcossistemaManager;
 import pt.isec.pa.javalife.model.data.elements.Elemento;
-
-import java.util.ArrayList;
+import pt.isec.pa.javalife.model.data.elements.IElemento;
 
 public class EditElementoCmd extends CommandAdapter {
-    private Elemento tipo;
+    private IElemento elemento;
     private int id;
-    private ArrayList<String> parametros;
-    public EditElementoCmd(EcossistemaManager manager, Elemento tipo, int id, ArrayList<String> parametros) {
+    private double strength;
+    private Elemento type;
+    public EditElementoCmd(EcossistemaManager manager, int id, double strength,Elemento type) {
         super(manager);
-        this.tipo = tipo;
         this.id = id;
-        this.parametros = parametros;
+        this.strength = strength;
+        this.type = type;
     }
 
     @Override
-    public boolean undo() {
-        // perceber como vamos fazer a edição, temos de ir buscar os valores antigos da edição antes para voltar
-        // a aplicar com os valores antigos
-        return true;
+    public void undo() {
+        manager.editElementoUndo(elemento);
     }
 
     @Override
-    public boolean execute() { // faz o edit()
-        return manager.editElemento(tipo, id, parametros);
+    public void execute() throws CloneNotSupportedException {
+         elemento = manager.editElementoCmd(id, strength,type);
     }
 }

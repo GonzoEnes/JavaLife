@@ -62,15 +62,49 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
     public boolean getIsAreaValid(Area area) {
         return area.left() > 7 && area.right() < getLargura()-7 && area.up() > 7 && area.down() < getAltura()-7;
     }
-
     public void addElemento(IElemento elemento){
-        if (!getIsAreaValid(elemento.getArea())) {
+        if (!getIsAreaValid(elemento.getArea()) || hasAnElemento(elemento.getArea())) {
             return;
         }
         elementos.add(elemento);
     }
-
-    public void addElemento(Area area, Ecossistema ecossistema, String image, Elemento type) {
+    public IElemento addElementocmd(Area area, Elemento type){
+        IElemento elemento = Elemento.createElemento(type, area, this);
+        if(elemento==null)
+            System.out.println("Elemento nulo");
+        if (elemento != null) {
+            elementos.add(elemento);
+            return elemento;
+        }
+        return null;
+    }
+    public IElemento editElementocmd(int id, double strength,Elemento type) throws CloneNotSupportedException {
+        for (IElemento elemento : elementos) {
+            if (elemento.getId() == id && type == Elemento.FAUNA) {
+                IElemento aux = elemento.clone();
+                ((Fauna)elemento).setStrength(strength);
+                return aux;
+            }else if(elemento.getId() == id && type == Elemento.FLORA){
+                IElemento aux = elemento.clone();
+                ((Flora)elemento).setStrength(strength);
+                return aux;
+            }
+        }
+        return null;
+    }
+    public void editElementoUndo(IElemento elemento) {
+        for(IElemento element : elementos){
+            if(element.getId() == elemento.getId()){
+                if(element.getType() == Elemento.FAUNA){
+                    ((Fauna)element).setStrength(((Fauna)elemento).getStrength());
+                }else if(element.getType() == Elemento.FLORA){
+                    ((Flora)element).setStrength(((Flora)elemento).getStrength());
+                    ((Flora)element).setImage(((Flora)elemento).getImage());
+                }
+            }
+        }
+    }
+    public void addElemento(Area area , String image, Elemento type) {
         if (!getIsAreaValid(area)) {
             return;
         }
@@ -81,10 +115,10 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
                 elemento = new Pedra(area);
             }
             case FLORA -> {
-                elemento = new Erva(area, ecossistema, "flora.png");
+                elemento = new Erva(area, this, "flora.png");
             }
             case FAUNA -> {
-                elemento = new Animal(area, ecossistema, image);
+                elemento = new Animal(area, this, image);
             }
         }
         if (elemento != null) {
@@ -98,6 +132,16 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
 
         elementos.remove(elemento);
         return true;
+    }
+    public IElemento removeElementocmd(int id,Elemento type) throws CloneNotSupportedException {
+        for (IElemento elemento : elementos) {
+            if (elemento.getId() == id && elemento.getType() == type){
+                IElemento aux= elemento.clone();
+                elementos.remove(elemento);
+                return aux;
+            }
+        }
+        return null;
     }
     public boolean editElemento(Elemento tipo, int id, ArrayList<String> parametros) { // ir reforçando, claro
         for (IElemento elemento : elementos) {
@@ -132,7 +176,6 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         }
         checkStrength();
     }
-
     private void checkStrength() {
         for (IElemento elemento : elementos) {
             if (elemento instanceof Fauna fauna && fauna.getStrength() <= 0) {
@@ -143,7 +186,6 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
             }
         }
     }
-
     public boolean hasAnInanimadoOrFauna(Area area,int id) {
         for (IElemento elemento : elementos) {
             if (elemento instanceof Inanimado inanimado && inanimado.getArea().equals(area)) {
@@ -155,7 +197,7 @@ public class Ecossistema implements Serializable, IGameEngineEvolve {
         }
         return false;
     }
-public boolean hasAnElemento(Area area) {
+    public boolean hasAnElemento(Area area) {
         for (IElemento elemento : elementos) {
             if (elemento.getArea().equals(area)) {
                 return true;
@@ -163,7 +205,6 @@ public boolean hasAnElemento(Area area) {
         }
         return false;
     }
-
     public Area getStrongestFauna(int id) {
         double strength = 0;
         Area aux=null;
@@ -253,5 +294,62 @@ public boolean hasAnElemento(Area area) {
     public boolean isFaunaBeingAttackedNearyby(Area hunter,double speed,Area prey) {
         Area aux = new Area(hunter.up()+speed,hunter.left()+speed,hunter.down()+speed,hunter.right()+speed);
         return aux.equals(prey);
+    }
+
+    public List<IElemento> getElementsOfType(Elemento newValue) {
+        List<IElemento> aux= new ArrayList<>();
+        for(IElemento elemento : elementos){
+            if(elemento.getType()==newValue)
+                aux.add(elemento);
+        }
+        return aux;
+    }
+
+    public void setGainStrengthFasterFlora() {
+        for(IElemento elemento : elementos){
+            if(elemento instanceof Flora flora){
+                ((Flora) elemento).setIncreaseStrength(((Flora) elemento).getIncreaseStrength()*2);
+            }
+        }
+    }
+    public void setGainStrengthNormalFlora() {
+        for(IElemento elemento : elementos){
+            if(elemento instanceof Flora flora){
+                ((Flora) elemento).setIncreaseStrength(((Flora) elemento).getIncreaseStrength()/2);
+            }
+        }
+    }
+    public void setSpeedSlowerFauna() {
+        for(IElemento elemento : elementos){
+            if(elemento instanceof Fauna fauna){
+                fauna.setSpeed(fauna.getSpeed()/2);
+            }
+        }
+    }
+    public void setSpeedNormalFauna() {
+        for(IElemento elemento : elementos){
+            if(elemento instanceof Fauna fauna){
+                fauna.setSpeed(fauna.getSpeed()*2);
+            }
+        }
+    }
+    public void removeElementoEvent(int id, Elemento elemento) {
+        for(IElemento element : elementos){
+            if(element.getId() == id && element.getType() == elemento){
+                elementos.remove(element);
+                return;
+            }
+        }
+    }
+    public void addStrengthEvent(int id, Elemento elemento) {
+        for(IElemento element : elementos){
+            if(element.getId() == id && element.getType() == elemento){
+                if(element.getType() == Elemento.FAUNA){
+                    ((Fauna)element).increaseStrength(50);
+                    return;
+                }
+                return;
+            }
+        }
     }
 }
