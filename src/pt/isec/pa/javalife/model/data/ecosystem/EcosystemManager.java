@@ -107,6 +107,7 @@ public class EcosystemManager {
         pcs.firePropertyChange(ECOSSISTEMA_EVOLVE, null, null);
         return true;
     }
+
     public boolean importCSVElements(File file) {
         try (
                 BufferedReader br = new BufferedReader(new FileReader(file))
@@ -116,7 +117,6 @@ public class EcosystemManager {
             }
 
             String line;
-            Set<IElement> importedElements = new HashSet<>();
 
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(",");
@@ -125,35 +125,8 @@ public class EcosystemManager {
                 double baixo = Double.parseDouble(fields[2]);
                 double esquerda = Double.parseDouble(fields[3]);
                 double direita = Double.parseDouble(fields[4]);
-                Area area = new Area(cima,baixo,esquerda,direita);
-
-                switch (type.toUpperCase()) {
-                    case "FAUNA":
-                        double forcaFauna = Double.parseDouble(fields[5]);
-                        IElement fauna = Element.createElement(Element.FAUNA, area, ecosystem);
-                        assert fauna != null;
-                        ((Fauna)fauna).setStrength(forcaFauna);
-                        importedElements.add(fauna);
-                        break;
-                    case "FLORA":
-                        double forcaFlora = Double.parseDouble(fields[5]);
-                        IElement flora = Element.createElement(Element.FLORA, area, ecosystem);
-                        assert flora != null;
-                        ((Flora)flora).setStrength(forcaFlora);
-                        importedElements.add(flora);
-                        break;
-                    case "INANIMADO":
-                        IElement inanimado = Element.createElement(Element.INANIMADO, area, ecosystem);
-                        importedElements.add(inanimado);
-                        break;
-                    default:
-                        System.err.println("Tipo desconhecido: " + type);
-                        break;
-                }
-            }
-
-            for (IElement elemento : importedElements) {
-                ecosystem.addElemento(elemento);
+                Area area = new Area(cima, baixo, esquerda, direita);
+                addElemento(area, Element.valueOf(type));
             }
 
         } catch (Exception e) {
@@ -167,11 +140,12 @@ public class EcosystemManager {
                 BufferedWriter bw = new BufferedWriter(new FileWriter(file))
         ) {
             for (IElement elemento : ecosystem.getElements()) {
+
                 StringBuilder line = new StringBuilder();
 
                 switch (elemento) {
-                    case Fauna fauna-> {
-                        line.append(fauna.getType());
+                    case Fauna fauna -> {
+                        line.append(fauna.getType()).append(",");
                         line.append(fauna.getArea().up()).append(",");
                         line.append(fauna.getArea().down()).append(",");
                         line.append(fauna.getArea().left()).append(",");
@@ -179,7 +153,7 @@ public class EcosystemManager {
                         line.append(fauna.getStrength());
                     }
                     case Flora flora -> {
-                        line.append(flora.getType());
+                        line.append(flora.getType()).append(",");
                         line.append(flora.getArea().up()).append(",");
                         line.append(flora.getArea().down()).append(",");
                         line.append(flora.getArea().left()).append(",");
@@ -187,7 +161,7 @@ public class EcosystemManager {
                         line.append(flora.getStrength());
                     }
                     case Inanimado inanimado -> {
-                        line.append(inanimado.getType());
+                        line.append(inanimado.getType()).append(",");
                         line.append(inanimado.getArea().up()).append(",");
                         line.append(inanimado.getArea().down()).append(",");
                         line.append(inanimado.getArea().left()).append(",");
